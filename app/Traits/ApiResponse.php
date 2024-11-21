@@ -4,8 +4,6 @@ namespace App\Traits;
 
 trait ApiResponse
 {
-
-
     /**
      * Returns a standardized success response with the provided data, message, and HTTP status code.
      * 
