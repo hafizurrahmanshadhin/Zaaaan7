@@ -2,120 +2,172 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     use ApiResponse;
-    public function register(Request $request) {
-        $request->validate([
-            'name' => "required",
-            'email' => "required|email|unique:users",
-            'password' => "required|confirmed"
-        ]);
 
-        $user = new User();
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-
-        $user->save();
-
-        $token = auth('api')->login($user);
-        return $this->respondWithToken($token);
-    }
+    protected AuthService $authService;
 
     /**
-     * Get a JWT token via given credentials.
+     * Class constructor that initializes the AuthService dependency.
+     * 
+     * This constructor accepts an instance of the AuthService and binds it to the 
+     * class property. It allows access to authentication-related methods throughout 
+     * the class, enabling operations such as user registration, login, and token management.
      *
-     * @param  \Illuminate\Http\Request  $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @param AuthService $authService The AuthService instance used for authentication tasks.
      */
-    public function login(Request $request)
+    public function __construct(AuthService $authService)
     {
-        $credentials = $request->only('email', 'password');
+        $this->authService = $authService;
+    }
 
-        if ($token = $this->guard()->attempt($credentials)) {
-            return $this->respondWithToken($token);
+
+
+    /**
+     * Handles the user registration process by validating the request and delegating
+     * the registration logic to the AuthService.
+     * 
+     * This method first validates the incoming registration data using the provided 
+     * RegisterRequest. If validation passes, it calls the AuthService to register 
+     * the user and generate a JWT token. Upon success, it returns a success response 
+     * with the generated token. If an error occurs during the registration process, 
+     * it returns an error response with the appropriate message.
+     *
+     * @param RegisterRequest $request The validated registration request containing user data:
+     *                                 - 'name' (string): The user's full name.
+     *                                 - 'email' (string): The user's email address.
+     *                                 - 'password' (string): The user's password.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response with the registration result:
+     *                                      - On success: Returns the JWT token and a success message.
+     *                                      - On failure: Returns the error message.
+     * 
+     * @throws Exception If any error occurs during user registration.
+     */
+    public function register(RegisterRequest $request)
+    {
+        try {
+            $validatedData = $request->validated();
+            $token = $this->authService->register($validatedData);
+
+            return $this->success(['token' => $token], 'user registration successfull', 200);
+
+        } catch (Exception $e) {
+            return $this->error(['errors' => $e->getMessage()], 'Something went wrong during registration', 500);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
-    /**
-     * Get the authenticated User
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return response()->json($this->guard()->user());
-    }
+
 
     /**
-     * Log the user out (Invalidate the token)
+     * Handles the user login process by validating the request and delegating
+     * the authentication logic to the AuthService.
+     * 
+     * This method validates the incoming login credentials using the provided 
+     * LoginRequest. If validation passes, it calls the AuthService to authenticate 
+     * the user and generate a JWT token. Upon success, it returns a success response 
+     * with the generated token. If validation fails or any error occurs during 
+     * the login process, it returns an error response with the appropriate message.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @param LoginRequest $request The validated login request containing user credentials:
+     *                              - 'email' (string): The user's email address.
+     *                              - 'password' (string): The user's password.
+     *
+     * @return JsonResponse A JSON response with the login result:
+     *                     - On success: Returns the JWT token and a success message.
+     *                     - On validation failure: Returns validation errors and a failure message.
+     *                     - On general failure: Returns the error message and a failure status.
+     * 
+     * @throws ValidationException If the validation of the login credentials fails.
+     * @throws Exception If any other error occurs during user login.
      */
-    public function logout()
+    public function login(LoginRequest $request): JsonResponse
     {
-        // $this->guard()->logout();
-
-        // return response()->json(['message' => 'Successfully logged out']);
         try {
-            // Get the authenticated user's token
+            $validatedData = $request->validated();
+
+            $token = $this->authService->login($validatedData);
+
+            return $this->success(['token' => $token], 'user login successfull', 200);
+
+        } catch (ValidationException $e) {
+            return $this->error(['errors' => $e->errors()], 'Validation failed', 422);
+        } catch (Exception $e) {
+            return $this->error(['errors' => $e->getMessage()], 'Something went wrong during logout', 500);
+        }
+    }
+
+
+
+
+    /**
+     * Logs out the authenticated user by invalidating the current JWT token.
+     * 
+     * This method retrieves the current JWT token from the request, invalidates it, 
+     * and effectively logs the user out. Upon successful logout, it returns a success 
+     * response. If an error occurs during the logout process (e.g., invalid token), 
+     * an error response is returned with the appropriate message.
+     *
+     * @return JsonResponse A JSON response with the logout result:
+     *                     - On success: Returns a success message confirming the user was logged out.
+     *                     - On failure: Returns the error message and a failure status.
+     * 
+     * @throws Exception If any error occurs during the logout process, such as an invalid token.
+     */
+    public function logout(): JsonResponse
+    {
+        try {
             $token = JWTAuth::getToken();
-
-            // Invalidate the token so it cannot be used again
             JWTAuth::invalidate($token);
-
             return $this->success([], 'User logged out successfully', 200);
         } catch (Exception $e) {
-            return $this->error(['error' => $e->getMessage()], 'Something went wrong during logout', 500);
+            return $this->error(['errors' => $e->getMessage()], 'Something went wrong during logout', 500);
         }
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken($this->guard()->refresh());
-    }
+
+
 
     /**
-     * Get the token array structure.
+     * Refreshes the JWT token for the authenticated user.
+     * 
+     * This method attempts to refresh the current JWT token, generating a new token
+     * for the user. If the refresh is successful, it returns the new token in the 
+     * response. If an error occurs during the token refresh process (e.g., invalid or 
+     * expired token), an error response is returned indicating the failure.
      *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse A JSON response with the result of the token refresh:
+     *                     - On success: Returns the new JWT token and a success message.
+     *                     - On failure: Returns an error message indicating the failure to refresh the token.
+     * 
+     * @throws JWTException If the token could not be refreshed (e.g., invalid or expired token).
      */
-    protected function respondWithToken($token)
+    public function refresh(): JsonResponse
     {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $this->guard()->factory()->getTTL() * 60
-        ]);
-    }
+        try {
+            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+            return $this->success(['token' => $newToken], 'token updated', 200);
+        } catch (JWTException $e) {
+            return response()->json(['errors' => 'Could not refresh token'], 500);
+        }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Illuminate\Contracts\Auth\Guard
-     */
-    public function guard()
-    {
-        return Auth::guard();
     }
 }

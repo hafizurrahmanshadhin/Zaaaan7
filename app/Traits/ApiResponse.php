@@ -4,6 +4,21 @@ namespace App\Traits;
 
 trait ApiResponse
 {
+
+
+    /**
+     * Returns a standardized success response with the provided data, message, and HTTP status code.
+     * 
+     * This method formats the response to indicate a successful operation. It includes a success 
+     * flag, an optional message, the data to be returned, and an HTTP status code. The response 
+     * is structured as a JSON object and the status code defaults to 200 (OK), but can be customized.
+     *
+     * @param mixed $data The data to be included in the response, typically the result of the operation.
+     * @param string|null $message An optional message providing additional context about the success.
+     * @param int $code The HTTP status code for the response (default is 200).
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the success status, message, data, and code.
+     */
     public function success($data, $message = null, $code = 200)
     {
         return response()->json([
@@ -14,6 +29,23 @@ trait ApiResponse
         ], $code);
     }
 
+    
+
+
+    /**
+     * Returns a standardized error response with the provided data, message, and HTTP status code.
+     * 
+     * This method formats the response to indicate an error or failure in the operation. It includes 
+     * an error flag, an optional message, the error details or data, and an HTTP status code. The 
+     * response is structured as a JSON object, and the status code defaults to 500 (Internal Server Error), 
+     * but can be customized to reflect different types of errors.
+     *
+     * @param mixed $data The data to be included in the response, typically containing error details.
+     * @param string|null $message An optional message providing additional context about the error.
+     * @param int $code The HTTP status code for the response (default is 500).
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the error status, message, data, and code.
+     */
     public function error($data, $message = null, $code = 500)
     {
         return response()->json([
