@@ -49,7 +49,7 @@ class AuthService
 
         } catch (Exception $e) {
             Log::error('AuthService::register -> ' . $e->getMessage());
-            return null;
+            throw $e;
         }
 
     }
@@ -96,7 +96,7 @@ class AuthService
             throw $e;
         } catch (Exception $e) {
             Log::error('AuthService::login -> ' . $e->getMessage());
-            throw new Exception('An error occurred while processing the login.');
+            throw $e;
         }
 
     }
