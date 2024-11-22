@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+
+            $table->enum('gender', ['male', 'female', 'others'])->nullable();
+            
+            $table->string('phone')->nullable();
+            $table->text('address');
+
+            $table->date('date_of_birth')->nullable();
+            $table->longText('bio');
+
             $table->timestamps();
         });
     }
