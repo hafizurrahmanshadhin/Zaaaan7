@@ -53,9 +53,9 @@ class RegisterRequest extends FormRequest
     {
         // Use the `error` method from the `ApiResponse` trait
         $response = $this->error(
-            ['errors' => $validator->errors()],
+            422,
             'Validation errors',
-            422
+            $validator->errors(),
         );
 
         throw new ValidationException($validator, $response);
