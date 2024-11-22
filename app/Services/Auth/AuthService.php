@@ -6,7 +6,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -69,7 +68,6 @@ class AuthService
      *
      * @return string The generated JWT token if the login is successful.
      * 
-     * @throws ValidationException If the password is incorrect or the user is not found.
      * @throws Exception If any other error occurs, such as token generation failure.
      */
     public function login(array $credentials): string

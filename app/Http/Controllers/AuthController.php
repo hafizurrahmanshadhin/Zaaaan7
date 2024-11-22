@@ -63,7 +63,7 @@ class AuthController extends Controller
             $validatedData = $request->validated();
             $token = $this->authService->register($validatedData);
 
-            return $this->success(['token' => $token], 'user registration successfull', 200);
+            return $this->success(200, 'user registration successfull',[ 'token' => $token]);
 
         } catch (Exception $e) {
             return $this->error(500, 'server error',  $e->getMessage() );
@@ -102,8 +102,7 @@ class AuthController extends Controller
 
             $token = $this->authService->login($validatedData);
 
-            return $this->success(['token' => $token], 'user login successfull', 200);
-
+            return $this->success(200, 'user login successfull',[ 'token' => $token]);
         }catch (Exception $e) {
             return $this->error(500, 'server error',  $e->getMessage() );
         }
@@ -131,7 +130,7 @@ class AuthController extends Controller
         try {
             $token = JWTAuth::getToken();
             JWTAuth::invalidate($token);
-            return $this->success([], 'user logged out successfully', 200);
+            return $this->success(200, 'user logged out successfully',[ 'token' => $token]);
         } catch (Exception $e) {
             return $this->error(500, 'server error',  $e->getMessage() );
         }
@@ -157,8 +156,8 @@ class AuthController extends Controller
     public function refresh(): JsonResponse
     {
         try {
-            $newToken = JWTAuth::refresh(JWTAuth::getToken());
-            return $this->success(['token' => $newToken], 'token updated', 200);
+            $token = JWTAuth::refresh(JWTAuth::getToken());
+            return $this->success(200, 'token updated',[ 'token' => $token]);
         } catch (Exception $e) {
             return $this->error(500, 'server error',  $e->getMessage() );
         }
