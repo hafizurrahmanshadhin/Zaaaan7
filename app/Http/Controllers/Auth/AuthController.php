@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -61,6 +62,7 @@ class AuthController extends Controller
     {
         try {
             $validatedData = $request->validated();
+            Log::info($validatedData);
             $token = $this->authService->register($validatedData);
 
             return $this->success(200, 'user registration successfull',[ 'token' => $token]);

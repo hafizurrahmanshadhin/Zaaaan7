@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -32,10 +33,17 @@ class AuthService
     public function register(array $credentials): string
     {
         try {
-            User::create([
-                'name' => $credentials['name'],
-                'email' => $credentials['email'],
-                'password' => Hash::make($credentials['password'])
+            DB::beginTransaction();
+            $user = User::create([
+                'first_name' => $credentials['first_name'],
+                'last_name'  => $credentials['last_name'],
+                'email'      => $credentials['email'],
+                'password'   => Hash::make($credentials['password']),
+
+            ]);
+
+            $user->profile()->create([
+                'address' => $credentials['address'],
             ]);
 
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
@@ -43,10 +51,12 @@ class AuthService
             if (!$token) {
                 throw new Exception('Token generation failed.');
             }
+            DB::commit();
 
             return $token;
 
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error('AuthService::register -> ' . $e->getMessage());
             throw $e;
         }

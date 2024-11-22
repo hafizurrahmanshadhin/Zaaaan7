@@ -28,10 +28,26 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email" => "required|email|exists:users,email",
+"email"    => "required|email|exists:users,email",
             "password" => ["required", new Validatepassword($this->input('email'))]
         ];
     }
+
+
+    /**
+     * Define custom validation messages for the email and password fields.
+     *
+     * @return array The custom error messages for the validation rules.
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Email field is required.',
+            'email.email'    => 'Please provide a valid email address.',
+            'email.exists'   => 'This email address is not registered in our system.',
+        ];
+    }
+
 
 
     /**
@@ -58,7 +74,7 @@ class LoginRequest extends FormRequest
         } else {
             $message = $passwordErrors[0];
         }
-        // Use the `error` method from the `ApiResponse` trait
+
         $response = $this->error(
             422,
             $message,
