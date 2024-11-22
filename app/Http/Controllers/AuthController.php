@@ -66,7 +66,7 @@ class AuthController extends Controller
             return $this->success(['token' => $token], 'user registration successfull', 200);
 
         } catch (Exception $e) {
-            return $this->error(['errors' => $e->getMessage()], 'Something went wrong during registration', 500);
+            return $this->error(['error' => $e->getMessage()], 'Something went wrong during registration', 500);
         }
 
     }
@@ -105,9 +105,9 @@ class AuthController extends Controller
             return $this->success(['token' => $token], 'user login successfull', 200);
 
         } catch (ValidationException $e) {
-            return $this->error(['errors' => $e->errors()], 'Validation failed', 422);
+            return $this->error(['error' => $e->errors()], 'Validation failed', 422);
         } catch (Exception $e) {
-            return $this->error(['errors' => $e->getMessage()], 'Something went wrong during logout', 500);
+            return $this->error(['error' => $e->getMessage()], 'Something went wrong during logout', 500);
         }
     }
 
@@ -133,9 +133,9 @@ class AuthController extends Controller
         try {
             $token = JWTAuth::getToken();
             JWTAuth::invalidate($token);
-            return $this->success([], 'User logged out successfully', 200);
+            return $this->success([], 'user logged out successfully', 200);
         } catch (Exception $e) {
-            return $this->error(['errors' => $e->getMessage()], 'Something went wrong during logout', 500);
+            return $this->error(['error' => $e->getMessage()], 'Something went wrong during logout', 500);
         }
     }
 
@@ -162,7 +162,7 @@ class AuthController extends Controller
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
             return $this->success(['token' => $newToken], 'token updated', 200);
         } catch (JWTException $e) {
-            return response()->json(['errors' => 'Could not refresh token'], 500);
+            return response()->json(['error' => 'Could not refresh token'], 500);
         }
 
     }

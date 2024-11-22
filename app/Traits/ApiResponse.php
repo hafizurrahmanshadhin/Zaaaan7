@@ -21,9 +21,10 @@ trait ApiResponse
     {
         return response()->json([
             'success' => true,
+            'code' => $code,
             'message' => $message,
             'data' => $data,
-            'code' => $code
+            'timestamp' => now()->toIso8601String() . ' GMT' . now()->format('P'),
         ], $code);
     }
 
@@ -48,9 +49,10 @@ trait ApiResponse
     {
         return response()->json([
             'status' => false,
+            'code' => $code,
             'message' => $message,
             'data' => $data,
-            'code' => $code
+            'timestamp' => now()->toIso8601String() . ' GMT' . now()->format('P'),
         ], $code);
     }
 }
