@@ -77,13 +77,6 @@ class AuthService
         try {
             $user = User::where('email', $credentials['email'])->first();
 
-            // Validate password
-            if (!Hash::check($credentials['password'], $user->password)) {
-                throw ValidationException::withMessages([
-                    'password' => ['The provided password is incorrect.']
-                ]);
-            }
-
             $token = JWTAuth::fromUser($user);
 
             if (!$token) {
@@ -92,8 +85,6 @@ class AuthService
 
             return $token;
 
-        } catch (ValidationException $e) {
-            throw $e;
         } catch (Exception $e) {
             Log::error('AuthService::login -> ' . $e->getMessage());
             throw $e;

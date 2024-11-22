@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\Auth\Validatepassword;
 use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,7 +29,7 @@ class LoginRequest extends FormRequest
     {
         return [
             "email" => "required|email|exists:users,email",
-            "password" => "required"
+            "password" => ["required", new Validatepassword($this->input('email'))]
         ];
     }
 
@@ -49,11 +50,19 @@ class LoginRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
+        $emailErrors = $validator->errors()->get('email') ?? null;
+        $passwordErrors = $validator->errors()->get('password') ?? null;
+
+        if ($emailErrors) {
+            $message = $emailErrors[0];
+        } else {
+            $message = $passwordErrors[0];
+        }
         // Use the `error` method from the `ApiResponse` trait
         $response = $this->error(
-            ['errors' => $validator->errors()],
-            'Validation errors',
-            422
+            422,
+            $message,
+            $validator->errors(),
         );
 
         throw new ValidationException($validator, $response);

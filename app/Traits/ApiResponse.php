@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Http\JsonResponse;
+
 trait ApiResponse
 {
     /**
@@ -17,7 +19,7 @@ trait ApiResponse
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the success status, message, data, and code.
      */
-    public function success($data, $message = null, $code = 200)
+    public function success($data, $message = null, $code = 200): JsonResponse
     {
         return response()->json([
             'success' => true,
@@ -45,13 +47,13 @@ trait ApiResponse
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the error status, message, data, and code.
      */
-    public function error($data, $message = null, $code = 500)
+    public function error($code = 500,  $message = null, $data): JsonResponse
     {
         return response()->json([
             'status' => false,
             'code' => $code,
             'message' => $message,
-            'data' => $data,
+            'error' => $data,
             'timestamp' => now()->toIso8601String() . ' GMT' . now()->format('P'),
         ], $code);
     }
