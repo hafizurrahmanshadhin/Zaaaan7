@@ -19,18 +19,18 @@ trait ApiResponse
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the success status, message, data, and code.
      */
-    public function success($code = 200, $message = null, $data ): JsonResponse
+    public function success($code = 200, $message = null, $data): JsonResponse
     {
         return response()->json([
-            'success' => true,
-            'code' => $code,
+            'success' => (bool) true,
+            'code' => (int) $code,
             'message' => $message,
             'data' => $data,
             'timestamp' => now()->toIso8601String() . ' GMT' . now()->format('P'),
         ], $code);
     }
 
-    
+
 
 
     /**
@@ -47,11 +47,11 @@ trait ApiResponse
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the error status, message, data, and code.
      */
-    public function error($code = 500,  $message = null, $error): JsonResponse
+    public function error($code = 500, $message = null, $error): JsonResponse
     {
         return response()->json([
-            'status' => false,
-            'code' => $code,
+            'status' => (bool) false,
+            'code' => (int) $code,
             'message' => $message,
             'error' => $error,
             'timestamp' => now()->toIso8601String() . ' GMT' . now()->format('P'),
