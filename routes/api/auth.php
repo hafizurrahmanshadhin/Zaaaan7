@@ -4,12 +4,17 @@ use App\Http\Controllers\API\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group( [],function ($router) {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
-});
 
-Route::middleware('auth:api')->group(function (){
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
+// Define a group of routes that all use the AuthController.
+Route::controller(AuthController::class)->group(function () {
+    // guest route
+    Route::middleware('guest:api')->group(function ($router) {
+        Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+        Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+    });
+    // auth routes
+    Route::middleware('auth:api')->group(function () {
+        Route::post('logout', 'logout')->name('auth.logout');
+        Route::post('refresh', 'refresh')->name('auth.refresh.token');
+    });
 });
