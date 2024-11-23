@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->group(function () {
     // guest route
     Route::middleware('guest:api')->group(function ($router) {
-        Route::post('login', [AuthController::class, 'login'])->name('auth.login');
-        Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+        Route::post('login', 'login')->name('auth.login');
+        Route::post('register', 'register')->name('auth.register');
     });
     // auth routes
     Route::middleware('auth:api')->group(function () {
