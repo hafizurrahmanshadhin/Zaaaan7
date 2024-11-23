@@ -19,7 +19,7 @@ return new class extends Migration {
 
             $table->enum('operation', ['email', 'password', 'profile']); // operation the otp will use for.
             $table->integer('number'); // otp number
-            $table->boolean('status')->default(false); // true if otp is used
+            $table->boolean('status')->default(true); // true if otp is used
 
             $table->timestamps();
         });

@@ -2,11 +2,13 @@
 
 namespace App\Services\Auth;
 
+use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -34,6 +36,7 @@ class AuthService
     {
         try {
             DB::beginTransaction();
+            // creating user
             $user = User::create([
                 'first_name' => $credentials['first_name'],
                 'last_name'  => $credentials['last_name'],
@@ -41,10 +44,19 @@ class AuthService
                 'password'   => Hash::make($credentials['password']),
 
             ]);
-
+            // creating user profile
             $user->profile()->create([
                 'address' => $credentials['address'],
             ]);
+
+            // creating a otp
+            $otp = mt_rand(111111,999999);
+            $user->otps()->create([
+                'operation' => 'email',
+                'number' => $otp,
+            ]);
+
+            Mail::to($user->email)->send(new OTPMail('Onboarding', $otp, $user));
 
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 
