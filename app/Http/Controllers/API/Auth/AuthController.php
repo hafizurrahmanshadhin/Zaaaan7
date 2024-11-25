@@ -62,7 +62,6 @@ class AuthController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            Log::info($validatedData);
             $token = $this->authService->register($validatedData);
 
             return $this->success(200, 'user registration successfull',[ 'token' => $token]);

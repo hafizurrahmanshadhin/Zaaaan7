@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Jobs\SendOTPEmail;
 use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
@@ -56,7 +57,9 @@ class AuthService
                 'number' => $otp,
             ]);
 
-            Mail::to($user->email)->send(new OTPMail('Onboarding', $otp, $user));
+            SendOTPEmail::dispatch($user, $otp);
+            // Mail::to($user->email)->send(new OTPMail('Onboarding', $otp, $user));
+
 
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 

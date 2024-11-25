@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class OTPMail extends Mailable
 {
@@ -39,6 +40,7 @@ class OTPMail extends Mailable
      */
     public function content(): Content
     {
+        Log::info('email');
         return new Content(
             view: 'emails.otp',
             with: [
