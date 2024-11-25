@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->group(function () {
     // guest route
     Route::middleware('guest:api')->group(function ($router) {
-        Route::post('login', 'login')->name('auth.login');
-        Route::post('register', 'register')->name('auth.register');
+        Route::post('login', 'login')->name('login');
+        Route::post('register', 'register')->name('register');
+        Route::post('oto-send/{operation}', 'otoSend')->name('otp-resend');
     });
     // auth routes
     Route::middleware('auth:api')->group(function () {
-        Route::post('logout', 'logout')->name('auth.logout');
-        Route::post('refresh', 'refresh')->name('auth.refresh.token');
+        Route::post('logout', 'logout')->name('logout');
+        Route::post('refresh', 'refresh')->name('refresh.token');
     });
 });

@@ -163,4 +163,15 @@ class AuthController extends Controller
             return $this->error(500, 'server error',  $e->getMessage() );
         }
     }
+
+
+
+    public function otoSend($operation): JsonResponse
+    {
+        try {
+            return $this->success(200, 'otp sended',[]);
+        }catch (Exception $e) {
+            return $this->error(500, 'server error',  $e->getMessage() );
+        }
+    }
 }

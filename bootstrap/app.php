@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         then:function(){
             Route::middleware([])
             ->prefix('api/auth')
+            ->name('auth.')
             ->group(base_path('routes/api/auth.php'));
         }
     )
