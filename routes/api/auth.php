@@ -11,11 +11,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::middleware('guest:api')->group(function ($router) {
         Route::post('login', 'login')->name('login');
         Route::post('register', 'register')->name('register');
-        Route::post('oto-send/{operation}', 'otoSend')->name('otp-resend');
+        Route::post('oto-send', 'otoSend')->name('otp-resend');
     });
     // auth routes
     Route::middleware('auth:api')->group(function () {
         Route::post('logout', 'logout')->name('logout');
         Route::post('refresh', 'refresh')->name('refresh.token');
+        Route::post('oto-send/authorized', 'otoSend')->name('otp-resend');
     });
 });

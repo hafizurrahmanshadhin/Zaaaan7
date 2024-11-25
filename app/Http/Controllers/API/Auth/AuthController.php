@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\Http\Requests\Auth\OTPRequest;
 use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Services\Auth\OTPService;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -64,10 +67,11 @@ class AuthController extends Controller
             $validatedData = $request->validated();
             $token = $this->authService->register($validatedData);
 
-            return $this->success(200, 'user registration successfull',[ 'token' => $token]);
+            return $this->success(200, 'user registration successfull', ['token' => $token]);
 
         } catch (Exception $e) {
-            return $this->error(500, 'server error',  $e->getMessage() );
+            Log::error('User registration'. $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
         }
 
     }
@@ -103,9 +107,10 @@ class AuthController extends Controller
 
             $token = $this->authService->login($validatedData);
 
-            return $this->success(200, 'user login successfull',[ 'token' => $token]);
-        }catch (Exception $e) {
-            return $this->error(500, 'server error',  $e->getMessage() );
+            return $this->success(200, 'user login successfull', ['token' => $token]);
+        } catch (Exception $e) {
+            Log::error('User login'. $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
         }
     }
 
@@ -131,9 +136,10 @@ class AuthController extends Controller
         try {
             $token = JWTAuth::getToken();
             JWTAuth::invalidate($token);
-            return $this->success(200, 'user logged out successfully',[ 'token' => $token]);
+            return $this->success(200, 'user logged out successfully', ['token' => $token]);
         } catch (Exception $e) {
-            return $this->error(500, 'server error',  $e->getMessage() );
+            Log::error('User logout'. $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
         }
     }
 
@@ -158,20 +164,28 @@ class AuthController extends Controller
     {
         try {
             $token = JWTAuth::refresh(JWTAuth::getToken());
-            return $this->success(200, 'token updated',[ 'token' => $token]);
+            return $this->success(200, 'token updated', ['token' => $token]);
         } catch (Exception $e) {
-            return $this->error(500, 'server error',  $e->getMessage() );
+            Log::error('User refresh token'. $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
         }
     }
 
 
 
-    public function otoSend($operation): JsonResponse
+    public function otoSend(OTPRequest $request): JsonResponse
     {
         try {
-            return $this->success(200, 'otp sended',[]);
-        }catch (Exception $e) {
-            return $this->error(500, 'server error',  $e->getMessage() );
+
+            $otpService = New OTPService();
+
+            
+
+            return $this->success(200, 'otp sended', []);
+        }
+        catch (Exception $e) {
+            Log::error('Send OTP'. $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
         }
     }
 }
