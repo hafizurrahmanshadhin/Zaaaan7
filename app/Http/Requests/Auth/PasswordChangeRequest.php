@@ -2,14 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Traits\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Validation\Validator;
 
-class OTPRequest extends FormRequest
+class PasswordChangeRequest extends FormRequest
 {
-    use ApiResponse;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -26,10 +24,11 @@ class OTPRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email"    => "required|email|exists:users,email",
-            "operation" => 'required|in:email,password',
+            "email" => "required|email|exists:users,email",
+            'password' => "required|confirmed",
         ];
     }
+
 
 
     /**
@@ -41,12 +40,12 @@ class OTPRequest extends FormRequest
     {
         return [
             'email.required' => 'Email field is required.',
-            'email.email'    => 'Please provide a valid email address.',
-            'email.exists'   => 'This email address is not registered in our system.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.exists' => 'This email address is not registered in our system.',
 
-            'operation.required' => 'operation field is required',
-            'operation.in' => 'The operation field must be \'email\' or \'password\' only',
-        ]; 
+            'password.required' => 'Password is required.',
+            'password.confirmed' => 'Passwords do not match.',
+        ];
     }
 
 
@@ -69,13 +68,12 @@ class OTPRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $emailErrors = $validator->errors()->get('email') ?? null;
-        $operationErrors = $validator->errors()->get('operation') ?? null;
+        $passwordErrors = $validator->errors()->get('password') ?? null;
 
         if ($emailErrors) {
             $message = $emailErrors[0];
-        }
-        else if ($operationErrors) {
-            $message = $operationErrors[0];
+        } else if ($passwordErrors) {
+            $message = $passwordErrors[0];
         }
 
         $response = $this->error(

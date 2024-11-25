@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\OTPRequest;
 use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\PasswordChangeRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\OTPService;
 use App\Traits\ApiResponse;
@@ -70,7 +71,7 @@ class AuthController extends Controller
             return $this->success(200, 'user registration successfull', ['token' => $token]);
 
         } catch (Exception $e) {
-            Log::error('User registration'. $e->getMessage());
+            Log::error('User registration' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
         }
 
@@ -109,7 +110,7 @@ class AuthController extends Controller
 
             return $this->success(200, 'user login successfull', ['token' => $token]);
         } catch (Exception $e) {
-            Log::error('User login'. $e->getMessage());
+            Log::error('User login' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
         }
     }
@@ -138,7 +139,7 @@ class AuthController extends Controller
             JWTAuth::invalidate($token);
             return $this->success(200, 'user logged out successfully', ['token' => $token]);
         } catch (Exception $e) {
-            Log::error('User logout'. $e->getMessage());
+            Log::error('User logout' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
         }
     }
@@ -166,7 +167,7 @@ class AuthController extends Controller
             $token = JWTAuth::refresh(JWTAuth::getToken());
             return $this->success(200, 'token updated', ['token' => $token]);
         } catch (Exception $e) {
-            Log::error('User refresh token'. $e->getMessage());
+            Log::error('User refresh token' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
         }
     }
@@ -177,14 +178,24 @@ class AuthController extends Controller
     {
         try {
 
-            $otpService = New OTPService();
-
+            $otpService = new OTPService();
             $otpService->otpSend($request->email, $request->operation);
-
             return $this->success(200, 'otp sended', []);
+        } catch (Exception $e) {
+            Log::error('Send OTP' . $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
         }
-        catch (Exception $e) {
-            Log::error('Send OTP'. $e->getMessage());
+    }
+
+
+
+
+    public function changePassword(PasswordChangeRequest $request)
+    {
+        try {
+
+        } catch (Exception $e) {
+            Log::error('Change Password' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
         }
     }

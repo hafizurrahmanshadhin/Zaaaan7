@@ -11,7 +11,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::middleware('guest:api')->group(function ($router) {
         Route::post('login', 'login')->name('login');
         Route::post('register', 'register')->name('register');
-        Route::post('oto-send', 'otpSend')->name('otp-resend');
+        Route::post('oto-send', 'otpSend')->name('otp.send');
+        Route::post('chage-password', 'changePassword')->name('change.password');
     });
     // auth routes
     Route::middleware('auth:api')->group(function () {
