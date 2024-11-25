@@ -51,14 +51,17 @@ class AuthService
             ]);
 
             // creating a otp
-            $otp = mt_rand(111111,999999);
-            $user->otps()->create([
-                'operation' => 'email',
-                'number' => $otp,
-            ]);
+            // $otp = mt_rand(111111,999999);
+            // $user->otps()->create([
+            //     'operation' => 'email',
+            //     'number' => $otp,
+            // ]);
 
-            SendOTPEmail::dispatch($user, $otp);
+            // SendOTPEmail::dispatch($user, $otp);
             // Mail::to($user->email)->send(new OTPMail('Onboarding', $otp, $user));
+
+            $optService = new OTPService();
+            $optService->otpSend($user->email, 'email');
 
 
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);

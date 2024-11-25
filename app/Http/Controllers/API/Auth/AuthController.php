@@ -173,13 +173,13 @@ class AuthController extends Controller
 
 
 
-    public function otoSend(OTPRequest $request): JsonResponse
+    public function otpSend(OTPRequest $request): JsonResponse
     {
         try {
 
             $otpService = New OTPService();
 
-            
+            $otpService->otpSend($request->email, $request->operation);
 
             return $this->success(200, 'otp sended', []);
         }
