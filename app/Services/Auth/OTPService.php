@@ -2,9 +2,14 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\OTPExpiredException;
+use App\Exceptions\OTPMismatchException;
+use App\Exceptions\UserAlreadyVarifiedException;
+use App\Exceptions\UserNotFoundException;
 use App\Jobs\SendOTPEmail;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OTPService
@@ -21,22 +26,72 @@ class OTPService
      * @param string $email The email address of the user.
      * @param string $operation The operation associated with the OTP (e.g., 'email').
      *
-     * @return string Returns '200' on success or an error message on failure.
+     * @return void Returns '200' on success or an error message on failure.
      */
-    public function otpSend($email, $operation): string
+    public function otpSend($email, $operation): void
     {
 
         try {
             $user = User::whereEmail($email)->first();
             $user->otps()->whereOperation($operation)->delete();
             $this->otp($user, $operation);
-            return '200';
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return $e;
+            Log::error('OTPService::otpSend -> ' . $e->getMessage());
+            throw $e;
         }
     }
+
+
+    /**
+     * Match an OTP for a given email and operation.
+     *
+
+     * @param string $email     The email address of the user.
+     * @param string $operation The operation type (e.g., 'email', 'reset').
+     * @param string $otp       The OTP to validate.
+     *
+     * @return void          
+     */
+    public function otpMatch($email, $operation, $otp): void
+    {
+        try {
+            $user = User::whereEmail($email)->first();
+
+            if ($user->email_verified_at){
+                throw new UserAlreadyVarifiedException();
+            }
+            
+            $userOTP = $user->otps()->whereOperation($operation)->whereStatus(true)->first();
+
+            if (!$userOTP || (int)$otp != (int)$userOTP->number) {
+                throw new OTPMismatchException();
+            }
+
+            if ($userOTP->created_at->diffInMinutes(now()) > 1) {
+                throw new OTPExpiredException();
+            }
+
+            DB::beginTransaction();
+
+            // Invalidate the OTP
+            $userOTP->status = false;
+            $userOTP->save();
+
+            // Perform operation-specific logic
+            if ($operation === 'email') {
+                $user->email_verified_at = now();
+                $user->save();
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('OTPService::otpMatch -> ' . $e->getMessage());
+            throw  $e;
+        }
+    }
+
 
 
 
@@ -49,16 +104,20 @@ class OTPService
      * @param User $user The user instance for whom the OTP is generated.
      * @param string $operation The operation associated with the OTP (e.g., 'email').
      *
-     * @return void
      */
-    public function otp($user, $operation)
+    public function otp($user, $operation):void
     {
-        $otp = mt_rand(111111, 999999);
-        $user->otps()->create([
-            'operation' => $operation,
-            'number' => $otp,
-        ]);
-        // quejob
-        SendOTPEmail::dispatch($user, $otp);
+        try {
+            $otp = mt_rand(111111, 999999);
+            $user->otps()->create([
+                'operation' => $operation,
+                'number' => $otp,
+            ]);
+
+            SendOTPEmail::dispatch($user, $otp);
+        } catch (Exception $e) {
+            Log::error('OTPService::otpMatch -> ' . $e->getMessage());
+            throw  $e;
+        }
     }
 }

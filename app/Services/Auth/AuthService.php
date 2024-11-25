@@ -115,6 +115,19 @@ class AuthService
             Log::error('AuthService::login -> ' . $e->getMessage());
             throw $e;
         }
+    }
 
+
+    public function changePassword($email, $password) {
+        try {
+            $user = User::where('email', $email)->first();
+            $user->update([
+                'password' => Hash::make($password),
+            ]);
+            return '200';
+        }catch (Exception $e) {
+            Log::error('AuthService::changepassword -> '. $e->getMessage());
+            throw $e;
+        }
     }
 }

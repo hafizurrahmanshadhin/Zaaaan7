@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\Exceptions\OTPExpiredException;
+use App\Exceptions\OTPMismatchException;
+use App\Exceptions\UserAlreadyVarifiedException;
+use App\Exceptions\UserNotFoundException;
 use App\Http\Requests\Auth\OTPRequest;
 use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\OTPMatchRequest;
 use App\Http\Requests\Auth\PasswordChangeRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\OTPService;
@@ -177,7 +182,6 @@ class AuthController extends Controller
     public function otpSend(OTPRequest $request): JsonResponse
     {
         try {
-
             $otpService = new OTPService();
             $otpService->otpSend($request->email, $request->operation);
             return $this->success(200, 'otp sended', []);
@@ -188,12 +192,35 @@ class AuthController extends Controller
     }
 
 
-
-
-    public function changePassword(PasswordChangeRequest $request)
+    public function otpMatch(OTPMatchRequest $request): JsonResponse
     {
         try {
+            $otpService = new OTPService();
+            $otpService->otpMatch($request->email, $request->operation, $request->otp);
+            return $this->success(200, 'otp verified', []);
+        } catch(UserAlreadyVarifiedException $e) {
+            Log::error('OTP Match: ' . $e->getMessage());
+            return $this->error($e->getCode(), 'User is already verified', $e->getMessage());
+        } catch (OTPMismatchException $e) {
+            Log::error('OTP Match: ' . $e->getMessage());
+            return $this->error($e->getCode(), 'OTP did not match', $e->getMessage());
+        } catch (OTPExpiredException $e) {
+            Log::error('OTP Match: ' . $e->getMessage());
+            return $this->error($e->getCode(), 'OTP Expired', $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('OTP Match: ' . $e->getMessage());
+            return $this->error(500, 'Server Error', $e->getMessage());
+        }
+    }
 
+
+
+
+    public function changePassword(PasswordChangeRequest $request): JsonResponse
+    {
+        try {
+            $this->authService->changePassword($request->email, $request->password);
+            return $this->success(200, 'password changed successfully', []);
         } catch (Exception $e) {
             Log::error('Change Password' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
