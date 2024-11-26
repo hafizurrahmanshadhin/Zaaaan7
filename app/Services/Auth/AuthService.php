@@ -2,14 +2,11 @@
 
 namespace App\Services\Auth;
 
-use App\Jobs\SendOTPEmail;
-use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -119,33 +116,27 @@ class AuthService
 
 
 
+
     /**
-     * Changes the password for the user identified by the provided email.
+     * Logs out the user by invalidating their JWT token.
      *
-     * This method retrieves the user based on the given email and updates their password
-     * with the new one provided. The password is hashed using the `Hash::make` function
-     * before being saved in the database. If the operation is successful, it returns a 
-     * success status. In case of any exception during the process, an error is logged 
-     * and the exception is rethrown.
-     *
-     * @param string $email The email address of the user whose password is being changed.
-     * @param string $password The new password to set for the user.
-     *
-     * @return string Returns '200' if the password is successfully changed.
-     *
-     * @throws Exception If there is an error while fetching the user or updating the password.
+     * This method retrieves the current token from the request, invalidates it 
+     * to log the user out, and handles any exceptions that may arise during 
+     * the process by logging the error message.
+     * 
+     * @throws Exception If an error occurs while invalidating the token, it will
+     * be logged and re-thrown.
      */
-    public function changePassword($email, $password)
+    public function logout(): void
     {
         try {
-            $user = User::where('email', $email)->first();
-            $user->update([
-                'password' => Hash::make($password),
-            ]);
-            return '200';
+            $token = JWTAuth::getToken();
+            JWTAuth::invalidate($token);
         } catch (Exception $e) {
-            Log::error('AuthService::changepassword -> ' . $e->getMessage());
+            Log::error('AuthService::logout -> ' . $e->getMessage());
             throw $e;
         }
     }
+
+
 }

@@ -1,24 +1,37 @@
 <?php
 
 use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Auth\OTPController;
+use App\Http\Controllers\API\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 
 
-// Define a group of routes that all use the AuthController.
-Route::controller(AuthController::class)->group(function () {
-    // guest route
-    Route::middleware('guest:api')->group(function ($router) {
+// Guest routes - Accessible by unauthenticated users only
+Route::middleware('guest:api')->group(function ($router) {
+        // Authentication-related routes
+    Route::controller(AuthController::class)->group(function () {
         Route::post('login', 'login')->name('login');
         Route::post('register', 'register')->name('register');
+    });
+    // OTP-related routes
+    Route::controller(OTPController::class)->group(function () {
         Route::post('oto-send', 'otpSend')->name('otp.send');
         Route::post('oto-match', 'otpMatch')->name('otp.match');
+    });
+    // Password-related routes
+    Route::controller(PasswordController::class)->group(function () {
         Route::post('chage-password', 'changePassword')->name('change.password');
     });
-    // auth routes
-    Route::middleware('auth:api')->group(function () {
+});
+
+
+
+// Authenticated routes - Accessible only by authenticated users
+Route::middleware('auth:api')->group(function () {
+    // Authentication-related routes
+    Route::controller(AuthController::class)->group(function () {
         Route::post('logout', 'logout')->name('logout');
         Route::post('refresh', 'refresh')->name('refresh.token');
-        Route::post('oto-send/authorized', 'otpSend')->name('otp-resend');
     });
 });

@@ -5,7 +5,6 @@ namespace App\Services\Auth;
 use App\Exceptions\OTPExpiredException;
 use App\Exceptions\OTPMismatchException;
 use App\Exceptions\UserAlreadyVarifiedException;
-use App\Exceptions\UserNotFoundException;
 use App\Jobs\SendOTPEmail;
 use App\Models\User;
 use Exception;

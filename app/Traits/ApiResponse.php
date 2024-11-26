@@ -19,7 +19,7 @@ trait ApiResponse
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the success status, message, data, and code.
      */
-    public function success($code = 200, $message = null, $data): JsonResponse
+    public function success($code = 200, $message = null, $data = null): JsonResponse
     {
         return response()->json([
             'success' => (bool) true,
