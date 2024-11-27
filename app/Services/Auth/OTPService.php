@@ -45,30 +45,29 @@ class OTPService
 
 
     /**
-     * Verifies the OTP (One-Time Password) provided by the user for a specific operation.
+     * Validate and match the provided OTP (One-Time Password) for a given operation.
      *
-     * This method performs several checks to verify the OTP:
-     * 1. Ensures that the user is not already verified (based on the `email_verified_at` field).
-     * 2. Retrieves the user's OTP for the given operation and checks if it matches the provided OTP.
-     * 3. Verifies that the OTP is not expired (expires after 1 minute).
-     * 4. If the OTP is valid, it invalidates the used OTP and updates the user's verification status 
-     *    (e.g., setting the `email_verified_at` field for email verification).
-     * The method uses database transactions to ensure that changes are applied atomically. 
-     * If an error occurs during the process, the transaction is rolled back and the exception is rethrown.
+     * This method performs the following operations:
+     * - Verifies that the provided OTP matches the one stored for the user based on the given email and operation.
+     * - Checks if the OTP has expired (1 minute window).
+     * - If the OTP is valid, the corresponding operation is performed (e.g., email verification).
+     * - In the case of successful email verification, a new authentication token is generated for the user.
+     * 
+     * The method ensures that the OTP is invalidated after it is used, and any relevant changes (like email verification) are persisted in the database.
      *
-     * @param string $email The email address of the user whose OTP is being verified.
-     * @param string $operation The operation for which the OTP was issued (e.g., 'email' for email verification).
-     * @param string $otp The OTP entered by the user to be validated.
+     * @param string $email The user's email address.
+     * @param string $operation The operation for which the OTP was generated (e.g., 'email').
+     * @param string $otp The OTP that the user has provided.
      *
-     * @return void No value is returned from this method.
+     * @return string|null The generated authentication token if the OTP is valid and email is verified. 
+     *                     Returns null if the operation does not involve generating a token.
      *
-     * @throws UserAlreadyVarifiedException If the user is already verified.
-     * @throws OTPMismatchException If the provided OTP does not match the stored OTP.
-     * @throws OTPExpiredException If the OTP has expired.
-     * @throws Exception If there is an error during the verification process or database operations.
+     * @throws \App\Exceptions\UserAlreadyVarifiedException If the user's email has already been verified.
+     * @throws \App\Exceptions\OTPMismatchException If the provided OTP does not match the stored OTP.
+     * @throws \App\Exceptions\OTPExpiredException If the provided OTP has expired.
+     * @throws \Exception If any other unexpected error occurs.
      */
-
-    public function otpMatch($email, $operation, $otp): void
+    public function otpMatch($email, $operation, $otp): string|null
     {
         try {
             $user = User::whereEmail($email)->first();
@@ -97,9 +96,14 @@ class OTPService
             if ($operation === 'email') {
                 $user->email_verified_at = now();
                 $user->save();
-            }
 
+                $authService = new AuthService();
+                $token = $authService->login(['email' => $user->email]);
+                DB::commit();
+                return $token;
+            }
             DB::commit();
+            return null;
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('OTPService::otpMatch -> ' . $e->getMessage());

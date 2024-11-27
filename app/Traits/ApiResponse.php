@@ -47,7 +47,7 @@ trait ApiResponse
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the error status, message, data, and code.
      */
-    public function error($code = 500, $message = null, $error): JsonResponse
+    public function error($code = 500, $message = null, $error = null): JsonResponse
     {
         return response()->json([
             'status' => (bool) false,

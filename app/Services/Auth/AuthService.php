@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Helper\Helper;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -33,33 +34,13 @@ class AuthService
     public function register(array $credentials): string
     {
         try {
+
             DB::beginTransaction();
-            // creating user
-            $user = User::create([
-                'first_name' => $credentials['first_name'],
-                'last_name' => $credentials['last_name'],
-                'email' => $credentials['email'],
-                'password' => Hash::make($credentials['password']),
 
-            ]);
-            // creating user profile
-            $user->profile()->create([
-                'address' => $credentials['address'],
-            ]);
-
-            // creating a otp
-            // $otp = mt_rand(111111,999999);
-            // $user->otps()->create([
-            //     'operation' => 'email',
-            //     'number' => $otp,
-            // ]);
-
-            // SendOTPEmail::dispatch($user, $otp);
-            // Mail::to($user->email)->send(new OTPMail('Onboarding', $otp, $user));
+            $user = $this->createUser($credentials);
 
             $optService = new OTPService();
             $optService->otpSend($user->email, 'email');
-
 
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 
@@ -134,6 +115,56 @@ class AuthService
             JWTAuth::invalidate($token);
         } catch (Exception $e) {
             Log::error('AuthService::logout -> ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+
+
+    /**
+     * Create a new user and their associated profile.
+     *
+     * This method handles the creation of a new user in the system. It accepts an array of credentials,
+     * validates the input, creates a new user record in the database, and also creates an associated 
+     * user profile with additional information such as the user's address.
+     * 
+     * The user's handle is generated using a helper function to ensure uniqueness.
+     * The user's password is securely hashed before being stored.
+     * 
+     * If an error occurs during the process, it is logged, and the exception is rethrown for further handling.
+     *
+     * @param array $credentials An associative array containing the user's credentials, including:
+     *      - 'first_name' (string)  The user's first name.
+     *      - 'last_name' (string)   The user's last name.
+     *      - 'handle' (string)      A unique handle for the user (auto-generated).
+     *      - 'email' (string)       The user's email address.
+     *      - 'password' (string)    The user's password.
+     *      - 'address' (string)     The user's address (for the profile).
+     *
+     * @return \App\Models\User The newly created user instance.
+     *
+     * @throws \Exception If any error occurs during the user creation process, it will be logged and rethrown.
+     */
+    public function createUser(array $credentials): mixed
+    {
+        try {
+            $helper = new Helper();
+            // creating user
+            $user = User::create([
+                'first_name' => $credentials['first_name'],
+                'last_name' => $credentials['last_name'],
+                'handle' => $helper->generateUniqueSlug($credentials['first_name'], 'users', 'handle'),
+                'email' => $credentials['email'],
+                'password' => Hash::make($credentials['password']),
+
+            ]);
+            // creating user profile
+            $user->profile()->create([
+                'address' => $credentials['address'],
+            ]);
+            return $user;
+        } catch (Exception $e) {
+            Log::error('AuthService::createUser-> ' . $e->getMessage());
             throw $e;
         }
     }
