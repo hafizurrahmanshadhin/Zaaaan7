@@ -78,7 +78,7 @@ class RegisterRequest extends FormRequest
      * 
      * @throws ValidationException The exception is thrown to halt further processing and return validation errors.
      */
-    protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator):never
     {
 
         $firstNameErrors = $validator->errors()->get('first_name') ?? null;

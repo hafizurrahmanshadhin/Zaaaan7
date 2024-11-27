@@ -66,7 +66,7 @@ class OTPRequest extends FormRequest
      * 
      * @throws ValidationException The exception is thrown to halt further processing and return validation errors.
      */
-    protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator):never
     {
         $emailErrors = $validator->errors()->get('email') ?? null;
         $operationErrors = $validator->errors()->get('operation') ?? null;
