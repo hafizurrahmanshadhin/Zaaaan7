@@ -9,7 +9,7 @@ class OTP extends Model
 {
     protected $guarded = [];
 
-    
+
     /**
      * Get the attributes that should be cast.
      *
@@ -18,7 +18,7 @@ class OTP extends Model
     protected function casts(): array
     {
         return [
-            'opt' => 'integer',
+            'number' => 'integer',
         ];
     }
 

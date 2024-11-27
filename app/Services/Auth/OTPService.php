@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class OTPService
 {
-
-
-
     /**
      * Sends an OTP (One-Time Password) to the specified user for the given operation.
      *
@@ -82,7 +79,7 @@ class OTPService
 
             $userOTP = $user->otps()->whereOperation($operation)->whereStatus(true)->first();
 
-            if (!$userOTP || (int) $otp != (int) $userOTP->number) {
+            if (!$userOTP || (int) $otp != $userOTP->number) {
                 throw new OTPMismatchException();
             }
 
