@@ -8,7 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OTP extends Model
 {
     protected $guarded = [];
+
     
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'opt' => 'integer',
+        ];
+    }
 
     /**
      * Define the relationship between the current model and the User model.
