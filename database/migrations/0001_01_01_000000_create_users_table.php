@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
 
-            $table->string('email')->unique();
+            $table->string('email', 255)->unique();
             $table->timestamp('email_verified_at')->nullable();
 
             $table->string('password');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('status')->default(true);
 
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
