@@ -63,12 +63,23 @@ class MakeService extends Command
 
 
 
+    /**
+     * Generate the service class file content.
+     *
+     * This method generates the content for a service class based on the given name.
+     * It automatically sets the namespace and class name according to the provided
+     * input. The namespace corresponds to the directory structure, and the class name
+     * is extracted from the last part of the input string.
+     *
+     * @param string $name The name of the service class (e.g., 'Auth/SocialLoginService').
+     * @return string The generated PHP code for the service class.
+     */
     private function generateServiceClass($name)
     {
         // Split the input string into the directory (namespace) and the class name
         $namespace = str_replace('/', '\\', dirname($name)); // Get the namespace without the class name
         $className = basename($name); // Get the class name from the input string
-    
+
         return "<?php
     
 namespace App\\Services\\{$namespace};
@@ -79,8 +90,5 @@ class {$className}
 }
 ";
     }
-    
-    
-    
 
 }
