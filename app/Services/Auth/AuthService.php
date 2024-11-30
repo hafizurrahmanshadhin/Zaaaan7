@@ -45,7 +45,7 @@ class AuthService
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 
             if (!$token) {
-                throw new Exception('Token generation failed.');
+                throw new Exception('Token generation failed.', 500);
             }
             DB::commit();
 
