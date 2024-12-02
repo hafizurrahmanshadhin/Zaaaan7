@@ -1,9 +1,12 @@
 <?php
 
+use App\Helper\Helper;
 use App\Http\Middleware\EnsureGuestJwt;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -27,5 +30,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (Throwable $e, Request $request) {
+            if ($request->is('api/*')) {
+                if ($e instanceof QueryException) {
+                    return Helper::error(500, 'server error', $e->getMessage());
+                }
+                return Helper::error(500, 'server error', $e->getMessage());
+            }else{
+                return $e;
+            }
+        });
     })->create();
