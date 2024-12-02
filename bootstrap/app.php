@@ -11,6 +11,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -38,21 +39,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($e instanceof QueryException) {
                     return Helper::error(500, 'server error', $e->getMessage());
                 }
-                if ($e instanceof ModelNotFoundException) {
+                else if ($e instanceof ModelNotFoundException) {
                     return Helper::error(404, 'not found', $e->getMessage());
                 }
 
-                if ($e instanceof AuthenticationException) {
+                else if ($e instanceof AuthenticationException) {
                     return Helper::error(401, 'unauthorized', $e->getMessage());
                 }
-                if ($e instanceof AuthorizationException) {
+                else if ($e instanceof AuthorizationException) {
                     return Helper::error(403, 'forbidden', $e->getMessage());
                 }
-
-                // Dynamically determine the status code if available
-                $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
-                // Return a generic server error with the appropriate status code
-                return Helper::error($statusCode, 'server error', $e->getMessage());
+                // // Dynamically determine the status code if available
+                // $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+                // // Return a generic server error with the appropriate status code
+                // return Helper::error($statusCode, 'server error', $e->getMessage());
             } else {
                 return $e;
             }
