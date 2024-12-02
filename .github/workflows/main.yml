@@ -15,7 +15,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ftp.reigeeky.com
-        username: app@zaaaan7.reigeeky.com
+        username: api@zaaaan7.reigeeky.com
         password: ${{ secrets.ftp_password }}
         port: 21
         protocol: "ftps"
