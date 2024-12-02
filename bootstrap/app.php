@@ -53,8 +53,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 // $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
                 // // Return a generic server error with the appropriate status code
                 // return Helper::error($statusCode, 'server error', $e->getMessage());
-            } else {
-                return $e;
             }
         });
     })->create();
