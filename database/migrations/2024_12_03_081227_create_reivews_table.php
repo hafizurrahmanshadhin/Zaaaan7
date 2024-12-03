@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reivews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
-            $table->longText('comment')->comment('review comment');
+            $table->longText('comment')->comment('review comment')->nullable();
             $table->enum('star', [1,2,3,4,5])->comment('star rating 1 - 5');
             $table->timestamps();
         });
