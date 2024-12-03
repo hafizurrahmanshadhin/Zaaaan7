@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->foreign('client')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('helper')->references('id')->on('users')->cascadeOnDelete();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
