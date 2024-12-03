@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('document_type');
+            $table->enum('type', ['id', 'document']);
             $table->timestamps();
         });
     }

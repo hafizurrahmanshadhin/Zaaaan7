@@ -140,13 +140,15 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    public function idCard():HasOne
+    public function idCard(): HasOne
     {
-        return $this->hasOne(UserDocument::class);
+        return $this->hasOne(UserDocument::class)
+                    ->where('type', 'id');  // Only fetch 'id' type documents
     }
 
-    public function document():HasMany
+    public function documents(): HasMany
     {
-        return $this->hasMany(UserDocument::class);
+        return $this->hasMany(UserDocument::class)
+                    ->where('type', 'document');  // Only fetch 'document' type documents
     }
 }
