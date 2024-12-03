@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_documents', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            
-            $table->string('url')->comment('document link');;
-            $table->enum('type', ['id', 'doucment'])->comment('type of the cocument');
-            
+            $table->string('name', 100);
+            $table->float('cost')->nullable()->comment('$');
+            $table->float('provision')->nullable()->comment('$');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_documents');
+        Schema::dropIfExists('categories');
     }
 };

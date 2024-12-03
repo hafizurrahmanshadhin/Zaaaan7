@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('address')->nullable();
 
             $table->date('date_of_birth')->nullable();
-            $table->longText('bio')->nullable();;
+            $table->longText('bio')->nullable()->comment('description of the user');
 
             $table->timestamps();
         });

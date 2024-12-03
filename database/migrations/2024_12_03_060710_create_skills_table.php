@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
 
-            $table->string('name');
+            $table->string('name', 100)->comment('name of the skill');
 
             $table->timestamps();
         });
