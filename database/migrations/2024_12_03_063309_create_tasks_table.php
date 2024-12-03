@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('helper')->comment('from users table');
 
             $table->foreignId('address_id')->constrained('addresses')->cascadeOnDelete();
+            $table->foreignId('sub_categories_id')->constrained('sub_categories')->cascadeOnDelete();
 
             $table->enum('status', ['pending', 'accepted', 'in process', 'completed'])->default('pending');
             $table->longText('description')->comment('task description');
