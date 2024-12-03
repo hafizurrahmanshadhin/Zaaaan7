@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reivews', function (Blueprint $table) {
+        Schema::create('user_documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
-            $table->longText('comment')->comment('review comment')->nullable();
-            $table->enum('star', [1,2,3,4,5])->comment('star rating 1 - 5');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('document_type');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reivews');
+        Schema::dropIfExists('user_documents');
     }
 };

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -101,5 +102,51 @@ class User extends Authenticatable implements JWTSubject
     public function otps(): HasMany
     {
         return $this->hasMany(Otp::class);
+    }
+
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function skills():BelongsToMany
+    {
+        return $this->belongsToMany(SubCategory::class);
+    }
+
+    public function reviews():HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+
+    public function clientTasks():HasMany
+    {
+        return $this->hasMany(Task::class, 'client');
+    }
+
+
+    public function helperTasks():HasMany
+    {
+        return $this->hasMany(Task::class, 'helper');
+    }
+
+
+    public function requests()
+    {
+        return $this->belongsToMany(Task::class, 'task_requests')
+                    ->withTimestamps();
+    }
+
+
+    public function idCard():HasOne
+    {
+        return $this->hasOne(UserDocument::class);
+    }
+
+    public function document():HasMany
+    {
+        return $this->hasMany(UserDocument::class);
     }
 }
