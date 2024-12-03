@@ -17,9 +17,9 @@ return new class extends Migration {
             
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
 
-            $table->enum('operation', ['email', 'password', 'profile']); // operation the otp will use for.
-            $table->integer('number')->comment('OTP'); // otp number
-            $table->boolean('status')->default(true); // true if otp is used
+            $table->enum('operation', ['email', 'password', 'profile']); 
+            $table->integer('number')->comment('OTP'); 
+            $table->boolean('status')->default(true); 
 
             $table->timestamps();
         });
