@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_documents', function (Blueprint $table) {
+        Schema::create('sub_category_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            
-            $table->string('url')->comment('document link');;
-            $table->enum('type', ['id', 'doucment'])->comment('type of the cocument');
-            
+            $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_documents');
+        Schema::dropIfExists('sub_category_user');
     }
 };
