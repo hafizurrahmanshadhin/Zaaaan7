@@ -26,10 +26,6 @@ class Task extends Model
         return $this->belongsTo(User::class, 'helper');
     }
 
-    public function request():HasMany{
-        return $this->hasMany(TaskRequest::class);
-    }
-
 
     public function requests()
     {
