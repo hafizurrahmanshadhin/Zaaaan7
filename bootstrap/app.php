@@ -11,7 +11,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,15 +22,15 @@ return Application::configure(basePath: dirname(__DIR__))
         // custom routes for api
         then: function () {
             // web
-            Route::middleware([])
-            ->prefix('auth')
-            ->name('auth.')
+            Route::middleware(['web'])
+            ->prefix('admin')
+            ->name('')
             ->group(base_path('routes/web/auth.php'));
             
             // api
             Route::middleware([])
                 ->prefix('api/auth')
-                ->name('auth.')
+                ->name('api.auth.')
                 ->group(base_path('routes/api/auth.php'));
         }
     )

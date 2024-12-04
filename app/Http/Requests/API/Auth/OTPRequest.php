@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\API\Auth;
 
 use App\Traits\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class OTPMatchRequest extends FormRequest
+class OTPRequest extends FormRequest
 {
     use ApiResponse;
     /**
@@ -26,8 +26,7 @@ class OTPMatchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email" => "required|email|exists:users,email",
-            "otp" => 'required|numeric',
+            "email"    => "required|email|exists:users,email",
             "operation" => 'required|in:email,password',
         ];
     }
@@ -42,15 +41,12 @@ class OTPMatchRequest extends FormRequest
     {
         return [
             'email.required' => 'Email field is required.',
-            'email.email' => 'Please provide a valid email address.',
-            'email.exists' => 'This email address is not registered in our system.',
-
-            'otp.required' => 'OTP field is required.',
-            'otp.numeric' => 'OTP is a numeric value.',
+            'email.email'    => 'Please provide a valid email address.',
+            'email.exists'   => 'This email address is not registered in our system.',
 
             'operation.required' => 'operation field is required',
-            'operation.in' => 'The operation field must be \'email\', \'profile\' or \'password\' only',
-        ];
+            'operation.in' => 'The operation field must be \'email\' or \'password\' only',
+        ]; 
     }
 
 
@@ -73,14 +69,12 @@ class OTPMatchRequest extends FormRequest
     protected function failedValidation(Validator $validator):never
     {
         $emailErrors = $validator->errors()->get('email') ?? null;
-        $otpErrors = $validator->errors()->get('otp') ?? null;
         $operationErrors = $validator->errors()->get('operation') ?? null;
 
         if ($emailErrors) {
             $message = $emailErrors[0];
-        } else if ($otpErrors) {
-            $message = $otpErrors[0];
-        } else if ($operationErrors) {
+        }
+        else if ($operationErrors) {
             $message = $operationErrors[0];
         }
 

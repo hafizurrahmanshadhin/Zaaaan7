@@ -19,14 +19,6 @@
                         <h3 class="text-body-highlight">Sign In</h3>
                         <p class="text-body-tertiary">Get access to your account</p>
                     </div>
-                    {{-- <button class="btn btn-phoenix-secondary w-100 mb-3"><span
-                        class="fab fa-google text-danger me-2 fs-9"></span>Sign in with google</button><button
-                    class="btn btn-phoenix-secondary w-100"><span
-                        class="fab fa-facebook text-primary me-2 fs-9"></span>Sign in with facebook</button> --}}
-                    {{-- <div class="position-relative">
-                        <hr class="bg-body-secondary mt-5 mb-4" />
-                        <div class="divider-content-center">or use email</div>
-                    </div> --}}
                     <div class="mb-3 text-start"><label class="form-label" for="email">Email address</label>
                         <div class="form-icon-container">
                             <input class="form-control form-icon-input" id="email" value="{{old('email')}}"
@@ -42,11 +34,6 @@
                             <input class="form-control form-icon-input pe-6" id="password" type="password"
                                 placeholder="Password" name="password" data-password-input="data-password-input" />
                             <span class="fas fa-key text-body fs-9 form-icon"></span>
-                            {{-- <button class="btn px-3 py-0 h-100 position-absolute top-0 end-0 fs-7 text-body-tertiary"
-                                data-password-toggle="data-password-toggle">
-                                <span class="uil uil-eye show"></span>
-                                <span class="uil uil-eye-slash hide"></span>
-                            </button> --}}
                         </div>
                         @error('password')
                             <div class="text-danger validation-error">{{ $message }}</div>

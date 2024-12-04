@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\API\Auth;
 
-use App\Rules\Auth\Validatepassword;
 use App\Traits\ApiResponse;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class LoginRequest extends FormRequest
+class OTPMatchRequest extends FormRequest
 {
     use ApiResponse;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -28,8 +26,9 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email"    => "required|email|exists:users,email",
-            "password" => ["required", new Validatepassword($this->input('email'))]
+            "email" => "required|email|exists:users,email",
+            "otp" => 'required|numeric',
+            "operation" => 'required|in:email,password',
         ];
     }
 
@@ -43,10 +42,17 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required' => 'Email field is required.',
-            'email.email'    => 'Please provide a valid email address.',
-            'email.exists'   => 'This email address is not registered in our system.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.exists' => 'This email address is not registered in our system.',
+
+            'otp.required' => 'OTP field is required.',
+            'otp.numeric' => 'OTP is a numeric value.',
+
+            'operation.required' => 'operation field is required',
+            'operation.in' => 'The operation field must be \'email\', \'profile\' or \'password\' only',
         ];
     }
+
 
 
 
@@ -67,12 +73,15 @@ class LoginRequest extends FormRequest
     protected function failedValidation(Validator $validator):never
     {
         $emailErrors = $validator->errors()->get('email') ?? null;
-        $passwordErrors = $validator->errors()->get('password') ?? null;
+        $otpErrors = $validator->errors()->get('otp') ?? null;
+        $operationErrors = $validator->errors()->get('operation') ?? null;
 
         if ($emailErrors) {
             $message = $emailErrors[0];
-        } else {
-            $message = $passwordErrors[0];
+        } else if ($otpErrors) {
+            $message = $otpErrors[0];
+        } else if ($operationErrors) {
+            $message = $operationErrors[0];
         }
 
         $response = $this->error(
