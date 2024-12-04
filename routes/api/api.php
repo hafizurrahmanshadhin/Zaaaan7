@@ -33,3 +33,16 @@ Route::get('/seed', function () {
     Artisan::call('db:seed');
     return Helper::success(200, 'Database seeding completed successfully.');
 });
+
+//queue-work
+Route::get('/queue-work', function () {
+    Artisan::call('queue:work --stop-when-empty');
+    return Helper::success(200, 'Queue worker started successfully.');
+});
+
+
+// Run composer update
+Route::get('/composer-update', function () {
+    $output = shell_exec('composer update 2>&1');
+    return Helper::success(200, 'Composer update completed.', $output);
+});

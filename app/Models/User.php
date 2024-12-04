@@ -101,7 +101,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function otps(): HasMany
     {
-        return $this->hasMany(Otp::class);
+        return $this->hasMany(OTP::class);
     }
 
 
