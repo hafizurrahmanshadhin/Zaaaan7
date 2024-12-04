@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('password');
 
             $table->string('avatar')->nullable();
-            $table->enum('role', ['user', 'helper'])->default('user');
+            $table->enum('role', ['user', 'helper', 'admin'])->default('user');
             $table->boolean('status')->default(true);
 
             $table->rememberToken();
