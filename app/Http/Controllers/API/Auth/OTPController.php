@@ -8,6 +8,7 @@ use App\Exceptions\UserAlreadyVarifiedException;
 use App\Http\Requests\Auth\OTPRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\OTPMatchRequest;
+use App\Models\User;
 use App\Services\Auth\OTPService;
 use App\Traits\ApiResponse;
 use Exception;
@@ -63,7 +64,10 @@ class OTPController extends Controller
     {
         try {
             $this->otpService->otpSend($request->email, $request->operation);
-            return $this->success(200, 'otp sended', []);
+            // testing start
+                $otp = User::whereEmail($request->email)->first()->otps->first()->number;
+            // testing end
+            return $this->success(200, 'otp sended', ['otp' => $otp]);
         } catch (Exception $e) {
             Log::error('Send OTP' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
