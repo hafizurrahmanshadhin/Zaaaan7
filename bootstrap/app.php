@@ -27,9 +27,9 @@ return Application::configure(basePath: dirname(__DIR__))
             ->name('')
             ->group(base_path('routes/web/auth.php'));
 
-            Route::middleware(['web', 'auth'])
+            Route::middleware(['web'])
             ->prefix('admin')
-            ->name('admin')
+            ->name('admin.')
             ->group(base_path('routes/web/admin.php'));
             
             // api
@@ -60,10 +60,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 else if ($e instanceof AuthorizationException) {
                     return Helper::error(403, 'forbidden', $e->getMessage());
                 }
-                // // Dynamically determine the status code if available
-                // $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
-                // // Return a generic server error with the appropriate status code
-                // return Helper::error($statusCode, 'server error', $e->getMessage());
             }
         });
     })->create();

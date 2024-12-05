@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ProfileController;
 
 Route::get('/dashboard', function () {
-    return 'welocme';
+    return auth()->user();
 })->name('dashboard');
 
 
