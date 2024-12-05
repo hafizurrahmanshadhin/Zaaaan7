@@ -7,6 +7,18 @@ use Illuminate\Support\Facades\File;
 
 class MailService
 {
+
+    /**
+     * Update the email configuration in the .env file.
+     *
+     * This method takes an array of email configuration data, updates the relevant
+     * mail settings in the `.env` file, and saves the changes. It handles the update
+     * for settings like mailer, host, port, username, password, encryption, and
+     * the 'from' address.
+     *
+     * @param  array  $data  An associative array containing the new email settings.
+     * @return bool          Returns `true` if the .env file was successfully updated, `false` otherwise.
+     */
     public function updateMailConfig($data)
     {
         try {
