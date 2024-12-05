@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Services\Backend\Setting;
+namespace App\Services\Web\Backend\Setting;
 
 use Exception;
 use Illuminate\Support\Facades\File;
 
 class MailService
 {
-
     /**
      * Update the email configuration in the .env file.
      *

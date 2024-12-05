@@ -2,30 +2,25 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\UpdateProfileRequest;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Services\Web\ProfileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Exception;
 use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
-    use AuthorizesRequests;
+    protected $profileService;
     protected $user;
-    protected $helper;
 
-    public function __construct()
+    public function __construct(ProfileService $profileService)
     {
+        $this->profileService = $profileService;
         $this->user = Auth::user();
-        $this->helper = new Helper();
     }
-
 
     /**
      * Show the form for editing the specified user's profile.
@@ -37,14 +32,9 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $profile = $user->profile;
-        $compact = [
-            'user' => $user,
-            'profile' => $profile,
-        ];
-        return view('backend.layouts.profile.edit', $compact);
+
+        return view('backend.layouts.profile.edit', compact('user', 'profile'));
     }
-
-
 
     /**
      * Update the specified user's profile information in storage.
@@ -52,43 +42,17 @@ class ProfileController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'bio' => 'nullable|string|max:500',
-            'company_name' => 'nullable|string|max:255',
-            'website' => 'nullable|url|max:255',
-        ]);
+        $validatedData = $request->validated();
+        $isUpdated = $this->profileService->updateProfile($this->user, $validatedData);
 
-        try {
-            DB::beginTransaction();
-            $this->user->update([
-                'first_name' => $validatedData['first_name'],
-                'last_name' => $validatedData['last_name'],
-                'email' => $validatedData['email'],
-            ]);
-
-            $this->user->profile->update([
-                'bio' => $validatedData['bio'],
-                'company_name' => $validatedData['company_name'],
-                'website' => $validatedData['website'],
-            ]);
-
-            DB::commit();
-
-            return redirect()->back();
-
-        } catch (Exception $e) {
-            Log::error("Profile Update Error: " . $e->getMessage());
-            return redirect()->back();
+        if ($isUpdated) {
+            return redirect()->back()->with('success', 'Profile updated successfully');
+        } else {
+            return redirect()->back()->with('error', 'An error occurred while updating your profile');
         }
     }
-
-
 
     /**
      * Upload and update the user's avatar image.
@@ -99,64 +63,35 @@ class ProfileController extends Controller
     public function avatar(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp,jfif',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
+            $avatar = $request->file('avatar');
+            $avatarPath = $this->profileService->updateAvatar($this->user, $avatar);
+
+            if ($avatarPath) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $avatarPath,
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while uploading the avatar',
+                ], 500);
             }
-
-            $avater = $this->helper->uploadFile($request->avatar, 'avatars/' . $this->user->handle, 'image');
-
-            $this->user->update([
-                'avatar' => $avater,
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'data' => $avater,
-            ], 200);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'errors' => $e->validator->errors(),
-                'message' => "validation failed",
+                'message' => "Validation failed",
             ], 422);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'errors' => $e->getMessage(),
                 'message' => 'An error occurred. Please try again.',
             ], 500);
         }
     }
 
-
-
-    /**
-     * Remove the specified user from storage and log them out.
-     * 
-     * @param Request $request
-     * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function destroy(Request $request, User $user)
     {
-        // Authorize the action
-        $this->authorize('delete', $user);
-
-        try {
-            // Delete the user
-            $user->delete();
-
-            // If the deleted user is the currently authenticated user, log them out
-            Auth::logout();
-
-            return redirect()->route('login')->with('success', 'User deleted successfully.');
-        } catch (Exception $e) {
-            Log::error("User Delete Error: " . $e->getMessage());
-            return redirect()->back()->with('error', 'An error occurred while trying to delete the user.');
-        }
     }
 }

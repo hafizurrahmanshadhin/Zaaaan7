@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Web\Backend\Setting;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Backend\EmailSettingRequest;
-use App\Services\Backend\Setting\MailService;
-use Illuminate\Http\Request;
+use App\Services\Web\Backend\Setting\MailService;
 
 class MailController extends Controller
 {
@@ -17,7 +16,7 @@ class MailController extends Controller
      *
      * Injects the MailService to be used for updating mail configuration.
      *
-     * @param  \App\Services\Backend\Setting\MailService  $mailService
+     * @param  MailService  $mailService
      * @return void
      */
     public function __construct(MailService $mailService)
