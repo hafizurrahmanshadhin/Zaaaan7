@@ -100,7 +100,7 @@
                 </div>
                 <div class="col-12 col-xl-8">
                     {{-- profile update --}}
-                    <form class="border-bottom mb-4" action="{{ route('profile.update') }}" method="POST">
+                    <form class="border-bottom mb-4" action="{{ route('admin.profile.update') }}" method="POST">
                         @csrf
                         @method('PATCH')
                         <div class="mb-6">
@@ -154,7 +154,7 @@
                                     <div class="form-icon-container">
                                         <div class="form-floating">
                                             <input class="form-control form-icon-input" id="phone" type="tel"
-                                                name="phone" value="{{ $profile->phone }}" placeholder="Phone" />
+                                                name="phone" value="{{ $profile->phone ?? ''}}" placeholder="Phone" />
                                             <label class="text-body-tertiary form-icon-label" for="phone">
                                                 ENTER YOUR PHONE
                                             </label>
@@ -278,7 +278,7 @@
                             <p class="text-body-tertiary">
                                 Transfer this account to another person or to a company repository.
                             </p>
-                            <a href="{{ route('profile.destroy', $user->id) }}" class="btn btn-phoenix-danger">Delete account</a>
+                            <a href="{{ route('admin.profile.destroy', $user->id) }}" class="btn btn-phoenix-danger">Delete account</a>
                         </div>
                     </div>
                 </div>
@@ -318,7 +318,7 @@
                         formData.append('avatar', file);
 
                         $.ajax({
-                            url: '{{ route('profile.avatar') }}',
+                            url: '{{ route('admin.profile.avatar') }}',
                             type: 'POST',
                             data: formData, // Use formData here
                             contentType: false,

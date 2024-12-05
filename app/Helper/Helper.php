@@ -15,7 +15,7 @@ class Helper
      * @param  string  $directory
      * @return string
      */
-    public static function uploadImage($image, $directory)
+    public static function uploadFile($image, $directory)
     {
         try {
             $imageFileName = uniqid('image_') . '.' . $image->getClientOriginalExtension();
@@ -33,7 +33,7 @@ class Helper
      * @param  string  $imageUrl
      * @return bool
      */
-    public static function deleteImage($imageUrl)
+    public static function deleteFile($imageUrl)
     {
         try {
             // Check if $imageUrl is a valid string
