@@ -21,11 +21,16 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // custom routes for api
         then: function () {
-            // web
+            // web auth
             Route::middleware(['web'])
-            ->prefix('admin')
+            ->prefix('')
             ->name('')
             ->group(base_path('routes/web/auth.php'));
+
+            Route::middleware(['web', 'auth'])
+            ->prefix('admin')
+            ->name('admin')
+            ->group(base_path('routes/web/admin.php'));
             
             // api
             Route::middleware([])
