@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
             $table->string('name', 100)->comment('name of the category');
             $table->float('cost')->nullable()->comment('$');
             $table->float('provision')->nullable()->comment('$');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\Backend\CategoryRequest;
 use App\Services\Web\Backend\CateogryService;
 use Illuminate\Http\Request;
 
@@ -34,9 +35,12 @@ class CateogryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $categoryRequest)
     {
-        //
+        $validatedData = $categoryRequest->validated();
+        $this->cateogryService->store($validatedData);
+
+        return redirect()->route('backend.categories.index')->with('t-success', 'category created successfully');
     }
 
     /**

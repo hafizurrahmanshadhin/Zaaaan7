@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Web\UpdateProfileRequest;
+use App\Http\Requests\Web\Backend\UpdateProfileRequest;
 use App\Models\User;
 use App\Services\Web\Backend\ProfileService;
 use Illuminate\Http\Request;
