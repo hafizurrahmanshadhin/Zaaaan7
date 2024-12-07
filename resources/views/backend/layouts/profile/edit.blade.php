@@ -150,61 +150,6 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="form-icon-container">
-                                        <div class="form-floating">
-                                            <input class="form-control form-icon-input" id="phone" type="tel"
-                                                name="phone" value="{{ $profile->phone ?? ''}}" placeholder="Phone" />
-                                            <label class="text-body-tertiary form-icon-label" for="phone">
-                                                ENTER YOUR PHONE
-                                            </label>
-                                        </div>
-                                        <span class="fa-solid fa-phone text-body fs-9 form-icon"></span>
-                                        @error('phone')
-                                            <div class="text-danger validation-error">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="form-icon-container">
-                                        <div class="form-floating">
-                                            <textarea class="form-control form-icon-input" id="bio" style="height: 115px;" placeholder="bio"
-                                                name="bio">{{ $profile->bio ?? '' }}</textarea>
-                                            <label class="text-body-tertiary form-icon-label" for="bio">Bio</label>
-                                        </div>
-                                        <span class="fa-solid fa-circle-info text-body fs-9 form-icon"></span>
-                                        @error('bio')
-                                            <div class="text-danger validation-error">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="form-icon-container mb-3">
-                                        <div class="form-floating">
-                                            <input class="form-control form-icon-input" id="companyName" type="text"
-                                                placeholder="Company Name" name="company_name"
-                                                value="{{ $profile->company_name ?? '' }}" />
-                                            <label class="text-body-tertiary form-icon-label" for="companyName">
-                                                COMPANY NAME</label>
-                                        </div>
-                                        <span class="fa-solid fa-building text-body fs-9 form-icon"></span>
-                                        @error('company_name')
-                                            <div class="text-danger validation-error">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-icon-container">
-                                        <div class="form-floating">
-                                            <input class="form-control form-icon-input" id="website" type="text"
-                                                name="website" value="{{ $profile->website ?? '' }}" placeholder="Website" />
-                                            <label class="text-body-tertiary form-icon-label"
-                                                for="website">Website</label>
-                                        </div>
-                                        <span class="fa-solid fa-globe text-body fs-9 form-icon"></span>
-                                        @error('website')
-                                            <div class="text-danger validation-error">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="text-end mb-6">
@@ -271,16 +216,21 @@
                             </div>
                         </div>
                     </form>
-                    <div class="row gy-5">
-                        <div class="col-12 col-md-6">
 
-                            <h4 class="text-body-emphasis">Account Deletion</h4>
-                            <p class="text-body-tertiary">
-                                Transfer this account to another person or to a company repository.
-                            </p>
-                            <a href="{{ route('admin.profile.destroy', $user->id) }}" class="btn btn-phoenix-danger">Delete account</a>
+                    @if (auth()->user()->role != 'admin')
+                        <div class="row gy-5">
+                            <div class="col-12 col-md-6">
+
+                                <h4 class="text-body-emphasis">Account Deletion</h4>
+                                <p class="text-body-tertiary">
+                                    Transfer this account to another person or to a company repository.
+                                </p>
+                                <a href="{{ route('admin.profile.destroy', $user->id) }}"
+                                    class="btn btn-phoenix-danger">Delete account</a>
+                            </div>
                         </div>
-                    </div>
+                    @endif
+
                 </div>
             </div>
         </div>

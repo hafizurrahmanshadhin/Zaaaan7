@@ -30,19 +30,11 @@ class ProfileService
     {
         try {
             DB::beginTransaction();
-
             $user->update([
                 'first_name' => $validatedData['first_name'],
                 'last_name' => $validatedData['last_name'],
                 'email' => $validatedData['email'],
             ]);
-
-            $user->profile->update([
-                'bio' => $validatedData['bio'],
-                'company_name' => $validatedData['company_name'],
-                'website' => $validatedData['website'],
-            ]);
-
             DB::commit();
 
             return true;
