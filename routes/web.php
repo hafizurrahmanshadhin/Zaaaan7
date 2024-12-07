@@ -4,5 +4,5 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('admin.home.index');
 })->name('home.index');

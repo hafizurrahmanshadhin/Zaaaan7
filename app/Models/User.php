@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -150,5 +152,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(UserDocument::class)
                     ->where('type', 'document');  // Only fetch 'document' type documents
+    }
+
+
+
+    protected function avatar():Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset($value) : asset('assets/custom/img/user.jpg'),
+        );
     }
 }

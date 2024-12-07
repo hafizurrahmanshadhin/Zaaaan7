@@ -1,3 +1,6 @@
+@php
+    $user = auth()->user();
+@endphp
 <nav class="navbar navbar-top fixed-top navbar-expand" id="navbarDefault" style="display:none;">
     <div class="collapse navbar-collapse justify-content-between">
         {{-- logo --}}
@@ -6,7 +9,7 @@
                 data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse"
                 aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
                         class="toggle-line"></span></span></button>
-            <a class="navbar-brand me-1 me-sm-3" href="{{route('home.index')}}">
+            <a class="navbar-brand me-1 me-sm-3" href="{{route('admin.home.index')}}">
                 <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center"><img src="{{ asset('assets/img/icons/logo.png') }}"
                             alt="phoenix" width="27" />
@@ -37,7 +40,7 @@
                     role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
                     aria-expanded="false">
                     <div class="avatar avatar-l ">
-                        <img class="rounded-circle " src="{{ asset('assets/img/team/40x40/57.webp') }}"
+                        <img class="rounded-circle " src="{{$user->avatar}}"
                             alt="" />
                     </div>
                 </a>
@@ -47,10 +50,10 @@
                         <div class="card-body p-0">
                             <div class="text-center pt-4 pb-3">
                                 <div class="avatar avatar-xl ">
-                                    <img class="rounded-circle " src="{{ asset('assets/img/team/72x72/57.webp') }}"
+                                    <img class="rounded-circle " src="{{$user->avatar}}"
                                         alt="" />
                                 </div>
-                                <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
+                                <h6 class="mt-2 text-body-emphasis">{{$user->first_name.' '.$user->last_name}}</h6>
                             </div>
                         </div>
                         <div class="overflow-auto scrollbar" style="height: 10rem;">
@@ -58,7 +61,7 @@
                                 <li class="nav-item"><a class="nav-link px-3 d-block"
                                         href="{{ route('admin.profile.edit') }}"> <span class="me-2 text-body align-bottom"
                                             data-feather="user"></span><span>Profile</span></a></li>
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="{{ route('home.index') }}"><span
+                                <li class="nav-item"><a class="nav-link px-3 d-block" href="{{ route('admin.home.index') }}"><span
                                             class="me-2 text-body align-bottom"
                                             data-feather="pie-chart"></span>Dashboard</a></li>
                                 <li class="nav-item"><a class="nav-link px-3 d-block"

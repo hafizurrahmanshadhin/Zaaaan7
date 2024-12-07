@@ -35,26 +35,39 @@
                                     </div>
                                     <div class="d-flex d-xl-block d-xxl-flex align-items-center">
                                         <div class="d-flex mb-xl-2 mb-xxl-0 gap-2">
-                                            <svg viewBox="0 0 24 24" id="meteor-icon-kit__regular-inventory" width="10"
-                                                height="10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+                                                width="10" height="10" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
                                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
                                                     stroke-linejoin="round"></g>
                                                 <g id="SVGRepo_iconCarrier">
-                                                    <g clip-path="url(#clip0_525_147)">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M2 1C2 0.447715 1.55228 0 1 0C0.447715 0 0 0.447715 0 1V23C0 23.5523 0.447715 24 1 24C1.55228 24 2 23.5523 2 23V22H22V23C22 23.5523 22.4477 24 23 24C23.5523 24 24 23.5523 24 23V1C24 0.447715 23.5523 0 23 0C22.4477 0 22 0.447715 22 1V8H20V3C20 2.44772 19.5523 2 19 2H11C10.4477 2 10 2.44772 10 3V4H5C4.44772 4 4 4.44772 4 5V8H2V1ZM10 6H6V8H10V6ZM2 10V20H4V13C4 12.4477 4.44772 12 5 12H13C13.5523 12 14 12.4477 14 13V14H19C19.5523 14 20 14.4477 20 15V20H22V10H2ZM18 8V4H12V8H18ZM12 20H6V14H12V20ZM14 20V16H18V20H14Z"
-                                                            fill="#525b75"></path>
+                                                    <style type="text/css">
+                                                        .st0 {
+                                                            fill: #525b75;
+                                                        }
+                                                    </style>
+                                                    <g>
+                                                        <path class="st0"
+                                                            d="M77.609,448h52.781c7.516,0,13.609-6.094,13.609-13.609V315.094c0-7.516-6.094-13.609-13.609-13.609H77.609 c-7.516,0-13.609,6.094-13.609,13.609v119.297C64,441.906,70.094,448,77.609,448z">
+                                                        </path>
+                                                        <path class="st0"
+                                                            d="M197.609,448h52.781c7.516,0,13.609-6.094,13.609-13.609V235.094c0-7.516-6.094-13.609-13.609-13.609h-52.781 c-7.516,0-13.609,6.094-13.609,13.609v199.297C184,441.906,190.094,448,197.609,448z">
+                                                        </path>
+                                                        <path class="st0"
+                                                            d="M317.609,448h52.781c7.516,0,13.609-6.094,13.609-13.609V139.094c0-7.516-6.094-13.609-13.609-13.609h-52.781 c-7.516,0-13.609,6.094-13.609,13.609v295.297C304,441.906,310.094,448,317.609,448z">
+                                                        </path>
+                                                        <path class="st0"
+                                                            d="M437.609,448h52.781c7.516,0,13.609-6.094,13.609-13.609V43.094c0-7.516-6.094-13.609-13.609-13.609h-52.781 c-7.516,0-13.609,6.094-13.609,13.609v391.297C424,441.906,430.094,448,437.609,448z">
+                                                        </path>
+                                                        <path class="st0"
+                                                            d="M498.391,482H45.609C38.094,482,32,475.906,32,468.391V13.609C32,6.094,25.906,0,18.391,0h-4.781 C6.094,0,0,6.094,0,13.609v484.781C0,505.906,6.094,512,13.609,512h484.781c7.516,0,13.609-6.094,13.609-13.609v-2.781 C512,488.094,505.906,482,498.391,482z">
+                                                        </path>
                                                     </g>
-                                                    <defs>
-                                                        <clipPath id="clip0_525_147">
-                                                            <rect width="24" height="24" fill="white"></rect>
-                                                        </clipPath>
-                                                    </defs>
                                                 </g>
                                             </svg>
                                             <h6 class="d-inline-block mb-0">1297<span
-                                                    class="fw-semibold ms-1 me-4">Inventories</span></h6>
+                                                    class="fw-semibold ms-1 me-4">Users</span></h6>
                                         </div>
                                         <div class="d-flex gap-2">
                                             <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +102,7 @@
                                                 </g>
                                             </svg>
                                             <h6 class="d-block d-xl-inline-block mb-0">3971
-                                                <span class="fw-semibold ms-1">Sales</span>
+                                                <span class="fw-semibold ms-1">helpers</span>
                                             </h6>
                                         </div>
                                     </div>

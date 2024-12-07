@@ -5,7 +5,7 @@
             <ul class="navbar-nav flex-column" id="navbarVerticalNav">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('home.*') ? 'active' : '' }}"
-                        href="{{ route('home.index') }}">
+                        href="{{ route('admin.home.index') }}">
                         <div class="d-flex align-items-center">
                             <span class="nav-link-icon">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

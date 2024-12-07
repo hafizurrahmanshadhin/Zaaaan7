@@ -22,7 +22,7 @@
                         <h2 class="text-body-secondary fw-bolder mb-3">Page Missing!</h2>
                         <p class="text-body mb-5">But no worries! Our ostrich is looking everywhere <br
                                 class="d-none d-sm-block" />while you wait safely. </p><a class="btn btn-lg btn-primary"
-                            href="{{route('home.index')}}">Go Home</a>
+                            href="{{route('admin.home.index')}}">Go Home</a>
                     </div>
                 </div>
             </div>
