@@ -5,10 +5,6 @@ use App\Http\Controllers\Web\Backend\Setting\MailController;
 use App\Http\Controllers\Web\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/dashboard', function () {
-//     return view('backend.layouts.index');
-// })->name('dashboard');
-
 
 Route::prefix('/')->name('home.')->controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('index');
