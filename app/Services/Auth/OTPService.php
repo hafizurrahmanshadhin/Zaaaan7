@@ -98,9 +98,9 @@ class OTPService
                 $user->save();
 
                 $authService = new AuthService();
-                $token = $authService->login(['email' => $user->email]);
+                // $token = $authService->login(['email' => $user->email]);
                 DB::commit();
-                return $token;
+                return true;
             }
             DB::commit();
             return null;

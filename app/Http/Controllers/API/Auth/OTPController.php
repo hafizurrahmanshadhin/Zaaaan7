@@ -107,9 +107,9 @@ class OTPController extends Controller
     public function otpMatch(OTPMatchRequest $request): JsonResponse
     {
         try {
-            $token = $this->otpService->otpMatch($request->email, $request->operation, $request->otp);
-            if ($token) {
-                return $this->success(200, 'otp verified', ['token' => $token]);
+            $response = $this->otpService->otpMatch($request->email, $request->operation, $request->otp);
+            if ($response) {
+                return $this->success(200, 'otp verified');
             }
             throw new Exception('Server Error', 500);
         } catch (UserAlreadyVarifiedException $e) {
