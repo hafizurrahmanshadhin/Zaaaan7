@@ -69,28 +69,17 @@
                         <table class="table fs-9 mb-0" id="data-table">
                             <thead>
                                 <tr>
-                                    <th class="white-space-nowrap fs-9 align-middle ps-0"
-                                        style="max-width:20px; width:18px;">
-
-                                    </th>
+                                    <td class="align-middle white-space-nowrap py-0"><a
+                                            class="d-block border border-translucent rounded-2"
+                                            href="../landing/product-details.html"><img
+                                                src="../../../assets/img/products/1.png" alt="" width="53"></a>
+                                    </td>
                                     <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;">
                                         PRODUCT NAME</th>
                                     <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;">SKU
                                     </th>
                                     <th class="sort align-middle ps-4" scope="col" style="width:50px;">
                                         PLACE OF PURCHASE</th>
-                                    <th class="sort align-middle ps-3" scope="col" style="width:150px;">
-                                        TAGS</th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:50px;">PRICE
-                                    </th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:150px;">PURCHASE DATE
-                                    </th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:150px;">NOTE</th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:150px;">STATUS</th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:50px;">VAT (%)</th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:150px;">LISTING PRICE
-                                    </th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:150px;">LISTING DATE</th>
                                     <th class="sort align-middle ps-4" scope="col" style="width:50px;"></th>
                                 </tr>
                             </thead>
@@ -135,23 +124,14 @@
                         url: "{{ route('products.inventories.index') }}",
                         type: "GET",
                         data: (d) => {
-                            d.search = $('#search-input').val(); 
+                            d.search = $('#search-input').val();
                         }
                     },
                     columns: [{
-                            data: null,
-                            orderable: false,
-                            searchable: false,
-                            render: function(data, type, row) {
-                                return `
-                                    <td class="fs-9 align-middle">
-                                        <div class="form-check mb-0 fs-8">
-                                            <input class="form-check-input" type="checkbox"
-                                                data-bulk-select-row="">
-                                        </div>
-                                    </td>
-                                `;
-                            }
+                            data: 'image',
+                            name: 'image',
+                            orderable: true,
+                            searchable: true
                         },
                         {
                             data: 'name',
@@ -162,60 +142,6 @@
                         {
                             data: 'sku',
                             name: 'sku',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'place_of_purchase',
-                            name: 'place_of_purchase',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'tags',
-                            name: 'tags',
-                            orderable: true,
-                            searchable: true,
-                        },
-                        {
-                            data: 'price',
-                            name: 'tags',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'purchase_date',
-                            name: 'purchase_date',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'note',
-                            name: 'note',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'status',
-                            name: 'status',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'vat',
-                            name: 'vat',
-                            orderable: true,
-                            searchable: true,
-                        },
-                        {
-                            data: 'list_price',
-                            name: 'list_price',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'list_date',
-                            name: 'list_date',
                             orderable: true,
                             searchable: true
                         },

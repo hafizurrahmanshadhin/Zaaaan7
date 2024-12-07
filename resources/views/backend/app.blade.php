@@ -6,6 +6,7 @@
     $user = auth()->user();
     $profile = $user->profile;
 @endphp
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -42,8 +43,4 @@
     <!-- ===============================================-->
     @include('partials.script')
 </body>
-
-
-<!-- Mirrored from prium.github.io/phoenix/v1.18.1/pages/authentication/simple/sign-up.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 15 Aug 2024 06:14:12 GMT -->
-
 </html>

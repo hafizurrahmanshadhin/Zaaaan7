@@ -13,6 +13,7 @@
 <link href="{{ asset('assets/css/user-rtl.min.css') }}" type="text/css" rel="stylesheet" id="user-style-rtl">
 <link href="{{ asset('assets/css/user.min.css') }}" type="text/css" rel="stylesheet" id="user-style-default">
 
+
 <style>
     .validation-error {
         width: 100%;
@@ -55,4 +56,10 @@
 {{-- toastr --}}
 <link rel="stylesheet" href="{{ asset('assets/dev/css/toastr.css') }}">
 {{-- push --}}
+</script>
+
+
+{{-- dropify --}}
+<link rel="stylesheet" href="{{asset('assets/custom/css/dropify.min.css')}}">
+
 @stack('styles')

@@ -19,6 +19,7 @@
 <script src="{{ asset('vendors/choices/choices.min.js') }}"></script>
 
 
+
 {{-- development ................................................. --}}
 {{-- jquery --}}
 <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
@@ -112,6 +113,15 @@
 </script>
 {{-- toastr end --}}
 
+
+{{-- dropify --}}
+<script src="{{ asset('assets/custom/js/dropify.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('.dropify').dropify();
+    });
+</script>
+
 <script>
     // Set CSRF token for AJAX requests
     $.ajaxSetup({
@@ -120,5 +130,6 @@
         }
     });
 </script>
+
 
 @stack('scripts')

@@ -29,7 +29,7 @@ class CateogryController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.layouts.category.create');
     }
 
     /**

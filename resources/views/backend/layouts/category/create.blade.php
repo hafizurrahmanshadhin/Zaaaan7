@@ -1,10 +1,12 @@
-@extends('frontend.app')
+@extends('backend.app')
 
 @section('title')
     Create Product Catalog
 @endsection
 
 @push('styles')
+    {{-- dropify --}}
+    <script src="{{ asset('assets/css/dropify.min.css') }}"></script>
 @endpush
 
 @push('headScripts')
@@ -27,8 +29,8 @@
 
 @section('main')
     <div class="content">
-        <h2 class="mb-2 lh-sm">Create a Product Catalog</h2>
-        <p class="text-body-tertiary lead mb-2">Please Provide Your Product Informations</p>
+        <h2 class="mb-2 lh-sm">Create a Category</h2>
+        <p class="text-body-tertiary lead mb-2">Please Provide Your Category Informations</p>
         <div class="mt-4">
             <div class="row g-4">
                 <div class="col-12 col-xl-10 order-1 order-xl-0">
@@ -49,51 +51,43 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="p-4 code-to-copy">
-                                    <form class="row g-3 needs-validation" action="{{ route('settings.stockx.update') }}"
-                                        method="POST" novalidate="">
+                                    <form class="row g-3 needs-validation" action="#" method="POST" novalidate="">
                                         @csrf
                                         @method('PUT')
                                         <div class="col-md-12">
-                                            <label class="form-label" for="api_key">API Key</label>
-                                            <input class="form-control" id="api_key" name="api_key" type="text"
-                                                placeholder="{{ 'API Key' }}" value="{{ old('api_key') }}">
-                                            @error('api_key')
+                                            <label class="form-label" for="image">Input Image</label>
+                                            <input class="form-control dropify" name="image" id="image"
+                                                type="file" data-default-file="{{ asset('assets/custom/img/no-image-available.jpg') }}"/>
+                                            @error('image')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label" for="client_id">Client ID</label>
-                                            <input class="form-control" id="client_id" name="client_id" type="text"
-                                                placeholder="{{ 'Client ID' }}" value="{{ old('client_id') }}">
-                                            @error('client_id')
+                                            <label class="form-label" for="name">Client ID</label>
+                                            <input class="form-control" id="name" name="name" type="text"
+                                                placeholder="{{ 'Client ID' }}" value="{{ old('name') }}">
+                                            @error('name')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label" for="client_secret">Client Secret</label>
-                                            <input class="form-control" id="" name="client_secret"
-                                                placeholder="Client Secret" type="password" value="{{ '' }}">
-                                            @error('client_secret')
+                                            <label class="form-label" for="cost">Client Secret</label>
+                                            <input class="form-control" id="" name="cost"
+                                                placeholder="Client Secret" type="number" step="3"
+                                                value="{{ '' }}">
+                                            @error('cost')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-12">
-                                            <label class="form-label" for="redirect_url">Callback URL</label>
-                                            <input class="form-control" id="redirect_url" type="text"
-                                                value="https://dariobouman.test/auth/stockx/callback" disabled>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="provision">Client Secret</label>
+                                            <input class="form-control" id="" name="provision"
+                                                placeholder="Client Secret" type="number" step="3"
+                                                value="{{ '' }}">
+                                            @error('provision')
+                                                <div class="validation-error">{{ $message }}</div>
+                                            @enderror
                                         </div>
-                                        <label for="organizerMultiple">Multiple</label>
-                                        <select class="form-select" id="organizerMultiple" data-choices="data-choices"
-                                            multiple="multiple" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                            <option value="">Select organizer...</option>
-                                            <option>Massachusetts Institute of Technology</option>
-                                            <option>University of Chicago</option>
-                                            <option>GSAS Open Labs At Harvard</option>
-                                            <option>California Institute of Technology</option>
-                                        </select>
-
-
-
 
 
                                         <div class="col-12">
@@ -110,8 +104,7 @@
                         <h5 class="lh-1">On this page </h5>
                         <hr>
                         <ul class="nav nav-vertical flex-column doc-nav" data-doc-nav="data-doc-nav">
-                            <li class="nav-item"> <a class="nav-link" href="#save-StockX-credentials">Create a Product
-                                    Catalog</a>
+                            <li class="nav-item"> <a class="nav-link" href="#save-StockX-credentials">Create a Category</a>
                             </li>
                         </ul>
                     </div>
@@ -124,4 +117,5 @@
 @endsection
 
 @push('scripts')
+
 @endpush
