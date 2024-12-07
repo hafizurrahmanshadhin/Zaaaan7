@@ -101,6 +101,7 @@ class AuthController extends Controller
     {
         try {
             $validatedData = $request->validated();
+            // return response()->json($validatedData);
 
             $token = $this->authService->login($validatedData);
 

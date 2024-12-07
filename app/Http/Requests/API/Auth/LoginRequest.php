@@ -2,15 +2,16 @@
 
 namespace App\Http\Requests\API\Auth;
 
-use Illuminate\Auth\Events\Lockout;
+use App\Rules\Auth\Validatepassword;
+use App\Traits\ApiResponse;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    use ApiResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,59 +28,59 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            "email"    => "required|email|exists:users,email",
+            "password" => ["required", new Validatepassword($this->input('email'))]
         ];
     }
 
+
     /**
-     * Attempt to authenticate the request's credentials.
+     * Define custom validation messages for the email and password fields.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @return array The custom error messages for the validation rules.
      */
-    public function authenticate(): void
+    public function messages(): array
     {
-        $this->ensureIsNotRateLimited();
-
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+        return [
+            'email.required' => 'Email field is required.',
+            'email.email'    => 'Please provide a valid email address.',
+            'email.exists'   => 'This email address is not registered in our system.',
+        ];
     }
 
+
+
     /**
-     * Ensure the login request is not rate limited.
+     * Handles failed validation by formatting the validation errors and throwing a ValidationException.
+     * 
+     * This method is called when validation fails in a form request. It uses the `error` method 
+     * from the `ApiResponse` trait to generate a standardized error response with the validation 
+     * error messages and a 422 HTTP status code. It then throws a `ValidationException` with the 
+     * formatted response.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Validator $validator The validator instance containing the validation errors.
+     *
+     * @return void Throws a ValidationException with a formatted error response.
+     * 
+     * @throws ValidationException The exception is thrown to halt further processing and return validation errors.
      */
-    public function ensureIsNotRateLimited(): void
+    protected function failedValidation(Validator $validator):never
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
+        $emailErrors = $validator->errors()->get('email') ?? null;
+        $passwordErrors = $validator->errors()->get('password') ?? null;
+
+        if ($emailErrors) {
+            $message = $emailErrors[0];
+        } else {
+            $message = $passwordErrors[0];
         }
 
-        event(new Lockout($this));
+        $response = $this->error(
+            422,
+            $message,
+            $validator->errors(),
+        );
 
-        $seconds = RateLimiter::availableIn($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
-    }
-
-    /**
-     * Get the rate limiting throttle key for the request.
-     */
-    public function throttleKey(): string
-    {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        throw new ValidationException($validator, $response);
     }
 }
