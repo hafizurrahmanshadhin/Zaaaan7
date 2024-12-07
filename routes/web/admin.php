@@ -4,7 +4,7 @@ use App\Http\Controllers\Web\Backend\CateogryController;
 use App\Http\Controllers\Web\Backend\HomeController;
 use App\Http\Controllers\Web\Backend\Setting\MailController;
 use App\Http\Controllers\Web\Backend\SubCateogryController;
-use App\Http\Controllers\Web\ProfileController;
+use App\Http\Controllers\Web\Backend\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 

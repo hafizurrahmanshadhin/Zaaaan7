@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\UpdateProfileRequest;
 use App\Models\User;
-use App\Services\Web\ProfileService;
+use App\Services\Web\Backend\ProfileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;

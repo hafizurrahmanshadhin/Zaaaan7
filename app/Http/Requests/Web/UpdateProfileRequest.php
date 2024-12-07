@@ -24,11 +24,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'bio' => 'nullable|string|max:500',
-            'company_name' => 'nullable|string|max:255',
-            'website' => 'nullable|url|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
         ];
     }
 }

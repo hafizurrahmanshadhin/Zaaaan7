@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Web;
+namespace App\Services\Web\Backend;
 
 use App\Models\User;
 use App\Helper\Helper;
