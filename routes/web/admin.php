@@ -11,6 +11,20 @@ Route::prefix('/')->name('home.')->controller(HomeController::class)->group(func
 });
 
 
+Route::prefix('/category')->name('category.')->group(function () {
+
+    Route::prefix('/inventories')->name('inventories.')->controller(InventoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+    });
+
+    Route::prefix('/sales')->name('sales.')->controller(SalesController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+});
+
+
 // Routes for managing dates in the admin panel.
 // This includes viewing, creating, editing, and deleting dates.
 Route::prefix('setting/mail')->name('setting.mail.')->controller(MailController::class)->group(function () {
