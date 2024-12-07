@@ -8,22 +8,24 @@ use App\Http\Controllers\Web\Backend\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('/')->name('home.')->controller(HomeController::class)->group(function () {
-    Route::get('/', 'index')->name('index');
-});
+Route::prefix('/')->name('home.')->controller(HomeController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
 
 
 Route::prefix('/category')->name('category.')->group(function () {
 
-    Route::prefix('/')->name('inventories.')->controller(CateogryController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/store', 'store')->name('store');
-    });
+    Route::prefix('/')->name('')->controller(CateogryController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+        });
 
-    Route::prefix('/{category}/sub-cateogry')->name('sales.')->controller(SubCateogryController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-    });
+    // Route::prefix('/{category}/sub-cateogry')->name('sales.')->controller(SubCateogryController::class)->group(function () {
+    //     Route::get('/', 'index')->name('index');
+    // });
 });
 
 

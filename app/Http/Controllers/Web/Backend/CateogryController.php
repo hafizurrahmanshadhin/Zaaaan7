@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Web\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Backend\CategoryRequest;
 use App\Services\Web\Backend\CateogryService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CateogryController extends Controller
 {
 
     protected $cateogryService;
 
-    public function __construct (CateogryService $cateogryService) {
+    public function __construct(CateogryService $cateogryService)
+    {
         $this->cateogryService = $cateogryService;
     }
 
@@ -37,10 +40,16 @@ class CateogryController extends Controller
      */
     public function store(CategoryRequest $categoryRequest)
     {
-        $validatedData = $categoryRequest->validated();
-        $this->cateogryService->store($validatedData);
+        try {
+            $validatedData = $categoryRequest->validated();
+            $this->cateogryService->store($validatedData);
+            return redirect()->route('admin.category.index')->with('t-success', 'category created successfully');
+            // return redirect()->back()->with('t-success', 'category created successfully');
+        }catch (Exception $e){
+            Log::error('Catagory Store: '.$e->getMessage());
+            return redirect()->back()->with('t-error', 'Failed to create category');
+        }
 
-        return redirect()->route('backend.categories.index')->with('t-success', 'category created successfully');
     }
 
     /**

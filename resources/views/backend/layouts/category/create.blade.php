@@ -51,45 +51,42 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="p-4 code-to-copy">
-                                    <form class="row g-3 needs-validation" action="#" method="POST" novalidate="">
+                                    <form class="row g-3 needs-validation" action="{{ route('admin.category.store') }}"
+                                        method="POST" enctype="multipart/form-data">
                                         @csrf
-                                        @method('PUT')
                                         <div class="col-md-12">
                                             <label class="form-label" for="image">Input Image</label>
-                                            <input class="form-control dropify" name="image" id="image"
-                                                type="file" data-default-file="{{ asset('assets/custom/img/no-image-available.jpg') }}"/>
+                                            <input class="form-control dropify" name="image" id="image" type="file"
+                                                data-default-file="{{ asset('assets/custom/img/no-image-available.jpg') }}" />
                                             @error('image')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label" for="name">Client ID</label>
+                                            <label class="form-label" for="name">Category Name</label>
                                             <input class="form-control" id="name" name="name" type="text"
-                                                placeholder="{{ 'Client ID' }}" value="{{ old('name') }}">
+                                                placeholder="Category Name" value="{{ old('name') }}">
                                             @error('name')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label" for="cost">Client Secret</label>
-                                            <input class="form-control" id="" name="cost"
-                                                placeholder="Client Secret" type="number" step="3"
-                                                value="{{ '' }}">
+                                            <label class="form-label" for="cost">Cost</label>
+                                            <input class="form-control" id="" name="cost" placeholder="Cost"
+                                                type="number" step="0.01" value="{{ old('cost') }}">
                                             @error('cost')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label" for="provision">Client Secret</label>
+                                            <label class="form-label" for="provision">Provision</label>
                                             <input class="form-control" id="" name="provision"
-                                                placeholder="Client Secret" type="number" step="3"
-                                                value="{{ '' }}">
+                                                placeholder="Provision" type="number" step="0.1"
+                                                value="{{ old('provision') }}">
                                             @error('provision')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
-
-
                                         <div class="col-12">
                                             <button class="btn btn-primary" type="submit">Save</button>
                                         </div>
@@ -117,5 +114,4 @@
 @endsection
 
 @push('scripts')
-
 @endpush
