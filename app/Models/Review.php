@@ -8,12 +8,20 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Review extends Model
 {
-
-    public function user():BelongsTo
+    /**
+     * Define the inverse one-to-many relationship with the User model.
+     * Indicates that this model belongs to a specific user.
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    public function images():MorphMany
+
+    /**
+     * Define the one-to-many relationship with the SubCategory model.
+     * Indicates that this model can have multiple subcategories.
+     */
+    public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
     }

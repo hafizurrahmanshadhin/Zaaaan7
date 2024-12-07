@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Address extends Model
 {
-    public function user():BelongsTo
+    /**
+     * Define the inverse one-to-many relationship with the User model.
+     * Indicates that this model belongs to a specific user.
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

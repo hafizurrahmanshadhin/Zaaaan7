@@ -106,60 +106,89 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(OTP::class);
     }
 
-
+    /**
+     * Define the one-to-many relationship with the Address model.
+     * A user can have multiple addresses.
+     */
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
     }
 
-    public function skills():BelongsToMany
+    /**
+     * Define the many-to-many relationship with the SubCategory model.
+     * A user can have multiple skills that belong to various subcategories.
+     */
+    public function skills(): BelongsToMany
     {
         return $this->belongsToMany(SubCategory::class);
     }
 
-    public function reviews():HasMany
+    /**
+     * Define the one-to-many relationship with the Review model.
+     * A user can have multiple reviews.
+     */
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
-
-    public function clientTasks():HasMany
+    /**
+     * Define the one-to-many relationship with the Task model as a client.
+     * A user can create multiple tasks as a client.
+     */
+    public function clientTasks(): HasMany
     {
         return $this->hasMany(Task::class, 'client');
     }
 
-
-    public function helperTasks():HasMany
+    /**
+     * Define the one-to-many relationship with the Task model as a helper.
+     * A user can be assigned multiple tasks as a helper.
+     */
+    public function helperTasks(): HasMany
     {
         return $this->hasMany(Task::class, 'helper');
     }
 
-
+    /**
+     * Define the many-to-many relationship with the Task model through 'task_requests'.
+     * A user can request to participate in multiple tasks.
+     */
     public function requests()
     {
         return $this->belongsToMany(Task::class, 'task_requests')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
-
+    /**
+     * Define the one-to-one relationship with the UserDocument model for ID cards.
+     * Fetches only documents of type 'id'.
+     */
     public function idCard(): HasOne
     {
         return $this->hasOne(UserDocument::class)
-                    ->where('type', 'id');  // Only fetch 'id' type documents
+            ->where('type', 'id');  // Only fetch 'id' type documents
     }
 
+    /**
+     * Define the one-to-many relationship with the UserDocument model for documents.
+     * Fetches only documents of type 'document'.
+     */
     public function documents(): HasMany
     {
         return $this->hasMany(UserDocument::class)
-                    ->where('type', 'document');  // Only fetch 'document' type documents
+            ->where('type', 'document');  // Only fetch 'document' type documents
     }
 
-
-
-    protected function avatar():Attribute
+    /**
+     * Define an accessor for the user's avatar.
+     * Returns a default avatar image if the user doesn't have one.
+     */
+    protected function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset($value) : asset('assets/custom/img/user.jpg'),
+            get: fn($value) => $value ? asset($value) : asset('assets/custom/img/user.jpg'),
         );
     }
 }

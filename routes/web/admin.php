@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Web\Backend\CateogryController;
 use App\Http\Controllers\Web\Backend\HomeController;
 use App\Http\Controllers\Web\Backend\Setting\MailController;
+use App\Http\Controllers\Web\Backend\SubCateogryController;
 use App\Http\Controllers\Web\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,13 +15,13 @@ Route::prefix('/')->name('home.')->controller(HomeController::class)->group(func
 
 Route::prefix('/category')->name('category.')->group(function () {
 
-    Route::prefix('/inventories')->name('inventories.')->controller(InventoryController::class)->group(function () {
+    Route::prefix('/')->name('inventories.')->controller(CateogryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
     });
 
-    Route::prefix('/sales')->name('sales.')->controller(SalesController::class)->group(function () {
+    Route::prefix('/{category}/sub-cateogry')->name('sales.')->controller(SubCateogryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
     });
 });
