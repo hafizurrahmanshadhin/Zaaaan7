@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Web\Backend;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
-class CategoryRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +22,10 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $categoryId = $this->route('category')->id;
         return [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
-            'name' => 'required|unique:categories,name',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'name' => 'required|unique:categories,name,' . $categoryId . ',id',
             'cost' => 'required|numeric',
             'provision' => 'required|numeric',
         ];

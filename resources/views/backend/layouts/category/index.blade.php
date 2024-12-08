@@ -90,6 +90,12 @@
     {{-- Datatable --}}
     <script src="{{ asset('assets/dev/js/datatables.min.js') }}"></script>
     <script>
+        var routeUrls = {
+            viewUrl: "{{ route('admin.category.sub.index', ['category' => '__category__']) }}",
+            editUrl: "{{ route('admin.category.edit', ['category' => '__category__']) }}"
+        };
+    </script>
+    <script>
         $(document).ready(function() {
             if (!$.fn.DataTable.isDataTable('#data-table')) {
                 var dTable = $('#data-table').DataTable({
@@ -153,6 +159,8 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
+                                var viewUrl = routeUrls.viewUrl.replace('__category__', data);
+                                var editUrl = routeUrls.editUrl.replace('__category__', data);
                                 return `
                                     <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                                         <div class="btn-reveal-trigger position-static">
@@ -166,9 +174,10 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end py-2">
-                                                <a class="dropdown-item" href="#!">View</a>
+                                                <a class="dropdown-item" href="${viewUrl}">View</a>
+                                                <a class="dropdown-item" href="${editUrl}">Edit</a>
                                                 <div class="dropdown-divider"></div>
-                                                <button onclick="deleteAlert(${data})" class="dropdown-item text-danger" href="#!">Remove</button>
+                                                <button onclick="deleteAlert('${data}')" class="dropdown-item text-danger" href="#!">Remove</button>
                                             </div>
                                         </div>
                                     </td>

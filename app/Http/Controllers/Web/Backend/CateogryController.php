@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Web\Backend\CategoryRequest;
+use App\Http\Requests\Web\Backend\CreateCategoryRequest;
+use App\Http\Requests\Web\Backend\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Services\Web\Backend\CateogryService;
 use App\Traits\ApiResponse;
@@ -47,42 +48,43 @@ class CateogryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryRequest $categoryRequest)
+    public function store(CreateCategoryRequest $categoryRequest)
     {
         try {
             $validatedData = $categoryRequest->validated();
             $this->cateogryService->store($validatedData);
             return redirect()->route('admin.category.index')->with('t-success', 'category created successfully');
-            // return redirect()->back()->with('t-success', 'category created successfully');
         } catch (Exception $e) {
             Log::error('Catagory Store: ' . $e->getMessage());
             return redirect()->back()->with('t-error', 'Failed to create category');
         }
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category)
     {
-        //
+        try {
+            return view('backend.layouts.category.edit', compact('category'));
+        }catch(Exception $e) {
+            abort(404, 'not-found');
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoryRequest $updateCategoryRequest, Category $category)
     {
-        //
+        try {
+            $validatedData = $updateCategoryRequest->validated();
+            $this->cateogryService->update($validatedData, $category);
+            return redirect()->route('admin.category.index')->with('t-success', 'category updated successfully');
+        } catch (Exception $e) {
+            Log::error('Catagory Store: ' . $e->getMessage());
+            return redirect()->back()->with('t-error', 'Failed to create category');
+        }
     }
 
     /**

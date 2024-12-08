@@ -7,6 +7,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class CateogryService
@@ -60,19 +61,44 @@ class CateogryService
         try {
             DB::beginTransaction();
             $image = Helper::uploadFile($data['image'], 'category');
-            $Category = Category::create([
+            $category = Category::create([
                 'name' => $data['name'],
                 'cost' => $data['cost'],
                 'provision' => $data['provision'],
             ]);
 
-            $Category->image()->create([
+            $category->image()->create([
                 'url' => $image
             ]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Helper::deleteFile($image);
+            throw $e;
+        }
+    }
+
+
+    public function update(array $data, $category)
+    {
+        try {
+            DB::beginTransaction();
+            $category->update([
+                'name' => $data['name'],
+                'cost' => $data['cost'],
+                'provision' => $data['provision'],
+            ]);
+            if (isset($data['image']) && $data['image']) {
+                Log::info('image');
+                Helper::deleteFile($category->image->url);
+                $image = Helper::uploadFile($data['image'], 'category');
+                $category->image()->update([
+                    'url' => $image
+                ]);
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
