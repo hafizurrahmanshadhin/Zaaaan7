@@ -3,24 +3,40 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Services\Web\Backend\SubCateogryService;
+use App\Traits\ApiResponse;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
+use Yajra\DataTables\Facades\DataTables;
 
 class SubCateogryController extends Controller
 {
 
     protected $subCateogryService;
 
-    public function __construct (SubCateogryService $subCateogryService) {
+    public function __construct(SubCateogryService $subCateogryService)
+    {
         $this->subCateogryService = $subCateogryService;
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, Category $category): View|JsonResponse|RedirectResponse
     {
-        return view();
+        try {
+            if ($request->ajax()) {
+                return $this->subCateogryService->index($request, $category);
+            }
+            return view('backend.layouts.category.sub-categories.index', compact('category'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('t-error', 'Something went wrong! Please try again.');
+        }
     }
 
     /**

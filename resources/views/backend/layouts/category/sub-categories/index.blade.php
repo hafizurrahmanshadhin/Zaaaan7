@@ -7,13 +7,22 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/dev/css/datatables.min.css') }}">
+    <style>
+        th {
+            text-align: center !important;
+        }
+        td {
+            text-align: center !important;
+        }
+    </style>
 @endpush
 
 @section('main')
     <div class="content">
         <nav class="mb-3" aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item active">Categories</li>
+                <li class="breadcrumb-item">Categories</li>
+                <li class="breadcrumb-item active">Sub Categories</li>
             </ol>
         </nav>
         <div class="mb-9">
@@ -59,16 +68,8 @@
                         <table class="table fs-9 mb-0" id="data-table">
                             <thead>
                                 <tr>
-                                    <th class="sort white-space-nowrap align-middle fs-10" scope="col"
-                                        style="width:50px;"></th>
-                                    <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;">
-                                        CATEGORY NAME
-                                    </th>
                                     <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:50px;">
-                                        PRICE
-                                    </th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:50px;">
-                                        PROVISION
+                                        SUB CATEGORY NAME
                                     </th>
                                     <th class="sort align-middle ps-4" scope="col" style="width:50px;"></th>
                                 </tr>
@@ -91,8 +92,7 @@
     <script src="{{ asset('assets/dev/js/datatables.min.js') }}"></script>
     <script>
         var routeUrls = {
-            viewUrl: "{{ route('admin.category.sub.index', ['category' => '__category__']) }}",
-            editUrl: "{{ route('admin.category.edit', ['category' => '__category__']) }}"
+            editUrl: "{{ route('admin.category.sub.edit', ['category' => $category->id, 'subCategory' => '__subCategory__']) }}"
         };
     </script>
     <script>
@@ -117,39 +117,15 @@
                     pagingType: "full_numbers",
                     dom: "<'row justify-content-between table-topbar'<'col-md-2 col-sm-4 px-0'f>>tipr",
                     ajax: {
-                        url: "{{ route('admin.category.index') }}",
+                        url: "{{ route('admin.category.sub.index', $category) }}",
                         type: "GET",
                         data: (d) => {
                             d.search = $('#search-input').val();
                         }
                     },
                     columns: [{
-                            data: 'image',
-                            name: 'image',
-                            orderable: true,
-                            searchable: true,
-                            render: function(data, type, row) {
-                                return `
-                                <td>
-                                    <img src="${data}" alt="" width="53">
-                                </td>`;
-                            }
-                        },
-                        {
                             data: 'name',
                             name: 'name',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'cost',
-                            name: 'cost',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'provision',
-                            name: 'provision',
                             orderable: true,
                             searchable: true
                         },
@@ -159,8 +135,7 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
-                                var viewUrl = routeUrls.viewUrl.replace('__category__', data);
-                                var editUrl = routeUrls.editUrl.replace('__category__', data);
+                                var editUrl = routeUrls.editUrl.replace('__subCategory__', data);
                                 return `
                                     <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                                         <div class="btn-reveal-trigger position-static">
@@ -174,7 +149,6 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end py-2">
-                                                <a class="dropdown-item" href="${viewUrl}">View</a>
                                                 <a class="dropdown-item" href="${editUrl}">Edit</a>
                                                 <div class="dropdown-divider"></div>
                                                 <button onclick="deleteAlert('${data}')" class="dropdown-item text-danger" href="#!">Remove</button>

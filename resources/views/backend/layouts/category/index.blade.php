@@ -7,6 +7,20 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/dev/css/datatables.min.css') }}">
+    <style>
+        th {
+            text-align: center !important;
+        }
+        td {
+            text-align: center !important;
+        }
+        td img{
+            width: 53px;
+            height: 53px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
 @endpush
 
 @section('main')
