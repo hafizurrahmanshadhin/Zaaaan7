@@ -12,7 +12,17 @@ use Yajra\DataTables\Facades\DataTables;
 
 class CateogryService
 {
-
+    /**
+     * Display a listing of categories with optional search filter.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * This method retrieves all categories, optionally filtered by a search term.
+     * The search term can match against category name, cost, or provision fields.
+     * The results are returned as a DataTables response with columns for image, name, 
+     * cost, provision, and action.
+     */
     public function index($request): JsonResponse
     {
         $query = Category::orderBy('created_at', 'DESC');
@@ -54,8 +64,18 @@ class CateogryService
             ->rawColumns(['image', 'name', 'cost', 'provision', 'action'])
             ->make(true);
     }
+    
 
-
+    /**
+     * Store a new category in the database.
+     *
+     * @param  array  $data  The category data (name, cost, provision, and image)
+     * @return void
+     *
+     * This method creates a new category in the database, uploads the category image,
+     * and associates the image with the newly created category. A database transaction 
+     * is used to ensure that both the category and image are saved together.
+     */
     public function store(array $data)
     {
         try {
@@ -79,6 +99,17 @@ class CateogryService
     }
 
 
+    /**
+     * Update an existing category in the database.
+     *
+     * @param  array  $data      The updated category data (name, cost, provision, and optional image)
+     * @param  \App\Models\Category  $category  The category to be updated
+     * @return void
+     *
+     * This method updates the category's name, cost, and provision in the database.
+     * If a new image is provided, the old image is deleted, and the new image is uploaded 
+     * and associated with the category. A database transaction is used to ensure atomicity.
+     */
     public function update(array $data, $category)
     {
         try {
@@ -89,7 +120,6 @@ class CateogryService
                 'provision' => $data['provision'],
             ]);
             if (isset($data['image']) && $data['image']) {
-                Log::info('image');
                 Helper::deleteFile($category->image->url);
                 $image = Helper::uploadFile($data['image'], 'category');
                 $category->image()->update([
