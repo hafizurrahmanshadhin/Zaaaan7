@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Backend\CategoryRequest;
 use App\Models\Category;
 use App\Services\Web\Backend\CateogryService;
+use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CateogryController extends Controller
 {
-
+    use ApiResponse;
     protected $cateogryService;
 
     public function __construct(CateogryService $cateogryService)
@@ -87,8 +88,14 @@ class CateogryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+            return $this->success(200, 'category deleted successfully');
+        } catch (Exception $e) {
+            Log::error('Category Delete: '. $e->getMessage());
+            return $this->error(500, 'Failed to delete category');
+        }
     }
 }

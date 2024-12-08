@@ -131,5 +131,7 @@
     });
 </script>
 
+{{-- sweetalert --}}
+<script src="{{asset('assets/custom/js/sweetalert2@11.js')}}"></script>
 
 @stack('scripts')

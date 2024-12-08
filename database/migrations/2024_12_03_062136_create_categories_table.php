@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 100)->comment('name of the category');
             $table->float('cost')->nullable()->comment('$');
             $table->float('provision')->nullable()->comment('$');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

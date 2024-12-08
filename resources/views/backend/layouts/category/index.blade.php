@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="ms-xxl-auto">
-                            <a href="{{route("admin.category.create")}}" class="btn btn-primary" id="addBtn">
+                            <a href="{{ route('admin.category.create') }}" class="btn btn-primary" id="addBtn">
                                 <svg class="svg-inline--fa fa-plus me-2" aria-hidden="true" focusable="false"
                                     data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 448 512" data-fa-i2svg="">
@@ -168,7 +168,7 @@
                                             <div class="dropdown-menu dropdown-menu-end py-2">
                                                 <a class="dropdown-item" href="#!">View</a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item text-danger" href="#!">Remove</a>
+                                                <button onclick="deleteAlert(${data})" class="dropdown-item text-danger" href="#!">Remove</button>
                                             </div>
                                         </div>
                                     </td>
@@ -183,7 +183,98 @@
                 });
             }
         });
-    </script>
 
-    
+
+        const deleteAlert = (id) => {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: false,
+                showCancelButton: true,
+                confirmButtonColor: "#25b003",
+                cancelButtonColor: "#fa3b1d",
+                confirmButtonText: "Yes, delete it!",
+                customClass: {
+                    popup: 'my-popup-class',
+                    title: 'my-title-class',
+                    content: 'my-content-class',
+                    confirmButton: 'my-confirm-button-class',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteItem(id);
+                }
+            });
+        }
+
+
+        // deleteing parcel
+        const deleteItem = (id) => {
+            try {
+                $.ajax({
+                    // Generate the URL using the named route
+                    url: `{{ route('admin.category.destroy', '') }}/${id}`,
+                    type: 'DELETE',
+                    dataType: 'json',
+                    success: (response) => {
+                        try {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success",
+                                title: "Your work has been saved",
+                                showConfirmButton: false,
+                                timer: 500,
+                                customClass: {
+                                    popup: 'my-popup-class',
+                                    title: 'my-title-class',
+                                    content: 'my-content-class',
+                                    confirmButton: 'my-confirm-button-class',
+                                },
+                            });
+                            $('#data-table').DataTable().ajax.reload();
+                        } catch (e) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Something went wrong',
+                                icon: false,
+                                customClass: {
+                                    popup: 'my-popup-class',
+                                    title: 'my-title-class',
+                                    content: 'my-content-class',
+                                    confirmButton: 'my-confirm-button-class',
+                                },
+                            })
+                        }
+                    },
+                    error: (xhr, status, error) => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong',
+                            icon: false,
+                            customClass: {
+                                popup: 'my-popup-class',
+                                title: 'my-title-class',
+                                content: 'my-content-class',
+                                confirmButton: 'my-confirm-button-class',
+                            },
+                        })
+                    }
+                });
+            } catch (e) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Something went wrong',
+                    icon: false,
+                    customClass: {
+                        popup: 'my-popup-class',
+                        title: 'my-title-class',
+                        content: 'my-content-class',
+                        confirmButton: 'my-confirm-button-class',
+                    },
+                })
+            }
+
+        }
+    </script>
 @endpush

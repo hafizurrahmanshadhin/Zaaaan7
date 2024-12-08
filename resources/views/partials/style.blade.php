@@ -60,6 +60,33 @@
 
 
 {{-- dropify --}}
-<link rel="stylesheet" href="{{asset('assets/custom/css/dropify.min.css')}}">
+<link rel="stylesheet" href="{{ asset('assets/custom/css/dropify.min.css') }}">
+
+
+{{-- sweet alert --}}
+<style>
+    .my-popup-class {
+        background-color: #fffefe;
+        border-radius: 10px;
+        border: 2px solid #f5f7fa;
+    }
+
+    .my-title-class {
+        color: #e5780b;
+        font-size: 24px;
+    }
+
+    .my-content-class {
+        color: #003cc7 !important;
+        font-size: 16px;
+    }
+
+    .my-confirm-button-class {
+        background-color: #25b003;
+        color: black;
+        border-radius: 5px;
+        border: none;
+    }
+</style>
 
 @stack('styles')

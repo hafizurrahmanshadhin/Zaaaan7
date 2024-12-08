@@ -21,6 +21,7 @@ Route::prefix('/category')->name('category.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+            Route::delete('/destroy/{category}', 'destroy')->name('destroy');
         });
 
     // Route::prefix('/{category}/sub-cateogry')->name('sales.')->controller(SubCateogryController::class)->group(function () {
