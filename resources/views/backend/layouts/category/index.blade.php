@@ -1,4 +1,4 @@
-@extends('frontend.app')
+@extends('backend.app')
 
 @section('title')
     Inventory
@@ -13,13 +13,13 @@
     <div class="content">
         <nav class="mb-3" aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item active">Inventory</li>
+                <li class="breadcrumb-item active">Categories</li>
             </ol>
         </nav>
         <div class="mb-9">
             <div class="row g-3 mb-4">
                 <div class="col-auto">
-                    <h2 class="mb-0">Products</h2>
+                    <h2 class="mb-0">Categories</h2>
                 </div>
             </div>
             <div id="products"
@@ -69,17 +69,17 @@
                         <table class="table fs-9 mb-0" id="data-table">
                             <thead>
                                 <tr>
-                                    <td class="align-middle white-space-nowrap py-0"><a
-                                            class="d-block border border-translucent rounded-2"
-                                            href="../landing/product-details.html"><img
-                                                src="../../../assets/img/products/1.png" alt="" width="53"></a>
-                                    </td>
+                                    <th class="sort white-space-nowrap align-middle fs-10" scope="col"
+                                        style="width:50px;"></th>
                                     <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;">
-                                        PRODUCT NAME</th>
-                                    <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;">SKU
+                                        CATEGORY NAME
+                                    </th>
+                                    <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:50px;">
+                                        PRICE
                                     </th>
                                     <th class="sort align-middle ps-4" scope="col" style="width:50px;">
-                                        PLACE OF PURCHASE</th>
+                                        PROVISION
+                                    </th>
                                     <th class="sort align-middle ps-4" scope="col" style="width:50px;"></th>
                                 </tr>
                             </thead>
@@ -121,7 +121,7 @@
                     pagingType: "full_numbers",
                     dom: "<'row justify-content-between table-topbar'<'col-md-2 col-sm-4 px-0'f>>tipr",
                     ajax: {
-                        url: "{{ route('products.inventories.index') }}",
+                        url: "{{ route('admin.category.index') }}",
                         type: "GET",
                         data: (d) => {
                             d.search = $('#search-input').val();
@@ -131,7 +131,13 @@
                             data: 'image',
                             name: 'image',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            render: function(data, type, row) {
+                                return `
+                                <td>
+                                    <img src="${data}" alt="" width="53">
+                                </td>`;
+                            }
                         },
                         {
                             data: 'name',
@@ -140,13 +146,20 @@
                             searchable: true
                         },
                         {
-                            data: 'sku',
-                            name: 'sku',
+                            data: 'cost',
+                            name: 'cost',
                             orderable: true,
                             searchable: true
                         },
                         {
-                            data: null,
+                            data: 'provision',
+                            name: 'provision',
+                            orderable: true,
+                            searchable: true
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {

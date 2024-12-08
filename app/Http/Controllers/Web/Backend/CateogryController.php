@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Backend\CategoryRequest;
+use App\Models\Category;
 use App\Services\Web\Backend\CateogryService;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,9 +23,16 @@ class CateogryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            if ($request->ajax()) {
+                return $this->cateogryService->index($request);
+            }
+            return view('backend.layouts.category.index');
+        } catch (Exception $e) {
+            return redirect()->back()->with('t-error', 'Something went wrong! Please try again.');
+        }
     }
 
     /**
@@ -45,8 +53,8 @@ class CateogryController extends Controller
             $this->cateogryService->store($validatedData);
             return redirect()->route('admin.category.index')->with('t-success', 'category created successfully');
             // return redirect()->back()->with('t-success', 'category created successfully');
-        }catch (Exception $e){
-            Log::error('Catagory Store: '.$e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Catagory Store: ' . $e->getMessage());
             return redirect()->back()->with('t-error', 'Failed to create category');
         }
 

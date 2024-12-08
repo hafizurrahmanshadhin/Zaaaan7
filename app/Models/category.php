@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Category extends Model
 {
@@ -18,8 +18,8 @@ class Category extends Model
         return $this->hasMany(SubCategory::class);
     }
 
-    public function image(): MorphMany
+    public function image(): MorphOne
     {
-        return $this->morphMany(Image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 }
