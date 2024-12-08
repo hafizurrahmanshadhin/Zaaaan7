@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\Web\Backend;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -9,13 +9,15 @@ use Illuminate\Support\Facades\DB;
 class UniqueSubCategoryName implements ValidationRule
 {
     protected $categoryId;
+    protected $subCategoryId;
 
-    // Constructor to receive the category_id
-    public function __construct($categoryId)
+    // Constructor to receive the category_id and optional sub-category id (for updates)
+    public function __construct($categoryId, $subCategoryId = null)
     {
         $this->categoryId = $categoryId;
+        $this->subCategoryId = $subCategoryId;
     }
-    
+
     /**
      * Run the validation rule.
      *
@@ -29,6 +31,11 @@ class UniqueSubCategoryName implements ValidationRule
         $query = DB::table('sub_categories')
             ->where('category_id', $this->categoryId)
             ->where('name', $value);
+
+        // If a sub-category ID is passed (for updates), ignore that specific sub-category
+        if ($this->subCategoryId) {
+            $query->where('id', '!=', $this->subCategoryId);
+        }
 
         // If a record with the same name exists, trigger the validation failure
         if ($query->exists()) {

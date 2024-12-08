@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Web\Backend;
 
-use App\Rules\UniqueSubCategoryName;
+
+use App\Rules\Web\Backend\UniqueSubCategoryName;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateSubCategoryRequest extends FormRequest
+class SubCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

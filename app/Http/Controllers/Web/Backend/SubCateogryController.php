@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Web\Backend\CreateSubCategoryRequest;
+use App\Http\Requests\Web\Backend\SubCategoryRequest;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Services\Web\Backend\SubCateogryService;
@@ -52,7 +52,7 @@ class SubCateogryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateSubCategoryRequest $request, Category $category)
+    public function store(SubCategoryRequest $request, Category $category)
     {
         try {
             $validatedData = $request->validated();
@@ -68,15 +68,15 @@ class SubCateogryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category, SubCategory $subCategory)
     {
-        //
+        return view('backend.layouts.category.sub-categories.edit', compact('category','subCategory'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateedit(SubCategoryRequest $request, Category $category, SubCategory $subCategory)
     {
         //
     }

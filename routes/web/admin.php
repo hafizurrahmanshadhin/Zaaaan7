@@ -21,7 +21,7 @@ Route::prefix('/category')->name('category.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
-            Route::get('/edit/{category}', 'edit')->name('edit');
+            Route::get('//{category}', 'edit')->name('edit');
             Route::put('/update/{category}', 'update')->name('update');
             Route::delete('/destroy/{category}', 'destroy')->name('destroy');
         });
@@ -30,13 +30,12 @@ Route::prefix('/category')->name('category.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/update', 'update')->name('update');
     });
 });
 
-
 Route::prefix('sub-cateogry')->name('sub.')->controller(SubCateogryController::class)->group(function () {
-    Route::get('/edit/{subCategory}', 'edit')->name('edit');
-    Route::put('/update/{subCategory}', 'update')->name('update');
     Route::delete('/destroy/{subCategory}', 'destroy')->name('destroy');
 });
 

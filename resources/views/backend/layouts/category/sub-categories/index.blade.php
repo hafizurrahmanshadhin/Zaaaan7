@@ -92,7 +92,7 @@
     <script src="{{ asset('assets/dev/js/datatables.min.js') }}"></script>
     <script>
         var routeUrls = {
-            editUrl: "{{ route('admin.sub.edit', ['subCategory' => '__subCategory__']) }}"
+            editUrl: "{{ route('admin.category.sub.edit', ['category' => $category->id, 'subCategory' => '__subCategory__']) }}"
         };
     </script>
     <script>
