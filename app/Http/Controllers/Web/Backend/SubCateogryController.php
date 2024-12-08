@@ -43,9 +43,9 @@ class SubCateogryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Category $category)
     {
-        //
+        return view('backend.layouts.category.sub-categories.create');
     }
 
     /**

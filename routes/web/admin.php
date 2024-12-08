@@ -28,6 +28,8 @@ Route::prefix('/category')->name('category.')->group(function () {
 
     Route::prefix('/{category}/sub-cateogry')->name('sub.')->controller(SubCateogryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
     });
 });
 
