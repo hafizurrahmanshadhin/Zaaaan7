@@ -27,11 +27,11 @@ class AuthService
      *                            - 'email' (string): The email address of the user.
      *                            - 'password' (string): The plain-text password of the user, which will be hashed.
      * 
-     * @return string|null The generated JWT token if registration is successful; otherwise, null if an error occurs.
+     * @return array|null The generated JWT token if registration is successful; otherwise, null if an error occurs.
      * 
      * @throws Exception If token generation fails after user creation.
      */
-    public function register(array $credentials): string
+    public function register(array $credentials): array
     {
         try {
 
@@ -49,7 +49,7 @@ class AuthService
             }
             DB::commit();
 
-            return $token;
+            return ['token'=>$token, 'role' => $user->role];
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -72,11 +72,11 @@ class AuthService
      *                            - 'email' (string): The email address of the user.
      *                            - 'password' (string): The plain-text password of the user.
      *
-     * @return string The generated JWT token if the login is successful.
+     * @return array The generated JWT token if the login is successful.
      * 
      * @throws Exception If any other error occurs, such as token generation failure.
      */
-    public function login(array $credentials): string
+    public function login(array $credentials): array
     {
         try {
             $user = User::where('email', $credentials['email'])->first();
@@ -87,7 +87,7 @@ class AuthService
                 throw new Exception('Token generation failed.');
             }
 
-            return $token;
+            return ['token'=>$token, 'role' => $user->role];
 
         } catch (Exception $e) {
             Log::error('AuthService::login -> ' . $e->getMessage());
@@ -145,7 +145,7 @@ class AuthService
      *
      * @throws \Exception If any error occurs during the user creation process, it will be logged and rethrown.
      */
-    public function createUser(array $credentials): mixed
+    public function createUser(array $credentials, $role='user'): mixed
     {
         try {
             $helper = new Helper();
@@ -156,7 +156,7 @@ class AuthService
                 'handle' => $helper->generateUniqueSlug($credentials['first_name'], 'users', 'handle'),
                 'email' => $credentials['email'],
                 'password' => Hash::make($credentials['password']),
-
+                'role' => $role,
             ]);
             // creating user profile
             $user->profile()->create([

@@ -62,9 +62,9 @@ class AuthController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            $token = $this->authService->register($validatedData);
+            $response = $this->authService->register($validatedData);
 
-            return $this->success(200, 'user registration successfull', ['token' => $token]);
+            return $this->success(200, 'user registration successfull', $response);
 
         } catch (Exception $e) {
             Log::error('User registration' . $e->getMessage());
@@ -101,11 +101,10 @@ class AuthController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            // return response()->json($validatedData);
 
-            $token = $this->authService->login($validatedData);
+            $response = $this->authService->login($validatedData);
 
-            return $this->success(200, 'user login successfull', ['token' => $token]);
+            return $this->success(200, 'user login successfull', $response);
         } catch (Exception $e) {
             Log::error('User login' . $e->getMessage());
             return $this->error(500, 'server error', $e->getMessage());
