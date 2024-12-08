@@ -42,7 +42,7 @@ class CateogryService
             ->addColumn('name', function ($data) {
                 return '
                 <td class="product align-middle ps-4">
-                    <a class="fw-semibold line-clamp-3 mb-0" href="">' . $data->name . '</a>
+                    <a class="fw-semibold line-clamp-3 mb-0" href="' . route('admin.category.sub.index', $data->id) . '">' . $data->name . '</a>
                 </td>';
             })
             ->addColumn('cost', function ($data) {
