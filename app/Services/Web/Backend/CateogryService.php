@@ -15,7 +15,6 @@ class CateogryService
     public function index($request): JsonResponse
     {
         $query = Category::orderBy('created_at', 'DESC');
-        // $query = Category::query()->orderBy('created_at', 'DESC');
 
         if ($request->has('search') && $request->search) {
             $searchTerm = $request->search;
@@ -39,16 +38,19 @@ class CateogryService
             ->addColumn('cost', function ($data) {
                 return '
                 <td class="category align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                ' . $data->cost . '
+                $ ' . $data->cost . '
                 </td>';
             })
             ->addColumn('provision', function ($data) {
                 return '
                 <td class="category align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                ' . $data->provision . '
+                $ ' . $data->provision . '
                 </td>';
             })
-            ->rawColumns(['image', 'name', 'cost', 'provision'])
+            ->addColumn('action', function ($data) {
+                return $data->id;
+            })
+            ->rawColumns(['image', 'name', 'cost', 'provision', 'action'])
             ->make(true);
     }
 

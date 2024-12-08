@@ -103,7 +103,7 @@
         $(document).ready(function() {
             if (!$.fn.DataTable.isDataTable('#data-table')) {
                 var dTable = $('#data-table').DataTable({
-                    order: [],
+                    ordering: false,
                     lengthMenu: [
                         [10, 25, 50, 100, 200, 500, -1],
                         [10, 25, 50, 100, 200, 500, "All"]
@@ -195,4 +195,6 @@
             }
         });
     </script>
+
+    
 @endpush
