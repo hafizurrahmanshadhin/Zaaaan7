@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubCategory extends Model
 {
     use SoftDeletes;
-
+    protected $guarded = [];
     /**
      * Define the inverse one-to-many relationship with the User model.
      * Indicates that this model belongs to a specific user.

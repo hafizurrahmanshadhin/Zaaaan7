@@ -2,6 +2,7 @@
 
 namespace App\Services\Web\Backend;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -30,5 +31,18 @@ class SubCateogryService
             })
             ->rawColumns(['name', 'action'])
             ->make(true);
+    }
+
+
+    public function store(array $data, $category)
+    {
+        try {
+            $category->subCategories()->create([
+                'name' => $data['name']
+            ]);
+        }catch(Exception $e)
+        {
+            throw $e;
+        }
     }
 }

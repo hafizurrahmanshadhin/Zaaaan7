@@ -29,8 +29,8 @@
 
 @section('main')
     <div class="content">
-        <h2 class="mb-2 lh-sm">Create a Category</h2>
-        <p class="text-body-tertiary lead mb-2">Please Provide Your Category Informations</p>
+        <h2 class="mb-2 lh-sm">Create a Sub-Category of Category "{{$category->name}}"</h2>
+        <p class="text-body-tertiary lead mb-2">Please Provide Your Sub-Category Informations</p>
         <div class="mt-4">
             <div class="row g-4">
                 <div class="col-12 col-xl-10 order-1 order-xl-0">
@@ -51,39 +51,14 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="p-4 code-to-copy">
-                                    <form class="row g-3 needs-validation" action="{{ route('admin.category.store') }}"
+                                    <form class="row g-3 needs-validation" action="{{ route('admin.category.sub.store', $category) }}"
                                         method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="col-md-12">
-                                            <label class="form-label" for="image">Input Image</label>
-                                            <input class="form-control dropify" name="image" id="image" type="file"
-                                                data-default-file="{{ asset('assets/custom/img/no-image-available.jpg') }}" />
-                                            @error('image')
-                                                <div class="validation-error">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label" for="name">Category Name</label>
+                                            <label class="form-label" for="name">Sub Category Name</label>
                                             <input class="form-control" id="name" name="name" type="text"
                                                 placeholder="Category Name" value="{{ old('name') }}">
                                             @error('name')
-                                                <div class="validation-error">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label" for="cost">Cost</label>
-                                            <input class="form-control" id="" name="cost" placeholder="Cost"
-                                                type="number" step="0.01" value="{{ old('cost') }}">
-                                            @error('cost')
-                                                <div class="validation-error">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label" for="provision">Provision</label>
-                                            <input class="form-control" id="" name="provision"
-                                                placeholder="Provision" type="number" step="0.1"
-                                                value="{{ old('provision') }}">
-                                            @error('provision')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -101,7 +76,7 @@
                         <h5 class="lh-1">On this page </h5>
                         <hr>
                         <ul class="nav nav-vertical flex-column doc-nav" data-doc-nav="data-doc-nav">
-                            <li class="nav-item"> <a class="nav-link" href="#save-StockX-credentials">Create a Category</a>
+                            <li class="nav-item"> <a class="nav-link" href="#save-StockX-credentials">Create a Sub-Category</a>
                             </li>
                         </ul>
                     </div>
