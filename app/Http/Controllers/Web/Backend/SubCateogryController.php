@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Services\Web\Backend\SubCateogryService;
 use App\Traits\ApiResponse;
 use Exception;
@@ -16,7 +17,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class SubCateogryController extends Controller
 {
-
+    use ApiResponse;
     protected $subCateogryService;
 
     public function __construct(SubCateogryService $subCateogryService)
@@ -55,13 +56,6 @@ class SubCateogryController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -82,8 +76,14 @@ class SubCateogryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(SubCategory $subCategory)
     {
-        //
+        try {
+            $subCategory->delete();
+            return $this->success(200, 'category deleted successfully');
+        } catch (Exception $e) {
+            Log::error('Category Delete: ' . $e->getMessage());
+            return $this->error(500, 'Failed to delete category');
+        }
     }
 }

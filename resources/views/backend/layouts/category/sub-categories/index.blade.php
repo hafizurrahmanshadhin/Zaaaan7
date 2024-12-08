@@ -28,7 +28,7 @@
         <div class="mb-9">
             <div class="row g-3 mb-4">
                 <div class="col-auto">
-                    <h2 class="mb-0">Categories</h2>
+                    <h2 class="mb-0">Sub Categories of {{$category->name}}</h2>
                 </div>
             </div>
             <div id="products"
@@ -92,7 +92,7 @@
     <script src="{{ asset('assets/dev/js/datatables.min.js') }}"></script>
     <script>
         var routeUrls = {
-            editUrl: "{{ route('admin.category.sub.edit', ['category' => $category->id, 'subCategory' => '__subCategory__']) }}"
+            editUrl: "{{ route('admin.sub.edit', ['subCategory' => '__subCategory__']) }}"
         };
     </script>
     <script>
@@ -168,7 +168,7 @@
         });
 
 
-        const deleteAlert = (id) => {
+        const deleteAlert = (id) => {            
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -196,16 +196,15 @@
             try {
                 $.ajax({
                     // Generate the URL using the named route
-                    url: `{{ route('admin.category.destroy', '') }}/${id}`,
+                    url: "{{ route('admin.sub.destroy', ['subCategory' => '__id__']) }}".replace('__id__', id),
                     type: 'DELETE',
                     dataType: 'json',
                     success: (response) => {
                         try {
                             Swal.fire({
                                 title: "Deleted!",
-                                text: "Your file has been deleted.",
+                                text: "deleted successfully",
                                 icon: "success",
-                                title: "Your work has been saved",
                                 showConfirmButton: false,
                                 timer: 500,
                                 customClass: {

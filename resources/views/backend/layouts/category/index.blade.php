@@ -243,9 +243,8 @@
                         try {
                             Swal.fire({
                                 title: "Deleted!",
-                                text: "Your file has been deleted.",
+                                text: "deleted successfully",
                                 icon: "success",
-                                title: "Your work has been saved",
                                 showConfirmButton: false,
                                 timer: 500,
                                 customClass: {

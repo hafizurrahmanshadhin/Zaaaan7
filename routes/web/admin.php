@@ -28,9 +28,14 @@ Route::prefix('/category')->name('category.')->group(function () {
 
     Route::prefix('/{category}/sub-cateogry')->name('sub.')->controller(SubCateogryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/edit/{subCategory}', 'edit')->name('edit');
-        Route::put('/update/{subCategory}', 'update')->name('update');
     });
+});
+
+
+Route::prefix('sub-cateogry')->name('sub.')->controller(SubCateogryController::class)->group(function () {
+    Route::get('/edit/{subCategory}', 'edit')->name('edit');
+    Route::put('/update/{subCategory}', 'update')->name('update');
+    Route::delete('/destroy/{subCategory}', 'destroy')->name('destroy');
 });
 
 
