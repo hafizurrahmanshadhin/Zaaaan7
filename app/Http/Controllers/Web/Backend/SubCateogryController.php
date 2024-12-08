@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Web\Backend\SubCategoryRequest;
+use App\Http\Requests\Web\Backend\CreateSubCategoryRequest;
+use App\Http\Requests\Web\Backend\UpdateSubCategoryRequest;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Services\Web\Backend\SubCateogryService;
@@ -52,7 +53,7 @@ class SubCateogryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SubCategoryRequest $request, Category $category)
+    public function store(CreateSubCategoryRequest $request, Category $category)
     {
         try {
             $validatedData = $request->validated();
@@ -76,9 +77,16 @@ class SubCateogryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateedit(SubCategoryRequest $request, Category $category, SubCategory $subCategory)
+    public function update(UpdateSubCategoryRequest $request, Category $category, SubCategory $subCategory)
     {
-        //
+        try {
+            $validatedData = $request->validated();
+            $subCategory->update($validatedData);
+            return redirect()->route('admin.category.sub.index', ['category' => $category->id])->with('t-success', 'Sub category created successfully');
+        } catch (Exception $e) {
+            Log::error('Sub Category Store: ' . $e->getMessage());
+            return redirect()->back()->with('t-error', 'Failed to create sub category');
+        }
     }
 
     /**

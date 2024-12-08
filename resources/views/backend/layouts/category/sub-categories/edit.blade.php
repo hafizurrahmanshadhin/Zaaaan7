@@ -51,13 +51,14 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="p-4 code-to-copy">
-                                    <form class="row g-3 needs-validation" action="{{ route('admin.category.sub.store', $category) }}"
+                                    <form class="row g-3 needs-validation" action="{{ route('admin.category.sub.update',['category' => $category, 'subCategory'=> $subCategory]) }}"
                                         method="POST" enctype="multipart/form-data">
                                         @csrf
+                                        @method('PUT')
                                         <div class="col-md-12">
                                             <label class="form-label" for="name">Sub Category Name</label>
                                             <input class="form-control" id="name" name="name" type="text"
-                                                placeholder="Category Name" value="{{ old('name') }}">
+                                                placeholder="Category Name" value="{{ $subCategory->name }}">
                                             @error('name')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror

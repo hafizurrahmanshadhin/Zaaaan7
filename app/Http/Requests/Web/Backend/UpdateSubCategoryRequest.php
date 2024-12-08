@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests\Web\Backend;
 
-
 use App\Rules\Web\Backend\UniqueSubCategoryName;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SubCategoryRequest extends FormRequest
+class UpdateSubCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +23,9 @@ class SubCategoryRequest extends FormRequest
     public function rules(): array
     {
         $categoryId = $this->route('category')->id;
+        $subCategoryId = $this->route('subCategory')->id;
         return [
-            'name' => ['required', 'string', new UniqueSubCategoryName($categoryId)],
+            'name' => ['required', 'string', new UniqueSubCategoryName($categoryId, $subCategoryId)],
         ];
     }
 }
