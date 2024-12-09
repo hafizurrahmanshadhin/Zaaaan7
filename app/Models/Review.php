@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Review extends Model
 {
+    protected $guarded = [];
     /**
      * Define the inverse one-to-many relationship with the User model.
      * Indicates that this model belongs to a specific user.

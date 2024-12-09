@@ -13,6 +13,7 @@ Route::middleware('guest:api')->group(function ($router) {
     Route::controller(AuthController::class)->group(function () {
         Route::post('login', 'login')->name('login');
         Route::post('register', 'register')->name('register');
+        Route::post('register/helper', 'registerHelper')->name('register.helper');
     });
     // OTP-related routes
     Route::controller(OTPController::class)->group(function () {

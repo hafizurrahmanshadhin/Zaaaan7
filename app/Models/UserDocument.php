@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserDocument extends Model
 {
-
+    protected $guarded = [];
     /**
      * Define the inverse one-to-many relationship with the User model.
      * Indicates that this model belongs to a specific user.

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Task extends Model
 {
-
+    protected $guarded = [];
     /**
      * Define a polymorphic one-to-many relationship with the Image model.
      * Indicates that this model can have multiple associated images.

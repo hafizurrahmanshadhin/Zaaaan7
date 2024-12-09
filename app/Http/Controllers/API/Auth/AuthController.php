@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\Http\Requests\API\Auth\RegisterHelperRequest;
 use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\LoginRequest;
@@ -58,7 +59,7 @@ class AuthController extends Controller
      * 
      * @throws Exception If any error occurs during user registration.
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         try {
             $validatedData = $request->validated();
@@ -71,6 +72,49 @@ class AuthController extends Controller
             return $this->error(500, 'server error', $e->getMessage());
         }
 
+    }
+
+
+
+    /**
+     * Handles the registration of a new helper user.
+     * 
+     * This method:
+     * - Validates the incoming request data using the `RegisterHelperRequest` validation rules.
+     * - Passes the validated data to the `AuthService` to register the user.
+     * - Returns a successful JSON response with the user registration details.
+     * - Catches and logs any exceptions during the registration process, returning a server error response.
+     * 
+     * @param RegisterHelperRequest $registerHelperRequest The validated request containing the user credentials:
+     *   - first_name: The user's first name.
+     *   - last_name: The user's last name.
+     *   - email: The user's email address.
+     *   - password: The user's password.
+     *   - description: The user's profile description (bio).
+     *   - id: The user's ID document file.
+     *   - documents: An array of additional document files to be uploaded.
+     *   - sub_category_id: The ID of the skill sub-category to attach to the user.
+     * 
+     * @return JsonResponse A JSON response containing:
+     *   - A status code (200 for success or 500 for error).
+     *   - A message indicating success or failure.
+     *   - The response data (on success), which contains the JWT token, user role, and email verification flag.
+     * 
+     * @throws Exception If any error occurs during the registration process, such as validation failure, 
+     *                   user creation failure, or external service issues (e.g., OTP sending or token generation).
+     */
+    public function registerHelper(RegisterHelperRequest $registerHelperRequest): JsonResponse
+    {
+        try {
+            $validatedData = $registerHelperRequest->validated();
+            $response = $this->authService->registerHelper($validatedData);
+
+            return $this->success(200, 'user registration successfull', $response);
+
+        } catch (Exception $e) {
+            Log::error('User registration' . $e->getMessage());
+            return $this->error(500, 'server error', $e->getMessage());
+        }
     }
 
 
