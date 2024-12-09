@@ -102,7 +102,7 @@
                         <h5 class="lh-1">On this page </h5>
                         <hr>
                         <ul class="nav nav-vertical flex-column doc-nav" data-doc-nav="data-doc-nav">
-                            <li class="nav-item"> <a class="nav-link" href="#save-StockX-credentials">Create a Category</a>
+                            <li class="nav-item"> <a class="nav-link" href="#save-StockX-credentials">Edit a Category</a>
                             </li>
                         </ul>
                     </div>
