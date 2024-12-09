@@ -26,12 +26,11 @@ class CategoryService
     public function getCategoryes():array
     {
         try {
-            $categories = Category::all();
+            $categories = Category::get();
             return ['categories' => $categories];
         } catch (Exception $e) {
             throw $e;
         }
-
     }
 
 
@@ -73,8 +72,8 @@ class CategoryService
     public function getSubCategories($id):array
     {
         try {
-            $subCategoryes = SubCategory::whereCategoryId($id)->all();
-            return ['subCategoryes' => $subCategoryes];
+            $subCategoryes = SubCategory::whereCategoryId($id)->get();
+            return ['sub_categories' => $subCategoryes];
         } catch (Exception $e) {
             throw $e;
         }

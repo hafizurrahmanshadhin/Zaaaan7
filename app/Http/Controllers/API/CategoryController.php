@@ -34,7 +34,7 @@ class CategoryController extends Controller
     {
         try {
             $response = $this->categoryService->getCategoryes();
-            return $this->success(200, 'getting all the categories', ['categoryes' => $response]);
+            return $this->success(200, 'getting all the categories', ['categories' =>$response['categories']]);
         } catch (Exception $e) {
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get categories', $e->getMessage());
@@ -58,7 +58,7 @@ class CategoryController extends Controller
     {
         try {
             $response = $this->categoryService->getCategory($category);
-            return $this->success(200, 'getting the category', ['category' => $response]);
+            return $this->success(200, 'getting the category', ['category' => $response['category']]);
         } catch (Exception $e) {
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get the category', $e->getMessage());
@@ -81,7 +81,7 @@ class CategoryController extends Controller
     {
         try {
             $response = $this->categoryService->getSubCategories($category);
-            return $this->success(200, 'getting sub-categories of the category', ['sub_categories' => $response]);
+            return $this->success(200, 'getting sub-categories of the category', ['sub_categories' => $response['sub_categories']]);
         } catch (Exception $e) {
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get sub-categories', $e->getMessage());

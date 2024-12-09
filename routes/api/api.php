@@ -1,8 +1,39 @@
 <?php
 
 use App\Helper\Helper;
+use App\Http\Controllers\API\CategoryController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
+
+
+Route::prefix('category')->name('category.')->controller(CategoryController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{category}', 'view')->name('view');
+    Route::get('/sub-category/{category}', 'subCategories')->name('sub.category');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Clear all cache and optimize the application
 Route::get('/optimize-clear', function () {

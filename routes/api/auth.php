@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 // Guest routes - Accessible by unauthenticated users only
 Route::middleware('guest:api')->group(function ($router) {
-        // Authentication-related routes
+    // Authentication-related routes
     Route::controller(AuthController::class)->group(function () {
         Route::post('login', 'login')->name('login');
         Route::post('register', 'register')->name('register');
