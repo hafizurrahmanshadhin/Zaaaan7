@@ -21,7 +21,7 @@
     <div class="content">
         <nav class="mb-3" aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item">Categories</li>
+                <li class="breadcrumb-item"><a href="{{route('admin.category.index')}}">Categories</a></li>
                 <li class="breadcrumb-item active">Sub Categories</li>
             </ol>
         </nav>
