@@ -14,9 +14,11 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
 });
 
 
-
-
-
+Route::middleware(['auth:api'])->group(function () {
+    Route::prefix('category')->name('category.')->controller(CategoryController::class)->group(function () {
+        Route::get('/paginated/page', 'paginatedIndex')->name('index.paginated');
+    });
+});
 
 
 

@@ -23,7 +23,7 @@ class CategoryService
      * @return array
      * @throws \Exception
      */
-    public function getCategoryes():array
+    public function getCategoryes(): array
     {
         try {
             $categories = Category::select('id', 'name')->get();
@@ -34,12 +34,15 @@ class CategoryService
     }
 
 
-    public function getCagegoryPaginated():array
+    public function getCagegoryPaginated(): array
     {
         try {
             $perPage = request()->query('per_page', 10);
 
-            $categories = Category::paginate($perPage);
+            $categories = Category::select('id', 'name')
+                ->with(['image:url,imageable_id'])
+                ->paginate($perPage);
+
             return ['categories' => $categories];
         } catch (Exception $e) {
             throw $e;
@@ -60,7 +63,7 @@ class CategoryService
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
-    public function getCategory($id):array
+    public function getCategory($id): array
     {
         try {
             $category = Category::findOrFail($id, ['id', 'name', 'cost', 'provision']);
@@ -82,7 +85,7 @@ class CategoryService
      * @return array
      * @throws \Exception
      */
-    public function getSubCategories($id):array
+    public function getSubCategories($id): array
     {
         try {
             $subCategoryes = SubCategory::select('id', 'name')->whereCategoryId($id)->get();

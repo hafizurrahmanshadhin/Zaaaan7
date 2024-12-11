@@ -39,7 +39,17 @@ class CategoryController extends Controller
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get categories', $e->getMessage());
         }
+    }
 
+    public function paginatedIndex():JsonResponse
+    {
+        try {
+            $response = $this->categoryService->getCagegoryPaginated();
+            return $this->success(200, 'getting all the categories', ['categories' =>$response['categories']]);
+        } catch (Exception $e) {
+            Log::error('CategoryController:index ->' . $e->getMessage());
+            return $this->error(500, 'failed to get categories', $e->getMessage());
+        }
     }
 
 
