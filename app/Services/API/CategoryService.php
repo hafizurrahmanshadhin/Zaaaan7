@@ -26,7 +26,20 @@ class CategoryService
     public function getCategoryes():array
     {
         try {
-            $categories = Category::get();
+            $categories = Category::select('id', 'name')->get();
+            return ['categories' => $categories];
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    public function getCagegoryPaginated():array
+    {
+        try {
+            $perPage = request()->query('per_page', 10);
+
+            $categories = Category::paginate($perPage);
             return ['categories' => $categories];
         } catch (Exception $e) {
             throw $e;
@@ -50,7 +63,7 @@ class CategoryService
     public function getCategory($id):array
     {
         try {
-            $category = Category::findOrFail($id);
+            $category = Category::findOrFail($id, ['id', 'name', 'cost', 'provision']);
             return ['category' => $category];
         } catch (Exception $e) {
             throw $e;
@@ -72,7 +85,7 @@ class CategoryService
     public function getSubCategories($id):array
     {
         try {
-            $subCategoryes = SubCategory::whereCategoryId($id)->get();
+            $subCategoryes = SubCategory::select('id', 'name')->whereCategoryId($id)->get();
             return ['sub_categories' => $subCategoryes];
         } catch (Exception $e) {
             throw $e;
