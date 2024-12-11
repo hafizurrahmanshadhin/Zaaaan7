@@ -24,18 +24,18 @@ class OTPService
      * @param string $email The email address of the user to whom the OTP will be sent.
      * @param string $operation The operation for which the OTP is being generated (e.g., 'login', 'password_reset').
      *
-     * @return void No value is returned from this method.
+     * @return int 
      *
      * @throws Exception If there is an error retrieving the user, deleting old OTPs, or sending the new OTP.
      */
-    public function otpSend($email, $operation): void
+    public function otpSend($email, $operation): int
     {
 
         try {
             $user = User::whereEmail($email)->first();
             $user->otps()->whereOperation($operation)->delete();
-            $this->otp($user, $operation);
-
+            $otp = $this->otp($user, $operation);
+            return $otp;
         } catch (Exception $e) {
             Log::error('OTPService::otpSend -> ' . $e->getMessage());
             throw $e;
@@ -125,11 +125,11 @@ class OTPService
      * @param User $user The user to whom the OTP will be generated and sent.
      * @param string $operation The operation for which the OTP is generated (e.g., 'email' for email verification).
      *
-     * @return void No value is returned from this method.
+     * @return int
      *
      * @throws Exception If there is an error generating or saving the OTP, or dispatching the email.
      */
-    public function otp($user, $operation): void
+    public function otp($user, $operation): int
     {
         try {
             $otp = mt_rand(111111, 999999);
@@ -139,6 +139,7 @@ class OTPService
             ]);
 
             SendOTPEmail::dispatch($user, $otp);
+            return $otp;
         } catch (Exception $e) {
             Log::error('OTPService::otpMatch -> ' . $e->getMessage());
             throw $e;

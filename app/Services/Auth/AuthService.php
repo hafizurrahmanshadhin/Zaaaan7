@@ -40,7 +40,7 @@ class AuthService
             $user = $this->createUser($credentials);
 
             $optService = new OTPService();
-            $optService->otpSend($user->email, 'email');
+            $otp = $optService->otpSend($user->email, 'email');
 
             $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 
@@ -49,7 +49,7 @@ class AuthService
             }
             DB::commit();
 
-            return ['token' => $token, 'role' => $user->role, 'verify' => false];
+            return ['token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -100,7 +100,8 @@ class AuthService
             $user = $this->createHelper($credentials);
 
             $optService = new OTPService();
-            $optService->otpSend($user->email, 'email');
+            
+            $otp = $optService->otpSend($user->email, 'email');
 
             $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 
@@ -110,7 +111,7 @@ class AuthService
 
             DB::commit();
 
-            return ['token' => $token, 'role' => $user->role, 'verify' => false];
+            return ['token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
 
         } catch (Exception $e) {
             DB::rollBack();
