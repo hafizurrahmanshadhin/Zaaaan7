@@ -42,14 +42,15 @@ class AuthService
             $optService = new OTPService();
             $otp = $optService->otpSend($user->email, 'email');
 
-            $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
+            // $token = $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
 
-            if (!$token) {
-                throw new Exception('Token generation failed.', 500);
-            }
+            // if (!$token) {
+            //     throw new Exception('Token generation failed.', 500);
+            // }
             DB::commit();
 
-            return ['token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
+            // return ['token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
+            return ['role' => $user->role, 'verify' => false, 'otp' => $otp];
 
         } catch (Exception $e) {
             DB::rollBack();

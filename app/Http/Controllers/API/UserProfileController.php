@@ -9,7 +9,6 @@ use App\Services\API\UserProfileService;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class UserProfileController extends Controller
