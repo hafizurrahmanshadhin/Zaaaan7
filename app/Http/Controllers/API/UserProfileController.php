@@ -3,14 +3,22 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Services\API\UserProfileService;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
 {
-
-    public function show(string $id)
+    use ApiResponse;
+    protected $userProfileService;
+    public function __construct(UserProfileService $userProfileService)
     {
-        //
+        $this->userProfileService = $userProfileService;
+    }
+    public function show()
+    {
+        $response =  $this->userProfileService->getUserProfile();
+        return $this->success(200, 'user profile',$response);
     }
 
     public function updateAvatar()

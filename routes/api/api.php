@@ -2,6 +2,7 @@
 
 use App\Helper\Helper;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\UserProfileController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,12 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
 
 
 Route::middleware(['auth:api'])->group(function () {
+    // profile
+    Route::prefix('profile')->name('profile.')->controller(UserProfileController::class)->group(function () {
+        Route::get('/show', 'show')->name('show');
+    });
+
+    // category
     Route::prefix('category')->name('category.')->controller(CategoryController::class)->group(function () {
         Route::get('/paginated/page', 'paginatedIndex')->name('index.paginated');
     });
