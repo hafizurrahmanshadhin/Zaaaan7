@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\AvatarRequest;
 use App\Services\API\UserProfileService;
 use App\Traits\ApiResponse;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserProfileController extends Controller
 {
@@ -17,12 +20,20 @@ class UserProfileController extends Controller
     }
     public function show()
     {
-        $response =  $this->userProfileService->getUserProfile();
-        return $this->success(200, 'user profile',$response);
+        $response = $this->userProfileService->getUserProfile();
+        return $this->success(200, 'user profile', $response);
     }
 
-    public function updateAvatar()
+    public function updateAvatar(AvatarRequest $avatarRequest)
     {
+        try {
+            $validatedData = $avatarRequest->validated();
+            $this->userProfileService->updateAvatar($validatedData);
+            return $this->success(200, 'avatar updated successfully');
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Avatar Update: '. $e->getMessage());
+            return $this->error(500, 'Avatar update failed');
+        }
 
     }
 
@@ -31,7 +42,7 @@ class UserProfileController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
     }
 
 }
