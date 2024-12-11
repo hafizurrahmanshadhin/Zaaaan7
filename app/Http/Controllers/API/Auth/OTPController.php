@@ -109,7 +109,7 @@ class OTPController extends Controller
         try {
             $response = $this->otpService->otpMatch($request->email, $request->operation, $request->otp);
             if ($response) {
-                return $this->success(200, 'otp verified', ['token' => $response]);
+                return $this->success(200, 'otp verified', $response);
             }
             throw new Exception('Server Error', 500);
         } catch (UserAlreadyVarifiedException $e) {

@@ -59,15 +59,14 @@ class OTPService
      * @param string $operation The operation for which the OTP was generated (e.g., 'email').
      * @param string $otp The OTP that the user has provided.
      *
-     * @return string|null The generated authentication token if the OTP is valid and email is verified. 
-     *                     Returns null if the operation does not involve generating a token.
+     * @return array|null 
      *
      * @throws \App\Exceptions\UserAlreadyVarifiedException If the user's email has already been verified.
      * @throws \App\Exceptions\OTPMismatchException If the provided OTP does not match the stored OTP.
      * @throws \App\Exceptions\OTPExpiredException If the provided OTP has expired.
      * @throws \Exception If any other unexpected error occurs.
      */
-    public function otpMatch($email, $operation, $otp): string|null
+    public function otpMatch($email, $operation, $otp): array|null
     {
         try {
             $user = User::whereEmail($email)->first();
@@ -101,7 +100,7 @@ class OTPService
                 $response = $authService->login(['email' => $user->email]);
                 $token = $response['token'];
                 DB::commit();
-                return $token;
+                return ['token'  => $token, 'role' => $user->role];
             }
             DB::commit();
             return null;
