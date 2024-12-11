@@ -18,6 +18,18 @@ class UserReviewController extends Controller
         $this->userReviewsService = $userReviewService;
     }
 
+
+
+    /**
+     * Retrieve and display five random user reviews for the homepage.
+     * 
+     * This method calls the `getFiveUserReviews` function from the `userReviewsService` to fetch a selection of random reviews. 
+     * Upon successful retrieval, it returns the reviews with a success response.
+     * In case of failure, it logs the error and returns an appropriate error response.
+     * 
+     * @return \Illuminate\Http\JsonResponse The success or error response containing the reviews or error message.
+     * @throws \Exception If an error occurs during the process of fetching user reviews.
+     */
     public function homePageIndex()
     {
         try {
@@ -28,6 +40,7 @@ class UserReviewController extends Controller
             return $this->error(500, 'fail to get reviews', $e);
         }
     }
+
 
     /**
      * Display a listing of the resource.
