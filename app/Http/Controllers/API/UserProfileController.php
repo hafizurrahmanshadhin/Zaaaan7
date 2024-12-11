@@ -40,8 +40,14 @@ class UserProfileController extends Controller
      */
     public function show(): JsonResponse
     {
-        $response = $this->userProfileService->getUserProfile();
-        return $this->success(200, 'user profile', $response);
+        try {
+            $response = $this->userProfileService->getUserProfile();
+            return $this->success(200, 'user profile', $response);
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Show: '. $e->getMessage());
+            return $this->error(500, 'failed to get user profile', $e->getMessage());
+        }
+
     }
 
 
@@ -82,7 +88,7 @@ class UserProfileController extends Controller
             $this->userProfileService->updateProfile($validatedData);
             return $this->success(200, 'avatar updated successfully');
         } catch (Exception $e) {
-            Log::error('UserProfileController::Avatar Update: ' . $e->getMessage());
+            Log::error('UserProfileController::Update: ' . $e->getMessage());
             return $this->error(500, 'Avatar update failed');
         }
     }
