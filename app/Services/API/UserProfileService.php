@@ -12,12 +12,30 @@ class UserProfileService
 {
     private $user;
 
+
+    /**
+     * Constructor to initialize the user property.
+     * Retrieves the currently authenticated user using Laravel's Auth facade.
+     */
     public function __construct()
     {
         $this->user = Auth::user();
     }
 
-    public function getUserProfile()
+
+    /**
+     * Retrieves the authenticated user's profile and related profile details.
+     * 
+     * This method performs the following:
+     * - Selects specific columns (`id`, `first_name`, `last_name`, `email`, `avatar`) from the `users` table.
+     * - Filters the user by their email.
+     * - Eager loads the `profile` relationship with specific columns (`id`, `user_id`, `gender`, `phone`, `address`).
+     * - Returns the first matching user record with the associated profile.
+     * 
+     * @return \App\Models\User|null The user with their profile data, or null if no matching user is found.
+     * @throws \Exception If any error occurs during query execution.
+     */
+    public function getUserProfile():mixed
     {
         try {
             $user = User::select(
@@ -40,7 +58,21 @@ class UserProfileService
 
     }
 
-    public function updateAvatar($credentials)
+
+    /**
+     * Updates the authenticated user's avatar.
+     * 
+     * This method performs the following steps:
+     * 1. Retrieves the current avatar URL of the authenticated user.
+     * 2. Uploads the new avatar file to a specified directory using a helper function.
+     * 3. Updates the `avatar` field in the user's database record with the new URL.
+     * 4. Deletes the old avatar file if it exists.
+     * 
+     * @param array $credentials An array containing the `avatar` file to be uploaded.
+     * @return void
+     * @throws \Exception If any error occurs during file upload, database update, or file deletion.
+     */
+    public function updateAvatar($credentials):void
     {
         try {
             $userAvater = $this->user->avatar;
@@ -57,7 +89,33 @@ class UserProfileService
 
     }
 
-    public function updateProfile($credentials)
+
+
+
+    /**
+     * Updates the authenticated user's profile and associated profile details.
+     * 
+     * This method performs the following steps:
+     * 1. Starts a database transaction to ensure data integrity.
+     * 2. Finds the authenticated user by their ID and updates their basic information:
+     *    - `first_name`
+     *    - `last_name`
+     *    - `email`
+     * 3. Updates the user's associated profile with optional values for:
+     *    - `phone`
+     *    - `address`
+     *    - `gender`
+     *    (Falls back to existing values if no new value is provided.)
+     * 4. Commits the transaction upon successful updates.
+     * 5. Rolls back the transaction in case of an exception and rethrows the error.
+     * 
+     * @param array $credentials An associative array containing updated user and profile details.
+     *        Required keys: `first_name`, `last_name`, `email`.
+     *        Optional keys: `phone`, `address`, `gender`.
+     * @return void
+     * @throws \Exception If any error occurs during the update process.
+     */
+    public function updateProfile($credentials):void
     {
         try {
             DB::beginTransaction();
@@ -70,11 +128,11 @@ class UserProfileService
 
             $user->profile()->update([
                 'phone' => $credentials['phone'] ?? $user->profile->phone,
-                'address' => $credentials['address']?? $user->profile->address,
-                'gender' => $credentials['gender']?? $user->profile->gender,
+                'address' => $credentials['address'] ?? $user->profile->address,
+                'gender' => $credentials['gender'] ?? $user->profile->gender,
             ]);
             DB::commit();
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
