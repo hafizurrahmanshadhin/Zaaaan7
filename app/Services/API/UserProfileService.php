@@ -12,7 +12,6 @@ class UserProfileService
 {
     private $user;
 
-
     /**
      * Constructor to initialize the user property.
      * Retrieves the currently authenticated user using Laravel's Auth facade.
@@ -35,7 +34,7 @@ class UserProfileService
      * @return \App\Models\User|null The user with their profile data, or null if no matching user is found.
      * @throws \Exception If any error occurs during query execution.
      */
-    public function getUserProfile():mixed
+    public function getUserProfile(): mixed
     {
         try {
             $user = User::select(
@@ -47,7 +46,7 @@ class UserProfileService
             )->whereEmail($this->user->email)
                 ->with([
                     'profile' => function ($query) {
-                        $query->select('id', 'user_id', 'gender', 'phone', 'address');
+                        $query->select('id', 'user_id', 'gender', 'phone', 'address', 'date_of_birth');
                     }
                 ])
                 ->first();
@@ -55,7 +54,29 @@ class UserProfileService
         } catch (Exception $e) {
             throw $e;
         }
+    }
 
+
+    public function getHelperProfile(): mixed
+    {
+        try {
+            $user = User::select(
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'avatar'
+            )->whereEmail($this->user->email)
+                ->with([
+                    'profile' => function ($query) {
+                        $query->select('id', 'user_id', 'gender', 'phone', 'address', 'date_of_birth', 'bio as description');
+                    }
+                ])
+                ->first();
+            return $user;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
 
@@ -72,7 +93,7 @@ class UserProfileService
      * @return void
      * @throws \Exception If any error occurs during file upload, database update, or file deletion.
      */
-    public function updateAvatar($credentials):void
+    public function updateAvatar($credentials): void
     {
         try {
             $userAvater = $this->user->avatar;
@@ -115,7 +136,7 @@ class UserProfileService
      * @return void
      * @throws \Exception If any error occurs during the update process.
      */
-    public function updateProfile($credentials):void
+    public function updateProfile($credentials): void
     {
         try {
             DB::beginTransaction();
@@ -130,6 +151,52 @@ class UserProfileService
                 'phone' => $credentials['phone'] ?? $user->profile->phone,
                 'address' => $credentials['address'] ?? $user->profile->address,
                 'gender' => $credentials['gender'] ?? $user->profile->gender,
+            ]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+
+
+    /**
+     * Update the authenticated user's profile information and associated profile details.
+     * 
+     * This method:
+     * 1. Begins a database transaction to ensure data integrity.
+     * 2. Finds the authenticated user and updates their basic information (`first_name`, `last_name`, `email`).
+     * 3. Updates the user's associated profile with new or existing values for:
+     *    - `phone`
+     *    - `address`
+     *    - `gender`
+     *    - `description`
+     * 4. Commits the transaction upon successful updates.
+     * 5. Rolls back the transaction and throws an exception if any error occurs during the process.
+     * 
+     * @param array $credentials The data to update the user's profile and profile details. 
+     *        Required keys: `first_name`, `last_name`, `email`.
+     *        Optional keys: `phone`, `address`, `gender`, `description`.
+     * @return void
+     * @throws \Exception If any error occurs during the update process or transaction failure.
+     */
+    public function updateHelperProfile($credentials): void
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::findOrFail($this->user->id);
+            $user->update([
+                'first_name' => $credentials['first_name'],
+                'last_name' => $credentials['last_name'],
+                'email' => $credentials['email'],
+            ]);
+
+            $user->profile()->update([
+                'phone' => $credentials['phone'] ?? $user->profile->phone,
+                'address' => $credentials['address'] ?? $user->profile->address,
+                'gender' => $credentials['gender'] ?? $user->profile->gender,
+                'bio' => $credentials['description'] ?? $user->profile->description,
             ]);
             DB::commit();
         } catch (Exception $e) {

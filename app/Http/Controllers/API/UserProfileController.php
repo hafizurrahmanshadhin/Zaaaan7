@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\AvatarRequest;
+use App\Http\Requests\API\UpdateHelperProfileRequest;
 use App\Http\Requests\API\UpdateProfileRequest;
 use App\Services\API\UserProfileService;
 use App\Traits\ApiResponse;
@@ -46,7 +47,6 @@ class UserProfileController extends Controller
             Log::error('UserProfileController::Show: '. $e->getMessage());
             return $this->error(500, 'failed to get user profile', $e->getMessage());
         }
-
     }
 
 
@@ -72,6 +72,19 @@ class UserProfileController extends Controller
     }
 
 
+
+    public function showHelper(): JsonResponse
+    {
+        try {
+            $response = $this->userProfileService->getHelperProfile();
+            return $this->success(200, 'user profile', $response);
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Show: '. $e->getMessage());
+            return $this->error(500, 'failed to get user profile', $e->getMessage());
+        }
+    }
+
+
     /**
      * Update the authenticated user's profile information.
      * 
@@ -85,10 +98,26 @@ class UserProfileController extends Controller
         try {
             $validatedData = $updateProfileRequest->validated();
             $this->userProfileService->updateProfile($validatedData);
-            return $this->success(200, 'avatar updated successfully');
+            return $this->success(200, 'profile updated successfully');
         } catch (Exception $e) {
             Log::error('UserProfileController::Update: ' . $e->getMessage());
-            return $this->error(500, 'Avatar update failed');
+            return $this->error(500, 'profile update failed');
+        }
+    }
+
+
+
+
+
+    public function updateHelper(UpdateHelperProfileRequest $updatehelperProfileRequest):JsonResponse
+    {
+        try {
+            $validatedData = $updatehelperProfileRequest->validated();
+            $this->userProfileService->updateHelperProfile($validatedData);
+            return $this->success(200, 'profile updated successfully');
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Update: ' . $e->getMessage());
+            return $this->error(500, 'profile update failed');
         }
     }
 
