@@ -20,6 +20,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('profile')->name('profile.')->controller(UserProfileController::class)->group(function () {
         Route::get('/show', 'show')->name('show');
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
+        Route::post('/update', 'update')->name('update');
     });
 
     // category

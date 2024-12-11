@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserProfileService
 {
@@ -56,9 +57,27 @@ class UserProfileService
 
     }
 
-    public function updateProfile()
+    public function updateProfile($credentials)
     {
+        try {
+            DB::beginTransaction();
+            $user = User::findOrFail($this->user->id);
+            $user->update([
+                'first_name' => $credentials['first_name'],
+                'last_name' => $credentials['last_name'],
+                'email' => $credentials['email'],
+            ]);
 
+            $user->profile()->update([
+                'phone' => $credentials['phone'] ?? $user->profile->phone,
+                'address' => $credentials['address']?? $user->profile->address,
+                'gender' => $credentials['gender']?? $user->profile->gender,
+            ]);
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\API;
 
+use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,8 @@ use Illuminate\Validation\ValidationException;
 
 class UpdateProfileRequest extends FormRequest
 {
+
+    use ApiResponse;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -31,6 +34,7 @@ class UpdateProfileRequest extends FormRequest
             'email' => 'required|email|unique:users,email,' . $user->id . ',id',
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
+            'gender' => 'nullable|string|in:male,female,other',
         ];
     }
 
@@ -56,6 +60,9 @@ class UpdateProfileRequest extends FormRequest
             'phone.string' => 'Phone number must be a valid string.',
 
             'address.string' => 'Address must be a valid string.',
+
+            'gender.string' => 'Gender must be a valid string.',
+            'gender.in' => 'Gender must be one of the following values: male, female, or other.',
         ];
     }
 
@@ -76,18 +83,11 @@ class UpdateProfileRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): never
     {
-
         $errors = $validator->errors()->getMessages();
         $message = null;
-        $fields = [
-            'first_name',
-            'last_name',
-            'email',
-            'phone',
-            'address'
-        ];
+        $fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'gender'];
 
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             if (isset($errors[$field])) {
                 $message = $errors[$field][0];
                 break;

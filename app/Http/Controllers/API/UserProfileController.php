@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\AvatarRequest;
+use App\Http\Requests\API\UpdateProfileRequest;
 use App\Services\API\UserProfileService;
 use App\Traits\ApiResponse;
 use Exception;
@@ -40,9 +41,16 @@ class UserProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateProfileRequest $updateProfileRequest)
     {
-        
+        try {
+            $validatedData = $updateProfileRequest->validated();
+            $this->userProfileService->updateProfile($validatedData);
+            return $this->success(200, 'avatar updated successfully');
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Avatar Update: '. $e->getMessage());
+            return $this->error(500, 'Avatar update failed');
+        }
     }
 
 }
