@@ -2,6 +2,8 @@
 
 use App\Helper\Helper;
 use App\Http\Middleware\EnsureGuestJwt;
+use App\Http\Middleware\HelperMiddleware;
+use App\Http\Middleware\UserMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -42,6 +44,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'guest.api' => EnsureGuestJwt::class,
+            'helper' => HelperMiddleware::class,
+            'user' => UserMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
