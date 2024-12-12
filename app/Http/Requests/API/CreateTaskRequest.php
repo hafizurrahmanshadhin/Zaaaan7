@@ -31,8 +31,10 @@ class CreateTaskRequest extends FormRequest
             'address_id' => 'required|exists:addresses,id',
             'sub_category_id' => 'required|exists:sub_categories,id',
             'description' => 'required|string',
-            'date' => ['required', 'date', new DateNotInPast],  // Use the custom date rule
-            'time' => ['required', 'date_format:H:i', new TimeBasedOnDate($this->input('date'))],  // Use the custom time rule
+            'date' => ['required', 'date', new DateNotInPast],
+            'time' => ['required', 'date_format:H:i', new TimeBasedOnDate($this->input('date'))],
+            'image' => 'required|array',
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
 
@@ -46,21 +48,26 @@ class CreateTaskRequest extends FormRequest
         return [
             'address_id.required' => 'The address is required.',
             'address_id.exists' => 'The selected address does not exist.',
-    
+
             'sub_category_id.required' => 'The sub-category is required.',
             'sub_category_id.exists' => 'The selected sub-category does not exist.',
-    
+
             'description.required' => 'Please provide a task description.',
             'description.string' => 'The description must be a valid string.',
-    
+
             'date.required' => 'The task date is required.',
             'date.date' => 'Please provide a valid date for the task.',
-    
+
             'time.required' => 'The task time is required.',
             'time.date_format' => 'The time must be in the format HH:MM (e.g., 14:30).',
+
+            'image.required' => 'At least one document is required.',
+            'image.array' => 'Image must be provided as an array.',
+            'image.*.required' => 'Each document is required.',
+            'image.*.image' => 'Each document must be an image.',
+            'image.*.mimes' => 'Each document must be a jpeg, png, jpg, gif, or svg image.',
         ];
     }
-
 
     /**
      * Handles failed validation by formatting the validation errors and throwing a ValidationException.
@@ -80,10 +87,12 @@ class CreateTaskRequest extends FormRequest
     {
         $errors = $validator->errors()->getMessages();
         $message = null;
-        $fields = ['address_id', 'sub_category_id', 'description', 'date', 'time'];
+        $fields = ['address_id', 'sub_category_id', 'description', 'date', 'time', 'image'];
 
         foreach ($fields as $field) {
-            if (isset($errors[$field])) {
+            if ($field === 'image' && isset($errors['image.*'])) {
+                $message = $errors['image.*'][0];
+            } else if (isset($errors[$field])) {
                 $message = $errors[$field][0];
                 break;
             }
