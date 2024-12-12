@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client')->comment('from users table');
-            $table->unsignedBigInteger('helper')->comment('from users table');
+            $table->unsignedBigInteger('helper')->comment('from users table')->nullable();
 
             $table->foreignId('address_id')->constrained('addresses')->cascadeOnDelete();
             $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
