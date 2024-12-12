@@ -9,7 +9,7 @@ use App\Http\Requests\API\Auth\OTPRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\OTPMatchRequest;
 use App\Models\User;
-use App\Services\Auth\OTPService;
+use App\Services\API\Auth\OTPService;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;

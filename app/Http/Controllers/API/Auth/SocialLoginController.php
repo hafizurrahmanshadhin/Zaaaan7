@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Auth;
 use App\Exceptions\SocialLoginException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\SocialLoginRequest;
-use App\Services\Auth\SocialLoginService;
+use App\Services\API\Auth\SocialLoginService;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;

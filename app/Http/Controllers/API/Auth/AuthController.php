@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Requests\API\Auth\RegisterHelperRequest;
-use App\Services\Auth\AuthService;
+use App\Services\API\Auth\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\LoginRequest;
 use App\Http\Requests\API\Auth\RegisterRequest;

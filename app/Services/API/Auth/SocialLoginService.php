@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Auth;
+namespace App\Services\API\Auth;
 
 use App\Exceptions\SocialLoginException;
 use App\Models\User;
