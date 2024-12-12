@@ -18,11 +18,15 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
 Route::middleware(['auth:api'])->group(function () {
     // profile
     Route::prefix('profile')->name('profile.')->controller(UserProfileController::class)->group(function () {
-        Route::get('/', 'show')->name('show');
+        Route::middleware(['helper'])->group(function () {
+            Route::post('/update/helper', 'updateHelper')->name('update.helper');
+            Route::get('/show/helper', 'showHelper')->name('show.helper');
+        });
+        Route::middleware(['user'])->group(function () {
+            Route::get('/', 'show')->name('show');
+            Route::post('/update', 'update')->name('update');
+        });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
-        Route::post('/update', 'update')->name('update');
-        Route::post('/update/helper', 'updateHelper')->name('update.helper');
-        Route::get('/show/helper', 'showHelper')->name('show.helper');
     });
 
     // category
