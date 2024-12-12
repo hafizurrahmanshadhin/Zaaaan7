@@ -1,6 +1,7 @@
 <?php
 
 use App\Helper\Helper;
+use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\UserProfileController;
 use Illuminate\Support\Facades\Artisan;
@@ -27,6 +28,12 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('/update', 'update')->name('update');
         });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
+    });
+
+    Route::prefix('address')->name('address.')->controller(AddressController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::delete('/destroy/{address}', 'destroy')->name('destroy');
     });
 
     // category
