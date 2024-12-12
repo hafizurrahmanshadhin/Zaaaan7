@@ -3,6 +3,7 @@
 use App\Helper\Helper;
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\UserProfileController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::delete('/destroy/{address}', 'destroy')->name('destroy');
+    });
+
+    Route::middleware(['user'])->prefix('task')->name('task.')->controller(TaskController::class)->group(function () {
+        Route::post('/store', 'store')->name('store');
     });
 
     // category
