@@ -27,7 +27,11 @@ class CreateReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'task_id' => 'required|exists:tasks,id',
+            'star' => 'required|numeric',
+            'comment' => 'required|string',
+            'image' => 'required|array',
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
 

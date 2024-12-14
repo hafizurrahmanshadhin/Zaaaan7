@@ -47,6 +47,7 @@ class TaskService
      */
     public function createTaske(array $credentials):array
     {
+        $images = [];
         try {
             DB::beginTransaction();
             $task = $this->user->clientTasks()->create([
@@ -56,7 +57,7 @@ class TaskService
                 'date' => $credentials['date'],
                 'time' => $credentials['time'],
             ]);
-            $images = [];
+            
             foreach ($credentials['image'] as $image) {
                 $url = Helper::uploadFile($image, 'task/' . $task->id);
                 array_push($images, $task->images()->create([

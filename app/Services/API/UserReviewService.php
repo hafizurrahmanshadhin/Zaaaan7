@@ -2,9 +2,11 @@
 
 namespace App\Services\API;
 
+use App\Helper\Helper;
 use App\Models\Review;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserReviewService
 {
@@ -36,9 +38,31 @@ class UserReviewService
         }
     }
 
-    public function store()
+    public function storeReview(array $credentials)
     {
-        //
+        $images = [];
+        try {
+            DB::beginTransaction();
+            $review = Review::create([
+                'task_id' => $credentials['task_id'],
+                'star' => $credentials['star'],
+                'comment' => $credentials['comment'],
+            ]);
+            foreach ($credentials['image'] as $image) {
+                $url = Helper::uploadFile($image, 'task/' . $review->id);
+                array_push($images, $review->images()->create([
+                    'url' => $url
+                ]));
+            }
+            DB::commit();
+            return ['review' => $review, 'images' => $images];
+        } catch (Exception $e) {
+            DB::rollBack();
+            foreach ($images as $image) {
+                $url = Helper::deleteFile($image);
+            }
+            throw $e;
+        }
     }
 
     public function update()

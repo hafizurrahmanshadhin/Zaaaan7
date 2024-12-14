@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\UserProfileController;
+use App\Http\Controllers\API\UserReviewController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::delete('/destroy/{address}', 'destroy')->name('destroy');
     });
-
+    // task
     Route::middleware(['user'])->prefix('task')->name('task.')->controller(TaskController::class)->group(function () {
         Route::post('/store', 'store')->name('store');
     });
@@ -44,6 +45,10 @@ Route::middleware(['auth:api'])->group(function () {
     // category
     Route::prefix('category')->name('category.')->controller(CategoryController::class)->group(function () {
         Route::get('/paginated/page', 'paginatedIndex')->name('index.paginated');
+    });
+    // review
+    Route::prefix('review')->name('review.')->controller(UserReviewController::class)->group(function () {
+        Route::post('/store', 'store')->name('store');
     });
 });
 
