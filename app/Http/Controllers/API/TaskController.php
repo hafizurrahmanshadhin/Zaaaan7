@@ -52,4 +52,16 @@ class TaskController extends Controller
             return $this->error(500, 'fail to store taks', $e->getMessage());
         }
     }
+
+
+    public function experts()
+    {
+        try {
+            $experts = $this->taskService->getExperts();
+            return $this->success(200, 'task created successfully', $experts);
+        } catch (Exception $e) {
+            Log::error('TaksController::availableExperts:' . $e->getMessage());
+            return $this->error(500, 'fail to get available experts', $e->getMessage());
+        }
+    }
 }

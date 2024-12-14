@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -60,6 +59,18 @@ class Task extends Model
     public function review(): HasOne
     {
         return $this->hasOne(Review::class);
+    }
+
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+
+    public function skill():BelongsTo
+    {
+        return $this->belongsTo(SubCategory::class);
     }
 
 }

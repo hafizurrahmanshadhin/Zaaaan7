@@ -3,6 +3,8 @@
 namespace App\Services\API;
 
 use App\Helper\Helper;
+use App\Models\Address;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +47,7 @@ class TaskService
      *
      * @throws Exception If an error occurs during the task creation or image upload process.
      */
-    public function createTaske(array $credentials):array
+    public function createTaske(array $credentials): array
     {
         $images = [];
         try {
@@ -57,7 +59,7 @@ class TaskService
                 'date' => $credentials['date'],
                 'time' => $credentials['time'],
             ]);
-            
+
             foreach ($credentials['image'] as $image) {
                 $url = Helper::uploadFile($image, 'task/' . $task->id);
                 array_push($images, $task->images()->create([
@@ -71,6 +73,53 @@ class TaskService
             foreach ($images as $image) {
                 $url = Helper::deleteFile($image);
             }
+            throw $e;
+        }
+    }
+
+
+    public function getExperts()
+    {
+        try {
+
+            // Step 1: Get all tasks with their associated address and skill
+            $tasksWithAddressSkill = $this->user->clientTasks()
+                ->select('id', 'address_id', 'sub_category_id') // Assuming `sub_category_id` is the foreign key in the tasks table
+                ->with(['address:id,country,state,city,zip', 'skill:id']) // Assuming `skill` is a relationship that links to SubCategory
+                ->get();
+
+            // Step 2: Extract unique address details from the tasks
+            $addresses = $tasksWithAddressSkill->pluck('address')->unique(function ($address) {
+                return $address->country . $address->state . $address->city . $address->zip;
+            });
+
+            // Step 3: For each task, find users whose address and skill match the task's address and skill
+            $tasksWithUsers = $tasksWithAddressSkill->map(function ($task) use ($addresses) {
+                // Find users whose address and skill match the task's address and skill
+                $users = User::whereRole('helper')
+                    ->whereHas('addresses', function ($query) use ($task) {
+                        $query->where('country', $task->address->country)
+                            ->where('state', $task->address->state)
+                            ->where('city', $task->address->city)
+                            ->where('zip', $task->address->zip);
+                    })
+                    ->whereHas('skills', function ($query) use ($task) {
+                        $query->where('sub_category_id', $task->sub_category_id); 
+                    })
+                    ->get();
+
+                // Only include the task ID and related users
+                return [
+                    'task_id' => $task->id,
+                    'users' => $users 
+                ];
+            });
+
+            // Output the result
+            return $tasksWithUsers;
+
+
+        } catch (Exception $e) {
             throw $e;
         }
     }
