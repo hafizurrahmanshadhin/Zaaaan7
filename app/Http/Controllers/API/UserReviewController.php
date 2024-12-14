@@ -58,22 +58,6 @@ class UserReviewController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(CreateUserReviewRequest $createUserReviewRequest)
-    // {
-    //     try {
-    //         dd($createUserReviewRequest);
-    //         $validatedData = $createUserReviewRequest->validated();
-    //         $response = $this->userReviewsService->storeReview($validatedData);
-    //         return $this->success(200, 'review stored', ['reviews' => $response]);
-    //     } catch (Exception $e) {
-    //         Log::error("UserReviewController::store: " . $e->getMessage());
-    //         return $this->error(500, 'fail to store reviews', $e);
-    //     }
-    // }
-
     public function store(CreateReviewRequest $createReviewRequest)
     {
         try {

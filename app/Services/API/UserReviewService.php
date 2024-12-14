@@ -48,11 +48,14 @@ class UserReviewService
                 'star' => $credentials['star'],
                 'comment' => $credentials['comment'],
             ]);
-            foreach ($credentials['image'] as $image) {
-                $url = Helper::uploadFile($image, 'task/' . $review->id);
-                array_push($images, $review->images()->create([
-                    'url' => $url
-                ]));
+            if (isset($credentials['image']) && !empty($credentials['image']) && is_array($credentials['image'])) {
+
+                foreach ($credentials['image'] as $image) {
+                    $url = Helper::uploadFile($image, 'task/' . $review->id);
+                    array_push($images, $review->images()->create([
+                        'url' => $url
+                    ]));
+                }
             }
             DB::commit();
             return ['review' => $review, 'images' => $images];
