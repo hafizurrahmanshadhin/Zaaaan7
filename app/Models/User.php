@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -125,15 +126,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Define the one-to-many relationship with the Review model.
-     * A user can have multiple reviews.
-     */
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    /**
      * Define the one-to-many relationship with the Task model as a client.
      * A user can create multiple tasks as a client.
      */
@@ -179,6 +171,39 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(UserDocument::class)
             ->where('type', 'document');  // Only fetch 'document' type documents
+    }
+
+    /**
+     * Retrieve the reviews where the user is the client.
+     * 
+     * This method defines a one-to-many-through relationship between the user and the reviews, where the user is the client
+     * in the related tasks. It will return all reviews associated with the tasks where the user is the client.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function clientReviews(): HasManyThrough
+    {
+        return $this->hasManyThrough(Review::class, Task::class, 'client', 'task_id', 'id', 'id')
+            ->orWhereHas('task', function ($query) {
+                $query->where('helper', $this->id);
+            });
+    }
+
+
+    /**
+     * Retrieve the reviews where the user is the helper.
+     * 
+     * This method defines a one-to-many-through relationship between the user and the reviews, where the user is the helper
+     * in the related tasks. It will return all reviews associated with the tasks where the user is the helper.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function helperReviews(): HasManyThrough
+    {
+        return $this->hasManyThrough(Review::class, Task::class, 'helper', 'task_id', 'id', 'id')
+            ->orWhereHas('task', function ($query) {
+                $query->where('helper', $this->id);
+            });
     }
 
     /**

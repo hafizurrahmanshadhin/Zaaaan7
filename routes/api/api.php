@@ -48,6 +48,8 @@ Route::middleware(['auth:api'])->group(function () {
     });
     // review
     Route::prefix('review')->name('review.')->controller(UserReviewController::class)->group(function () {
+        Route::get('/client', 'clientIndex')->name('client.index')->middleware('user');
+        Route::get('/helper', 'helperIndex')->name('helper.index')->middleware('helper');
         Route::post('/store', 'store')->name('store');
     });
 });

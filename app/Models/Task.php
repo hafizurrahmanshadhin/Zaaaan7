@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Task extends Model
@@ -45,6 +46,20 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'task_requests')
             ->withTimestamps();
+    }
+
+
+    /**
+     * Define the one-to-one relationship with the Review model.
+     * 
+     * This method indicates that the current model (e.g., User or Task) has one associated review.
+     * It will return the review that is directly related to the current model, if it exists.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
     }
 
 }

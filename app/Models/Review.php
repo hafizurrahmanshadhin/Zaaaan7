@@ -10,12 +10,12 @@ class Review extends Model
 {
     protected $guarded = [];
     /**
-     * Define the inverse one-to-many relationship with the User model.
-     * Indicates that this model belongs to a specific user.
+     * Define the inverse one-to-many relationship with the task model.
+     * Indicates that this model belongs to a specific task.
      */
-    public function user(): BelongsTo
+    public function task(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Task::class);
     }
 
     /**

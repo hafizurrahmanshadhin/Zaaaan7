@@ -7,6 +7,7 @@ use App\Models\Review;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserReviewService
 {
@@ -18,23 +19,43 @@ class UserReviewService
 
 
     /**
-     * Retrieves five random reviews for the current user.
+     * Retrieves all reviews for the user where they are the client.
+     * It fetches the reviews along with any associated images and paginates the results.
      *
-     * This method fetches a random set of five reviews written by the currently authenticated user, 
-     * including any associated images, and returns them.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|Review[] The collection of reviews with images.
-     * @throws Exception If there is an error while fetching reviews.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @throws \Exception If any error occurs during the process, it will be thrown.
      */
-    public function getFiveUserReviews():mixed
+    public function getClientsReviews(): mixed
     {
         try {
-            $reviews = Review::whereUserId($this->user->id)->with('images')->inRandomOrder()->take(5)->get();
+            Log::info($this->user->id);
+            $perPage = request()->query('per_page', 10);
+            $reviews = $this->user->clientReviews()->with('images')->paginate($perPage);
             return $reviews;
         } catch (Exception $e) {
             throw $e;
         }
     }
+
+    /**
+     * Retrieves all reviews for the user where they are the helper.
+     * It fetches the reviews along with any associated images and paginates the results.
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @throws \Exception If any error occurs during the process, it will be thrown.
+     */
+    public function getHelperReviews(): mixed
+    {
+        try {
+            Log::info($this->user->id);
+            $perPage = request()->query('per_page', 10);
+            $reviews = $this->user->helperReviews()->with('images')->paginate($perPage);
+            return $reviews;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
 
 
     /**
@@ -47,7 +68,7 @@ class UserReviewService
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated list of reviews with images.
      * @throws Exception If there is an error while fetching reviews.
      */
-    public function getReviews():mixed
+    public function getReviews(): mixed
     {
         try {
             $perPage = request('per_page', 10);
@@ -72,7 +93,7 @@ class UserReviewService
      * @return array The newly created review and any associated images.
      * @throws Exception If there is an error while creating the review or handling the images.
      */
-    public function storeReview(array $credentials):array
+    public function storeReview(array $credentials): array
     {
         $images = [];
         try {

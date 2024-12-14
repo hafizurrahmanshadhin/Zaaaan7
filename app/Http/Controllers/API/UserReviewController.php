@@ -23,47 +23,50 @@ class UserReviewController extends Controller
 
 
     /**
-     * Retrieve and display five random user reviews for the homepage.
+     * Retrieve and return reviews where the user is the client.
      * 
-     * This method calls the `getFiveUserReviews` function from the `userReviewsService` to fetch a selection of random reviews. 
-     * Upon successful retrieval, it returns the reviews with a success response.
-     * In case of failure, it logs the error and returns an appropriate error response.
+     * This method fetches the reviews where the authenticated user is the client of the tasks,
+     * by calling the `getClientsReviews()` method from the `UserReviewsService`. The reviews are
+     * returned in a paginated format. The response is then wrapped in a success response with a 200
+     * HTTP status code if the operation is successful.
      * 
-     * @return \Illuminate\Http\JsonResponse The success or error response containing the reviews or error message.
-     * @throws \Exception If an error occurs during the process of fetching user reviews.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the client reviews or an error message.
+     * @throws \Exception If an error occurs during the process, the exception is logged and returned as an error response.
      */
-    public function homePageIndex()
+    public function clientIndex(): JsonResponse
     {
         try {
-            $response = $this->userReviewsService->getFiveUserReviews();
-            return $this->success(200, 'getting some random reviews', ['reviews' => $response]);
+            $response = $this->userReviewsService->getClientsReviews();
+            return $this->success(200, 'getting client reviews', ['reviews' => $response]);
         } catch (Exception $e) {
-            Log::error("UserReviewController::HomePageIndex: " . $e->getMessage());
-            return $this->error(500, 'fail to get reviews', $e);
+            Log::error("UserReviewController::clientIndex: " . $e->getMessage());
+            return $this->error(500, 'fail to get client reviews', $e->getMessage());
         }
     }
 
 
     /**
-     * Fetches and returns a list of reviews for the user.
-     *
-     * This method retrieves a set of reviews for the user from the `userReviewsService` and returns them
-     * as a JSON response. It handles any errors that may occur during the process and logs them.
-     *
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the reviews or an error message.
-     * @throws Exception If there is an error while fetching the reviews.
+     * Retrieve and return reviews where the user is the helper.
+     * 
+     * This method fetches the reviews where the authenticated user is the helper of the tasks,
+     * by calling the `getHelperReviews()` method from the `UserReviewsService`. The reviews are
+     * returned in a paginated format. The response is then wrapped in a success response with a 200
+     * HTTP status code if the operation is successful.
+     * 
+     * @return \Illuminate\Http\JsonResponse The JSON response with the helper reviews or an error message.
+     * @throws \Exception If an error occurs during the process, the exception is logged and returned as an error response.
      */
-    public function index():JsonResponse
+    public function helperIndex(): JsonResponse
     {
         try {
-            $response = $this->userReviewsService->getReviews();
-            return $this->success(200, 'getting some random reviews', ['reviews' => $response]);
+            // $response = $this->userReviewsService->getClientsReviews();
+            $response = $this->userReviewsService->getHelperReviews();
+            return $this->success(200, 'getting helper reviews', ['reviews' => $response]);
         } catch (Exception $e) {
-            Log::error("UserReviewController::HomePageIndex: " . $e->getMessage());
-            return $this->error(500, 'fail to get reviews', $e);
+            Log::error("UserReviewController::helperIndex: " . $e->getMessage());
+            return $this->error(500, 'fail to get helper reviews', $e->getMessage());
         }
     }
-
 
     /**
      * Stores a new review for a task.
@@ -76,7 +79,7 @@ class UserReviewController extends Controller
      * @return \Illuminate\Http\JsonResponse The JSON response indicating success or failure of storing the review.
      * @throws Exception If there is an error while storing the review.
      */
-    public function store(CreateReviewRequest $createReviewRequest):JsonResponse
+    public function store(CreateReviewRequest $createReviewRequest): JsonResponse
     {
         try {
             $validatedData = $createReviewRequest->validated();
