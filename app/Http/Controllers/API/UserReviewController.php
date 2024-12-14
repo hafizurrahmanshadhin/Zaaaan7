@@ -7,6 +7,7 @@ use App\Http\Requests\API\CreateReviewRequest;
 use App\Services\API\UserReviewService;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -44,9 +45,15 @@ class UserReviewController extends Controller
 
 
     /**
-     * Display a listing of the resource.
+     * Fetches and returns a list of reviews for the user.
+     *
+     * This method retrieves a set of reviews for the user from the `userReviewsService` and returns them
+     * as a JSON response. It handles any errors that may occur during the process and logs them.
+     *
+     * @return \Illuminate\Http\JsonResponse The JSON response containing the reviews or an error message.
+     * @throws Exception If there is an error while fetching the reviews.
      */
-    public function index()
+    public function index():JsonResponse
     {
         try {
             $response = $this->userReviewsService->getReviews();
@@ -58,7 +65,18 @@ class UserReviewController extends Controller
     }
 
 
-    public function store(CreateReviewRequest $createReviewRequest)
+    /**
+     * Stores a new review for a task.
+     *
+     * This method validates the incoming review data via the `CreateReviewRequest`, then stores the review 
+     * using the `userReviewsService`. It returns a JSON response indicating whether the review was successfully 
+     * stored or if an error occurred. Any error is logged for further debugging.
+     *
+     * @param CreateReviewRequest $createReviewRequest The validated review data from the request.
+     * @return \Illuminate\Http\JsonResponse The JSON response indicating success or failure of storing the review.
+     * @throws Exception If there is an error while storing the review.
+     */
+    public function store(CreateReviewRequest $createReviewRequest):JsonResponse
     {
         try {
             $validatedData = $createReviewRequest->validated();

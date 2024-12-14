@@ -16,7 +16,17 @@ class UserReviewService
         $this->user = Auth::user();
     }
 
-    public function getFiveUserReviews()
+
+    /**
+     * Retrieves five random reviews for the current user.
+     *
+     * This method fetches a random set of five reviews written by the currently authenticated user, 
+     * including any associated images, and returns them.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|Review[] The collection of reviews with images.
+     * @throws Exception If there is an error while fetching reviews.
+     */
+    public function getFiveUserReviews():mixed
     {
         try {
             $reviews = Review::whereUserId($this->user->id)->with('images')->inRandomOrder()->take(5)->get();
@@ -26,7 +36,18 @@ class UserReviewService
         }
     }
 
-    public function getReviews()
+
+    /**
+     * Retrieves a paginated list of reviews for the current user.
+     *
+     * This method fetches a paginated set of reviews written by the currently authenticated user, 
+     * including any associated images, and returns them. The number of reviews per page can be specified 
+     * via the `per_page` query parameter (defaults to 10).
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated list of reviews with images.
+     * @throws Exception If there is an error while fetching reviews.
+     */
+    public function getReviews():mixed
     {
         try {
             $perPage = request('per_page', 10);
@@ -38,7 +59,20 @@ class UserReviewService
         }
     }
 
-    public function storeReview(array $credentials)
+
+    /**
+     * Stores a new review for a task.
+     *
+     * This method creates a new review for a specified task, storing the rating (star), comment, 
+     * and associated images (if provided). The review is stored within a database transaction to ensure 
+     * atomicity. If any errors occur during the process, the transaction is rolled back, and any uploaded 
+     * images are deleted.
+     *
+     * @param array $credentials The review data containing 'task_id', 'star', 'comment', and optionally 'image'.
+     * @return array The newly created review and any associated images.
+     * @throws Exception If there is an error while creating the review or handling the images.
+     */
+    public function storeReview(array $credentials):array
     {
         $images = [];
         try {
