@@ -67,10 +67,34 @@ class TaskController extends Controller
     }
 
 
+    /**
+     * Handle the task request creation process from the user input.
+     *
+     * This method is responsible for handling the incoming request to create a task request. It validates the
+     * incoming data using the provided `TaskRequestRequest` form request, then delegates the task request
+     * logic to the `taskService` by calling `giveRequest`. If the request is successfully processed, a success
+     * response is returned. If any error occurs during the process, an error response is returned, and the
+     * exception details are logged.
+     *
+     * @param TaskRequestRequest $taskRequestRequest The validated request object containing the input data.
+     *
+     * @return \Illuminate\Http\JsonResponse A JSON response with either a success or error status:
+     *     - Success: HTTP status code 200 with a success message.
+     *     - Error: HTTP status code 500 with the error message and details.
+     *
+     * @throws Exception If an error occurs during the request process, an exception is thrown and caught, 
+     *         with an error message logged for debugging purposes.
+     */
     public function request(TaskRequestRequest $taskRequestRequest)
     {
-    //    $validatedData = $taskRequestRequest->validated();
+        try {
+            $validatedData = $taskRequestRequest->validated();
+            $this->taskService->giveRequest($validatedData);
+            return $this->success(200, 'task created successfully', []);
+        } catch (Exception $e) {
+            Log::error('TaksController::request:' . $e->getMessage());
+            return $this->error(500, 'fail to request for task', $e->getMessage());
+        }
 
-    //    dd($validatedData);
     }
 }

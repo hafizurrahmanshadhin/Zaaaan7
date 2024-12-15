@@ -4,6 +4,7 @@ namespace App\Services\API;
 
 use App\Helper\Helper;
 use App\Models\Address;
+use App\Models\Task;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -104,20 +105,53 @@ class TaskService
                             ->where('zip', $task->address->zip);
                     })
                     ->whereHas('skills', function ($query) use ($task) {
-                        $query->where('sub_category_id', $task->sub_category_id); 
+                        $query->where('sub_category_id', $task->sub_category_id);
                     })
                     ->get();
 
                 // Only include the task ID and related users
                 return [
                     'task_id' => $task->id,
-                    'users' => $users 
+                    'users' => $users
                 ];
             });
 
             // Output the result
             return $tasksWithUsers;
 
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    /**
+     * Handle the creation of a request for a task by a user.
+     *
+     * This method checks if a request already exists for a specific task and user. If no request exists,
+     * it attaches the user to the task through the `task_requests` pivot table. If a request already exists,
+     * it throws an exception indicating that the request already exists.
+     *
+     * @param array $credentials An associative array containing:
+     *     - 'task_id' (int): The ID of the task to which the user is making the request.
+     *     - 'user_id' (int): The ID of the user making the request.
+     *
+     * @return bool Returns `true` if the request was successfully added to the task, `false` otherwise.
+     *
+     * @throws Exception If the request already exists for the user on the task or if there is an error during
+     *         the process. Exception message will specify the reason.
+     */
+    public function giveRequest(array $credentials): bool
+    {
+        try {
+            $task = Task::findOrFail($credentials['task_id']);
+            if ($task->requests()->where('user_id', $credentials['user_id'])->exists()) {
+
+                throw new Exception('request exist', 404);
+            }
+            $task->requests()->attach($credentials['user_id']);
+            return true;
 
         } catch (Exception $e) {
             throw $e;
