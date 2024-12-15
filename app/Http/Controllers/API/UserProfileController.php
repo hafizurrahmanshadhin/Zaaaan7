@@ -121,4 +121,17 @@ class UserProfileController extends Controller
         }
     }
 
+
+
+    public function getHelper($user)
+    {
+        try {
+            $response = $this->userProfileService->getHelper($user);
+            return $this->success(200, 'user profile', $response);
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Show: '. $e->getMessage());
+            return $this->error(500, 'failed to get user profile', $e->getMessage());
+        }
+    }
+
 }

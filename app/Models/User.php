@@ -216,4 +216,19 @@ class User extends Authenticatable implements JWTSubject
             get: fn($value) => $value ? asset($value) : asset('assets/custom/img/user.jpg'),
         );
     }
+
+
+    /**
+     * Calculate the average rating for a helper based on reviews.
+     *
+     * This method calculates the average rating for a helper by retrieving the average value of the `star` field
+     * from all associated reviews in the `helper_reviews` relationship. It is assumed that each review contains a 
+     * `star` rating representing the helper's performance.
+     *
+     * @return float The average star rating for the helper. If no reviews exist, it will return `null`.
+     */
+    public function avarageRating()
+    {
+        return $this->helperReviews()->average('star') ?? 0;
+    }
 }

@@ -205,4 +205,24 @@ class UserProfileService
         }
     }
 
+
+    public function getHelper($id)
+    {
+        try {
+            $user = User::with(['profile', 'skills'])->findOrFail($id);
+            $user->averageRating = $user->avarageRating();
+            if (!$user)
+            {
+                return new Exception('user not found', 404);
+            }
+            if ($user->role !== 'helper'){
+                return new Exception('user is not a helper', 404);
+            }
+            return $user;
+        }catch (Exception $e) {
+            throw $e;
+        }
+
+    }
+
 }
