@@ -1,7 +1,7 @@
 @extends('backend.app')
 
 @section('title')
-    Categories
+    Helpers
 @endsection
 
 
