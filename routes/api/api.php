@@ -41,6 +41,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['user'])->prefix('task')->name('task.')->controller(TaskController::class)->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::get('/experts', 'experts')->name('experts');
+        Route::post('/request', 'request')->name('request');
+
     });
 
     // category

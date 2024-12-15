@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CreateTaskRequest;
+use App\Http\Requests\API\TaskRequestRequest;
 use App\Services\API\TaskService;
 use App\Traits\ApiResponse;
 use Exception;
@@ -63,5 +64,13 @@ class TaskController extends Controller
             Log::error('TaksController::availableExperts:' . $e->getMessage());
             return $this->error(500, 'fail to get available experts', $e->getMessage());
         }
+    }
+
+
+    public function request(TaskRequestRequest $taskRequestRequest)
+    {
+    //    $validatedData = $taskRequestRequest->validated();
+
+    //    dd($validatedData);
     }
 }
