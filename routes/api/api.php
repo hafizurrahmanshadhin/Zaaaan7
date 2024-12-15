@@ -3,6 +3,7 @@
 use App\Helper\Helper;
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserReviewController;
@@ -56,7 +57,16 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/helper', 'helperIndex')->name('helper.index')->middleware('helper');
         Route::post('/store', 'store')->name('store');
     });
+
+    Route::controller(ChatController::class)->group(function () {
+        Route::get('/messages/{user}',  'getMessages');
+        Route::post('/messages/{user}',  'sendMessage');
+    });
+    
 });
+
+
+
 
 
 
