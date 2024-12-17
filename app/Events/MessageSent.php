@@ -33,7 +33,7 @@ class MessageSent implements ShouldBroadcastNow
     {
         Log::info('info'); 
         return [
-            new PrivateChannel("chat.{$this->message->receiver_id}"),
+            new PrivateChannel(name: "chat.{$this->message->receiver_id}"),
         ];
     }
 }
