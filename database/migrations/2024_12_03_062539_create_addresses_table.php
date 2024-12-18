@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('zip')->comment('post code');
 
-            $table->boolean('activate')->default(false);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

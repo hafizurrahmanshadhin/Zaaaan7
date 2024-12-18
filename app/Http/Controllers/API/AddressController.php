@@ -100,4 +100,35 @@ class AddressController extends Controller
         }
     }
 
+
+
+    /**
+     * Handles the activation of an address by calling the address service
+     * to activate the specified address.
+     * 
+     * This method processes the address activation and returns a success or error response
+     * based on whether the activation succeeds or fails. It also logs errors if an issue occurs.
+     * 
+     * @param int $address The ID of the address to be activated.
+     * 
+     * @return \Illuminate\Http\JsonResponse The response containing the result of the address activation,
+     *         including a success message and the activated address data or an error message.
+     * 
+     * @throws UnauthorizedException If the user attempts to activate an address they don't own.
+     * @throws Exception If any other error occurs during the address activation process.
+     */
+    public function activate($address)
+    {
+        try {
+            $address = $this->addressService->activateAddress($address);
+            return $this->success(200, 'address activated successfully', ['address' => $address]);
+        } catch (UnauthorizedException $e) {
+            Log::error('AddressController::activate:' . $e->getMessage());
+            return $this->error(500, 'unauthorized access', $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('AddressController::activate:' . $e->getMessage());
+            return $this->error(500, 'fail to activate address', $e->getMessage());
+        }
+    }
+
 }

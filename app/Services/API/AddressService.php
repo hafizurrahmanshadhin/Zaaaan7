@@ -5,6 +5,7 @@ namespace App\Services\API;
 use App\Models\Address;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
 
 class AddressService
@@ -29,7 +30,7 @@ class AddressService
      * @return \Illuminate\Database\Eloquent\Collection|Address[] A collection of Address models
      * @throws Exception If there is an error fetching the addresses
      */
-    public function getAddresses():mixed
+    public function getAddresses(): mixed
     {
         try {
             return $this->user->addresses;
@@ -50,7 +51,7 @@ class AddressService
      * @return Address The newly created Address model instance
      * @throws Exception If there is an error storing the address
      */
-    public function storeAddress(array $credentials):mixed
+    public function storeAddress(array $credentials): mixed
     {
         try {
             $address = $this->user->addresses()->create([
@@ -83,7 +84,7 @@ class AddressService
      * @throws UnauthorizedException If the user is not authorized to delete the address
      * @throws Exception If there is an error during the deletion process
      */
-    public function deleteAddress($address):bool
+    public function deleteAddress($address): bool
     {
         try {
             if ($address->user_id == $this->user->id || $this->user->role == 'admin') {
@@ -92,9 +93,48 @@ class AddressService
                 return true;
             }
             throw new UnauthorizedException('Unauthorized address deletion', 403);
-        } catch (UnauthorizedException $e) {
-            throw $e;
         } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+
+    /**
+     * Activates the given address by deactivating the current active address
+     * for the user and setting the specified address as active.
+     * 
+     * This method performs the following actions:
+     * - Verifies that the address belongs to the authenticated user.
+     * - Deactivates any other active addresses for the user.
+     * - Sets the provided address as active and saves the changes to the database.
+     * 
+     * @param int $addressId The ID of the address to be activated.
+     * 
+     * @return Address The activated address object.
+     * 
+     * @throws UnauthorizedException If the address does not belong to the authenticated user.
+     * @throws Exception If any other error occurs during the activation process.
+     */
+    public function activateAddress($address)
+    {
+        try {
+            DB::beginTransaction();
+            $address = Address::findOrFail($address);
+            if ($address->user_id !== $this->user->id) {
+                throw new UnauthorizedException('Unauthorized address deletion', 403);
+            }
+
+            Address::where('user_id', $this->user->id)
+                ->where('is_active', true)
+                ->update(['is_active' => false]);
+
+            $address->is_active = true;
+            $address->save();
+            DB::commit();
+            return $address;
+        } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }

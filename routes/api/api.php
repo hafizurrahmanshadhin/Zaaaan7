@@ -19,7 +19,7 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
 });
 
 
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:api', 'verified'])->group(function () {
     // profile
     Route::prefix('profile')->name('profile.')->controller(UserProfileController::class)->group(function () {
         Route::middleware(['helper'])->group(function () {
@@ -33,10 +33,11 @@ Route::middleware(['auth:api'])->group(function () {
         });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
     });
-
+    // address
     Route::prefix('address')->name('address.')->controller(AddressController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
+        Route::patch('/activate/{address}', 'activate')->name('activate');
         Route::delete('/destroy/{address}', 'destroy')->name('destroy');
     });
     // task
@@ -57,12 +58,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/helper', 'helperIndex')->name('helper.index')->middleware('helper');
         Route::post('/store', 'store')->name('store');
     });
-
+    // message
     Route::controller(ChatController::class)->group(function () {
         Route::get('/messages/{user}',  'getMessages');
         Route::post('/messages/{user}',  'sendMessage');
     });
-    
 });
 
 

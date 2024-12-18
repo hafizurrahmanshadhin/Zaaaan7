@@ -3,6 +3,7 @@
 use App\Helper\Helper;
 use App\Http\Middleware\EnsureGuestJwt;
 use App\Http\Middleware\HelperMiddleware;
+use App\Http\Middleware\IsVerifyed;
 use App\Http\Middleware\UserMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -47,6 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest.api' => EnsureGuestJwt::class,
             'helper' => HelperMiddleware::class,
             'user' => UserMiddleware::class,
+            'verified' => IsVerifyed::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
