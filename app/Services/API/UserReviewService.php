@@ -28,7 +28,6 @@ class UserReviewService
     public function getClientsReviews(): mixed
     {
         try {
-            Log::info($this->user->id);
             $perPage = request()->query('per_page', 10);
             $reviews = $this->user->clientReviews()->with('images')->paginate($perPage);
             return $reviews;

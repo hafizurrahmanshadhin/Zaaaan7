@@ -28,13 +28,7 @@ class CreateReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'task_id' => [
-                'required',
-                'exists:tasks,id',
-                Rule::unique('reviews')->where(function ($query) {
-                    return $query->where('task_id', request()->task_id);
-                }),
-            ],
+            'task_id' => 'required|exists:tasks,id',
             'star' => 'required|numeric',
             'comment' => 'required|string',
             'image' => 'nullable|array',

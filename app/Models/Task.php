@@ -67,10 +67,9 @@ class Task extends Model
         return $this->belongsTo(Address::class);
     }
 
-
     public function skill():BelongsTo
     {
         return $this->belongsTo(SubCategory::class);
     }
-
+    
 }
