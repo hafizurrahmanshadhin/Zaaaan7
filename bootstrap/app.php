@@ -58,7 +58,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $e, Request $request) {
             if ($request->is('api/*')) {
-                Log::info('Exception Type: ' . get_class($e));
+                // Log::info('Exception Type: ' . get_class($e));
                 if ($e instanceof QueryException) {
                     return Helper::error(500, 'server error', $e->getMessage());
                 }
