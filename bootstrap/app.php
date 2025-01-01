@@ -15,6 +15,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -29,15 +30,15 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             // web auth
             Route::middleware(['web'])
-            ->prefix('')
-            ->name('')
-            ->group(base_path('routes/web/auth.php'));
+                ->prefix('')
+                ->name('')
+                ->group(base_path('routes/web/auth.php'));
 
             Route::middleware(['web', 'auth'])
-            ->prefix('admin')
-            ->name('admin.')
-            ->group(base_path('routes/web/admin.php'));
-            
+                ->prefix('admin')
+                ->name('admin.')
+                ->group(base_path('routes/web/admin.php'));
+
             // api
             Route::middleware([])
                 ->prefix('api/auth')
@@ -56,7 +57,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $e, Request $request) {
             if ($request->is('api/*')) {
-                Log::info('Exception Type: ' . get_class($e)); // Debugging
+                Log::info('Exception Type: ' . get_class($e));
                 if ($e instanceof QueryException) {
                     return Helper::error(500, 'server error', $e->getMessage());
                 }
@@ -72,8 +73,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($e instanceof NotFoundHttpException) {
                     return Helper::error(404, 'not found', $e->getMessage());
                 }
+                if ($e instanceof MethodNotAllowedHttpException) {
+                    return Helper::error(405, 'method not allowed', $e->getMessage());
+                }
 
-                return Helper::error(500, 'server error', $e->getMessage());
+                return Helper::error($e->getCode(), 'error', $e->getMessage());
             }
         });
     })->create();
