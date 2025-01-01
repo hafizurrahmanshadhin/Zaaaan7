@@ -15,6 +15,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -76,8 +77,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($e instanceof MethodNotAllowedHttpException) {
                     return Helper::error(405, 'method not allowed', $e->getMessage());
                 }
-
-                return Helper::error($e->getCode(), 'error', $e->getMessage());
             }
         });
     })->create();
