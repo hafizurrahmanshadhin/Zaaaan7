@@ -2,13 +2,16 @@
 
 namespace App\Http\Requests\API;
 
+use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class UpdateHelperProfileRequest extends FormRequest
 {
+    use ApiResponse;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,16 +28,18 @@ class UpdateHelperProfileRequest extends FormRequest
     public function rules(): array
     {
         $user = Auth::user();
+        Log::info('user', ['user' => $user]);
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|email|unique:users,email,' . $user->id . ',id',
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
             'gender' => 'nullable|string|in:male,female,other',
             'description' => 'nullable|string',
         ];
     }
+
 
     /**
      * Define the custom validation error messages.

@@ -13,7 +13,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -54,19 +56,24 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $e, Request $request) {
             if ($request->is('api/*')) {
+                Log::info('Exception Type: ' . get_class($e)); // Debugging
                 if ($e instanceof QueryException) {
                     return Helper::error(500, 'server error', $e->getMessage());
                 }
-                else if ($e instanceof ModelNotFoundException) {
+                if ($e instanceof ModelNotFoundException) {
+                    return Helper::error(404, 'not found', $e->getMessage());
+                }
+                if ($e instanceof AuthenticationException) {
+                    return Helper::error(401, 'unauthorized', $e->getMessage());
+                }
+                if ($e instanceof AuthorizationException) {
+                    return Helper::error(403, 'forbidden', $e->getMessage());
+                }
+                if ($e instanceof NotFoundHttpException) {
                     return Helper::error(404, 'not found', $e->getMessage());
                 }
 
-                else if ($e instanceof AuthenticationException) {
-                    return Helper::error(401, 'unauthorized', $e->getMessage());
-                }
-                else if ($e instanceof AuthorizationException) {
-                    return Helper::error(403, 'forbidden', $e->getMessage());
-                }
+                return Helper::error(500, 'server error', $e->getMessage());
             }
         });
     })->create();

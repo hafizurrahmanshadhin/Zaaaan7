@@ -5,6 +5,7 @@ namespace App\Services\API;
 use App\Helper\Helper;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -133,10 +134,10 @@ class UserProfileService
      * @param array $credentials An associative array containing updated user and profile details.
      *        Required keys: `first_name`, `last_name`, `email`.
      *        Optional keys: `phone`, `address`, `gender`.
-     * @return void
+     * @return mixed
      * @throws \Exception If any error occurs during the update process.
      */
-    public function updateProfile($credentials): void
+    public function updateProfile($credentials): mixed
     {
         try {
             DB::beginTransaction();
@@ -153,6 +154,7 @@ class UserProfileService
                 'gender' => $credentials['gender'] ?? $user->profile->gender,
             ]);
             DB::commit();
+            return $user->load('profile');
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -178,10 +180,10 @@ class UserProfileService
      * @param array $credentials The data to update the user's profile and profile details. 
      *        Required keys: `first_name`, `last_name`, `email`.
      *        Optional keys: `phone`, `address`, `gender`, `description`.
-     * @return void
+     * @return mixed
      * @throws \Exception If any error occurs during the update process or transaction failure.
      */
-    public function updateHelperProfile($credentials): void
+    public function updateHelperProfile($credentials):mixed
     {
         try {
             DB::beginTransaction();
@@ -199,6 +201,7 @@ class UserProfileService
                 'bio' => $credentials['description'] ?? $user->profile->description,
             ]);
             DB::commit();
+            return $user->load('profile');
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;

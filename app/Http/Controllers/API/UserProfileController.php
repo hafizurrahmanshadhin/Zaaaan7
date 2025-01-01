@@ -97,8 +97,8 @@ class UserProfileController extends Controller
     {
         try {
             $validatedData = $updateProfileRequest->validated();
-            $this->userProfileService->updateProfile($validatedData);
-            return $this->success(200, 'profile updated successfully');
+            $response = $this->userProfileService->updateProfile($validatedData);
+            return $this->success(200, 'profile updated successfully', $response);
         } catch (Exception $e) {
             Log::error('UserProfileController::Update: ' . $e->getMessage());
             return $this->error(500, 'profile update failed');
@@ -113,8 +113,8 @@ class UserProfileController extends Controller
     {
         try {
             $validatedData = $updatehelperProfileRequest->validated();
-            $this->userProfileService->updateHelperProfile($validatedData);
-            return $this->success(200, 'profile updated successfully');
+            $response = $this->userProfileService->updateHelperProfile($validatedData);
+            return $this->success(200, 'profile updated successfully', $response);
         } catch (Exception $e) {
             Log::error('UserProfileController::Update: ' . $e->getMessage());
             return $this->error(500, 'profile update failed');
@@ -123,7 +123,7 @@ class UserProfileController extends Controller
 
 
 
-    public function getHelper($user)
+    public function getHelper($user):JsonResponse
     {
         try {
             $response = $this->userProfileService->getHelper($user);

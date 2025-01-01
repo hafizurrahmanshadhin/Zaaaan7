@@ -8,6 +8,7 @@ use App\Models\Address;
 use App\Services\API\AddressService;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -86,16 +87,17 @@ class AddressController extends Controller
      * @throws UnauthorizedException If the user is not authorized to delete the address
      * @throws Exception If there is an error during the address deletion process
      */
-    public function destroy($address): JsonResponse
+    public function destroy(Address $address): JsonResponse
     {
         try {
             $this->addressService->deleteAddress($address);
             return $this->success(200, 'address deleted successfully', []);
-        } catch (UnauthorizedException $e) {
-            Log::error('AddressController::delete:' . $e->getMessage());
+        }
+        catch (UnauthorizedException $e) {
+            Log::error('AddressController::destroy:' . $e->getMessage());
             return $this->error(500, 'unauthorized access', $e->getMessage());
         } catch (Exception $e) {
-            Log::error('AddressController::delete:' . $e->getMessage());
+            Log::error('AddressController::destroy:' . $e->getMessage());
             return $this->error(500, 'fail to delete address', $e->getMessage());
         }
     }
