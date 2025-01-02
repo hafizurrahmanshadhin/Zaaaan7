@@ -98,7 +98,7 @@ class UserProfileService
     {
         try {
             $userAvater = $this->user->avatar;
-            $url = Helper::uploadFile($credentials['avatar'], 'user/' . $this->user->id . '/');
+            $url = Helper::uploadFile($credentials['avatar'], 'user/' . $this->user->id);
             User::whereId($this->user->id)->update([
                 'avatar' => $url,
             ]);
