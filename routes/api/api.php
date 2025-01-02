@@ -41,11 +41,18 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::delete('/destroy/{address}', 'destroy')->name('destroy');
     });
     // task
-    Route::middleware(['user'])->prefix('task')->name('task.')->controller(TaskController::class)->group(function () {
-        Route::post('/store', 'store')->name('store');
-        Route::get('/experts', 'experts')->name('experts');
-        Route::post('/request', 'request')->name('request');
-
+    Route::prefix('/task')->name('task.')->controller(TaskController::class)->group(function () {
+        
+        Route::middleware(['user'])->group(function () {
+            Route::post('/store', 'store')->name('store');
+            Route::get('/experts', 'experts')->name('experts');
+            Route::post('/request', 'request')->name('request');
+        });
+        Route::prefix('/helper')->name('helper.')->middleware(['helper'])->group(function () {
+            Route::get('/', 'helperIndex')->name('index');
+            Route::get('/reqest', 'helperRequestdIndex')->name('reqest');
+            Route::put('/accept/{task}', 'helperRequestAccept')->name('accept');
+        });
     });
 
     // category

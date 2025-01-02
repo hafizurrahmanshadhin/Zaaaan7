@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\Task;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,42 @@ class TaskService
     public function __construct()
     {
         $this->user = Auth::user();
+    }
+
+
+    public function getAllHelperTasks():mixed
+    {
+        try {
+            $tasks = $this->user->helperTasks;
+
+            return $tasks;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getAllHelperRequestTasks():Collection
+    {
+        try {
+            $tasks = $this->user->requests()->where('task_requests.created_at', '>', now())->get();
+            return $tasks;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    public function acceptRequest($task):bool
+    {
+        try {
+            $task->requests()->detach();
+            $task->update([
+                'helper' => $this->user->id,
+            ]);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
 

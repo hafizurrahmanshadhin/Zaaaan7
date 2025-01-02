@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CreateTaskRequest;
 use App\Http\Requests\API\TaskRequestRequest;
+use App\Models\Task;
 use App\Services\API\TaskService;
 use App\Traits\ApiResponse;
 use Exception;
@@ -22,9 +23,38 @@ class TaskController extends Controller
         $this->taskService = $taskService;
     }
 
-    public function index()
+    public function helperIndex(): JsonResponse
     {
+        try {
+            $tasks = $this->taskService->getAllHelperTasks();
+            return $this->success(200, 'tasks retrieved successfully', $tasks);
+        } catch (Exception $e) {
+            Log::error('TaksController::helperIndex:' . $e->getMessage());
+            return $this->error(500, 'fail to retrieve tasks', $e->getMessage());
+        }
+    }
 
+    public function helperRequestdIndex(): JsonResponse
+    {
+        try {
+            $tasks = $this->taskService->getAllHelperRequestTasks();
+            return $this->success(200, 'tasks retrieved successfully', $tasks);
+        } catch (Exception $e) {
+            Log::error('TaksController::helperCompletedIndex:' . $e->getMessage());
+            return $this->error(500, 'fail to retrieve tasks', $e->getMessage());
+        }
+    }
+
+
+    public function helperRequestAccept(Task $task): JsonResponse
+    {
+        try {
+            $tasks = $this->taskService->acceptRequest($task);
+            return $this->success(200, 'tasks accepted successfully', $tasks);
+        } catch (Exception $e) {
+            Log::error('TaksController::helperCompletedIndex:' . $e->getMessage());
+            return $this->error(500, 'fail to retrieve tasks', $e->getMessage());
+        }
     }
 
     /**
