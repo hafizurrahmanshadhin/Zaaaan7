@@ -26,7 +26,7 @@ class CategoryService
     public function getCategoryes(): array
     {
         try {
-            $categories = Category::select('id', 'name')->get();
+            $categories = Category::select('id', 'name', 'url')->get();
             return ['categories' => $categories];
         } catch (Exception $e) {
             throw $e;
@@ -39,7 +39,7 @@ class CategoryService
         try {
             $perPage = request()->query('per_page', 10);
 
-            $categories = Category::select('id', 'name')
+            $categories = Category::select('id', 'name', 'url')
                 ->with(['image:url,imageable_id'])
                 ->paginate($perPage);
 
@@ -66,7 +66,7 @@ class CategoryService
     public function getCategory($id): array
     {
         try {
-            $category = Category::findOrFail($id, ['id', 'name', 'cost', 'provision']);
+            $category = Category::findOrFail($id, ['id', 'name', 'url', 'cost', 'provision']);
             return ['category' => $category];
         } catch (Exception $e) {
             throw $e;

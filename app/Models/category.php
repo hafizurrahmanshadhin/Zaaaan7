@@ -26,4 +26,30 @@ class Category extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+
+
+    /**
+     * Get the URL attribute.
+     *
+     * This accessor method modifies the URL based on its type:
+     * - If the URL starts with 'http://' or 'https://', it appends the string 'tushar' to the URL.
+     * - If the URL is a relative path, it prepends the base URL using the asset helper.
+     * - If the URL is null, it returns the default user image URL.
+     *
+     * @param string|null $url The URL to be processed. Can be null or a string.
+     * 
+     * @return string The processed URL. It may be modified or default to a fallback image.
+     */
+    public function getUrlAttribute($url): string
+    {
+        if ($url) {
+            if (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) {
+                return $url;
+            } else {
+                return asset($url);
+            }
+        } else {
+            return asset('assets/custom/img/user.jpg');
+        }
+    }
 }
