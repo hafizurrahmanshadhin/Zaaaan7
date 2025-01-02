@@ -37,7 +37,7 @@ class CateogryService
 
         return DataTables::of($query)
             ->addColumn('image', function ($data) {
-                return $data->image->url ?? null;
+                return $data->url ?? null;
             })
             ->addColumn('name', function ($data) {
                 return '
@@ -83,11 +83,8 @@ class CateogryService
             $category = Category::create([
                 'name' => $data['name'],
                 'cost' => $data['cost'],
+                'url' => $image,
                 'provision' => $data['provision'],
-            ]);
-
-            $category->image()->create([
-                'url' => $image
             ]);
             DB::commit();
         } catch (Exception $e) {

@@ -22,11 +22,6 @@ class Category extends Model
         return $this->hasMany(SubCategory::class);
     }
 
-    public function image(): MorphOne
-    {
-        return $this->morphOne(Image::class, 'imageable');
-    }
-
 
     /**
      * Get the URL attribute.
