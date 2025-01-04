@@ -23,6 +23,12 @@ class TaskController extends Controller
         $this->taskService = $taskService;
     }
 
+
+     /**
+     * Retrieve all helper tasks.
+     *
+     * @return JsonResponse
+     */
     public function helperIndex(): JsonResponse
     {
         try {
@@ -34,6 +40,12 @@ class TaskController extends Controller
         }
     }
 
+
+    /**
+     * Retrieve all helper request tasks.
+     *
+     * @return JsonResponse
+     */
     public function helperRequestdIndex(): JsonResponse
     {
         try {
@@ -46,6 +58,12 @@ class TaskController extends Controller
     }
 
 
+    /**
+     * Accept a helper request task.
+     *
+     * @param Task $task
+     * @return JsonResponse
+     */
     public function helperRequestAccept(Task $task): JsonResponse
     {
         try {

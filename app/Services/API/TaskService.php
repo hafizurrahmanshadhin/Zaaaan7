@@ -27,7 +27,13 @@ class TaskService
     }
 
 
-    public function getAllHelperTasks():mixed
+
+    /**
+     * Get all tasks assigned to the current user as a helper.
+     *
+     * @return mixed
+     */
+    public function getAllHelperTasks(): mixed
     {
         try {
             $tasks = $this->user->helperTasks;
@@ -38,7 +44,13 @@ class TaskService
         }
     }
 
-    public function getAllHelperRequestTasks():Collection
+
+    /**
+     * Get all helper request tasks that are still pending.
+     *
+     * @return Collection
+     */
+    public function getAllHelperRequestTasks(): Collection
     {
         try {
             $tasks = $this->user->requests()->where('task_requests.created_at', '>', now())->get();
@@ -49,7 +61,14 @@ class TaskService
     }
 
 
-    public function acceptRequest($task):bool
+
+    /**
+     * Accept a request for a task and assign the current user as the helper.
+     *
+     * @param $task
+     * @return bool
+     */
+    public function acceptRequest($task): bool
     {
         try {
             $task->requests()->detach();
