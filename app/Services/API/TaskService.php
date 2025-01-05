@@ -74,6 +74,7 @@ class TaskService
             $task->requests()->detach();
             $task->update([
                 'helper' => $this->user->id,
+                'status' => 'accepted',
             ]);
             return true;
         } catch (Exception $e) {
@@ -140,7 +141,7 @@ class TaskService
         try {
 
             // Step 1: Get all tasks with their associated address and skill
-            $tasksWithAddressSkill = $this->user->clientTasks()
+            $tasksWithAddressSkill = $this->user->clientTasks()->whereStatus('pending')
                 ->select('id', 'address_id', 'sub_category_id') // Assuming `sub_category_id` is the foreign key in the tasks table
                 ->with(['address:id,country,state,city,zip', 'skill:id']) // Assuming `skill` is a relationship that links to SubCategory
                 ->get();
