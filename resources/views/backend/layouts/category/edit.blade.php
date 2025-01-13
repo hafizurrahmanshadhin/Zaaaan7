@@ -58,7 +58,7 @@
                                         <div class="col-md-12">
                                             <label class="form-label" for="image">Input Image</label>
                                             <input class="form-control dropify" name="image" id="image" type="file"
-                                                data-default-file="{{ $category->image->url }}" />
+                                                data-default-file="{{ $category->url }}" />
                                             @error('image')
                                                 <div class="validation-error">{{ $message }}</div>
                                             @enderror
