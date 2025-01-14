@@ -17,8 +17,8 @@ class DashboardService
     {
         try {
             return [
-                'totalEarn' => 0,
-                'weeklyEarn' => 0,
+                'totalEarn' => 0.0,
+                'weeklyEarn' => 0.0,
                 'rating' =>  $this->user->avarageRating(),
             ];
         }catch(Exception $e) {
