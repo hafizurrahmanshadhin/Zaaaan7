@@ -16,15 +16,15 @@ class OTPService
     /**
      * Sends an OTP (One-Time Password) to the specified user for the given operation.
      *
-     * This method first retrieves the user based on their email address, deletes any existing OTPs 
-     * for the specified operation, and then generates and sends a new OTP to the user. 
+     * This method first retrieves the user based on their email address, deletes any existing OTPs
+     * for the specified operation, and then generates and sends a new OTP to the user.
      * The OTP is associated with a specific operation (e.g., login, password reset).
      * If any error occurs during the process, an error is logged, and the exception is rethrown.
      *
      * @param string $email The email address of the user to whom the OTP will be sent.
      * @param string $operation The operation for which the OTP is being generated (e.g., 'login', 'password_reset').
      *
-     * @return int 
+     * @return int
      *
      * @throws Exception If there is an error retrieving the user, deleting old OTPs, or sending the new OTP.
      */
@@ -35,6 +35,7 @@ class OTPService
             $user = User::whereEmail($email)->first();
             $user->otps()->whereOperation($operation)->delete();
             $otp = $this->otp($user, $operation);
+            Log::info($otp);
             return $otp;
         } catch (Exception $e) {
             Log::error('OTPService::otpSend -> ' . $e->getMessage());
@@ -52,14 +53,14 @@ class OTPService
      * - Checks if the OTP has expired (1 minute window).
      * - If the OTP is valid, the corresponding operation is performed (e.g., email verification).
      * - In the case of successful email verification, a new authentication token is generated for the user.
-     * 
+     *
      * The method ensures that the OTP is invalidated after it is used, and any relevant changes (like email verification) are persisted in the database.
      *
      * @param string $email The user's email address.
      * @param string $operation The operation for which the OTP was generated (e.g., 'email').
      * @param string $otp The OTP that the user has provided.
      *
-     * @return array|null 
+     * @return array|null
      *
      * @throws \App\Exceptions\UserAlreadyVarifiedException If the user's email has already been verified.
      * @throws \App\Exceptions\OTPMismatchException If the provided OTP does not match the stored OTP.
@@ -71,11 +72,12 @@ class OTPService
         try {
             $user = User::whereEmail($email)->first();
 
-            if ($user->email_verified_at) {
+            if ($user->email_verified_at && $operation == 'email') {
                 throw new UserAlreadyVarifiedException();
             }
 
             $userOTP = $user->otps()->whereOperation($operation)->whereStatus(true)->first();
+
 
             if (!$userOTP || (int) $otp != $userOTP->number) {
                 throw new OTPMismatchException();
@@ -95,14 +97,14 @@ class OTPService
             if ($operation === 'email') {
                 $user->email_verified_at = now();
                 $user->save();
-
-                $authService = new AuthService();
-                $response = $authService->login(['email' => $user->email]);
-                $token = $response['token'];
+                $userOTP->delete();
                 DB::commit();
-                return ['token'  => $token, 'role' => $user->role];
+                return ['role' => $user->role];
             }
-            DB::commit();
+            if ($operation === 'password'){
+                DB::commit();
+                return ['role' => $user->role];
+            }
             return null;
         } catch (Exception $e) {
             DB::rollBack();
@@ -117,9 +119,9 @@ class OTPService
     /**
      * Generates and sends a One-Time Password (OTP) for a specific user and operation.
      *
-     * This method generates a random 6-digit OTP and associates it with the provided user and operation. 
-     * The OTP is saved in the database, and then an email containing the OTP is dispatched to the user 
-     * using the `SendOTPEmail` job. If any error occurs during the process, the exception is logged and 
+     * This method generates a random 6-digit OTP and associates it with the provided user and operation.
+     * The OTP is saved in the database, and then an email containing the OTP is dispatched to the user
+     * using the `SendOTPEmail` job. If any error occurs during the process, the exception is logged and
      * rethrown.
      *
      * @param User $user The user to whom the OTP will be generated and sent.

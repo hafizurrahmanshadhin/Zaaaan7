@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Auth\ForgerPasswordController;
 use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,17 @@ Route::middleware('guest:api')->group(function ($router) {
     // Password-related routes
     Route::controller(PasswordController::class)->group(function () {
         Route::post('chage-password', 'changePassword')->name('change.password');
+    });
+
+
+    // OTP-related routes
+    Route::prefix('/forget-password')->name('forgetpassword.')->controller(OTPController::class)->group(function () {
+        Route::post('/oto-send', 'otpSend')->name('otp.send');
+        Route::post('/oto-match', 'otpMatch')->name('otp.match');
+    });
+
+    Route::prefix('/forget-password')->name('forgetpassword.')->controller(ForgerPasswordController::class)->group(function () {
+        Route::post('/reset-password', 'resetPassword')->name('reset.password');
     });
 });
 
