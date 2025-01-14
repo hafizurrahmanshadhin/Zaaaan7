@@ -16,7 +16,7 @@ class AuthService
 
     /**
      * Registers a new user and returns a JWT token upon successful registration.
-     * 
+     *
      * This method accepts user credentials, creates a new user record in the database,
      * and generates a JWT token for authentication if the user is successfully registered.
      * In case of an error during user creation or token generation, an exception is caught,
@@ -26,9 +26,9 @@ class AuthService
      *                            - 'name' (string): The full name of the user.
      *                            - 'email' (string): The email address of the user.
      *                            - 'password' (string): The plain-text password of the user, which will be hashed.
-     * 
+     *
      * @return array|null The generated JWT token if registration is successful; otherwise, null if an error occurs.
-     * 
+     *
      * @throws Exception If token generation fails after user creation.
      */
     public function register(array $credentials): array
@@ -50,7 +50,7 @@ class AuthService
             DB::commit();
 
             // return ['token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
-            return ['role' => $user->role, 'verify' => false, 'otp' => $otp];
+            return ['id'=>$user->id, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -63,18 +63,18 @@ class AuthService
 
 
     /**
-     * Registers a new helper user, creates the user, sends an OTP verification email, 
+     * Registers a new helper user, creates the user, sends an OTP verification email,
      * and generates a JWT token for authentication.
-     * 
+     *
      * This method performs the following steps:
      * - Begins a database transaction to ensure atomicity.
      * - Creates a new helper user using the provided credentials.
      * - Sends an OTP verification email to the newly created user.
      * - Attempts to generate a JWT token for the user based on their email and password.
      * - Rolls back the transaction if any error occurs, logging the error.
-     * - Returns an array containing the JWT token, user role, and a flag indicating 
+     * - Returns an array containing the JWT token, user role, and a flag indicating
      *   whether the user's email has been verified (set to false in this case).
-     * 
+     *
      * @param array $credentials The user credentials, which include:
      *   - first_name: The user's first name.
      *   - last_name: The user's last name.
@@ -84,12 +84,12 @@ class AuthService
      *   - id: The user's ID document file.
      *   - documents: An array of additional document files to be uploaded.
      *   - sub_category_id: The ID of the skill sub-category to attach to the user.
-     * 
+     *
      * @return array The response containing:
      *   - 'token': The JWT token for authentication.
      *   - 'role': The user's role (e.g., 'helper').
      *   - 'verify': A flag indicating whether the email is verified (false by default).
-     * 
+     *
      * @throws Exception If there is an error during the registration process, user creation,
      *                   OTP sending, or token generation.
      */
@@ -101,7 +101,7 @@ class AuthService
             $user = $this->createHelper($credentials);
 
             $optService = new OTPService();
-            
+
             $otp = $optService->otpSend($user->email, 'email');
 
             $token = JWTAuth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
@@ -112,7 +112,7 @@ class AuthService
 
             DB::commit();
 
-            return ['token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
+            return ['id'=>$user->id, 'token' => $token, 'role' => $user->role, 'verify' => false, 'otp' => $otp];
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -125,8 +125,8 @@ class AuthService
 
     /**
      * Authenticates a user and returns a JWT token upon successful login.
-     * 
-     * This method accepts user credentials, verifies the user's existence, and checks the 
+     *
+     * This method accepts user credentials, verifies the user's existence, and checks the
      * provided password against the stored hash. If authentication is successful, a JWT token
      * is generated for the user. If any error occurs during the process, an appropriate exception
      * is thrown with a detailed error message.
@@ -136,7 +136,7 @@ class AuthService
      *                            - 'password' (string): The plain-text password of the user.
      *
      * @return array The generated JWT token if the login is successful.
-     * 
+     *
      * @throws Exception If any other error occurs, such as token generation failure.
      */
     public function login(array $credentials): array
@@ -155,7 +155,7 @@ class AuthService
                 $verify = true;
             }
 
-            return ['token' => $token, 'role' => $user->role, 'verify' => $verify];
+            return ['id'=>$user->id, 'token' => $token, 'role' => $user->role, 'verify' => $verify];
 
         } catch (Exception $e) {
             Log::error('AuthService::login -> ' . $e->getMessage());
@@ -169,10 +169,10 @@ class AuthService
     /**
      * Logs out the user by invalidating their JWT token.
      *
-     * This method retrieves the current token from the request, invalidates it 
-     * to log the user out, and handles any exceptions that may arise during 
+     * This method retrieves the current token from the request, invalidates it
+     * to log the user out, and handles any exceptions that may arise during
      * the process by logging the error message.
-     * 
+     *
      * @throws Exception If an error occurs while invalidating the token, it will
      * be logged and re-thrown.
      */
@@ -193,12 +193,12 @@ class AuthService
      * Create a new user and their associated profile.
      *
      * This method handles the creation of a new user in the system. It accepts an array of credentials,
-     * validates the input, creates a new user record in the database, and also creates an associated 
+     * validates the input, creates a new user record in the database, and also creates an associated
      * user profile with additional information such as the user's address.
-     * 
+     *
      * The user's handle is generated using a helper function to ensure uniqueness.
      * The user's password is securely hashed before being stored.
-     * 
+     *
      * If an error occurs during the process, it is logged, and the exception is rethrown for further handling.
      *
      * @param array $credentials An associative array containing the user's credentials, including:
@@ -240,7 +240,7 @@ class AuthService
 
     /**
      * Creates a new helper user with associated details including profile, documents, and skills.
-     * 
+     *
      * This method performs the following tasks:
      * - Creates a new user with the provided credentials and a default or specified role.
      * - Generates a unique slug for the user handle.
@@ -248,7 +248,7 @@ class AuthService
      * - Uploads the user's ID document and associates it with the user.
      * - Uploads any additional documents and associates them with the user.
      * - Attaches skills to the user based on the provided sub-category ID.
-     * 
+     *
      * @param array $credentials The user's credentials, including:
      *   - first_name: The user's first name.
      *   - last_name: The user's last name.
@@ -259,9 +259,9 @@ class AuthService
      *   - documents: An array of additional document files to be uploaded.
      *   - sub_category_id: The ID of the skill sub-category to attach to the user.
      * @param string $role The role to assign to the user (default is 'helper').
-     * 
+     *
      * @return User The newly created user object.
-     * 
+     *
      * @throws Exception If any error occurs during user creation, profile creation, or document uploads.
      */
     public function createHelper(array $credentials, $role = 'helper'): mixed

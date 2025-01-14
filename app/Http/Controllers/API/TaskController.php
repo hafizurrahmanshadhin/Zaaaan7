@@ -41,6 +41,11 @@ class TaskController extends Controller
     }
 
 
+    /**
+     * Retrieve all helper completed tasks.
+     *
+     * @return JsonResponse
+     */
     public function helperCompletedIndex(): JsonResponse
     {
         try {
