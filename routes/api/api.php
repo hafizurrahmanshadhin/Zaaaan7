@@ -4,6 +4,7 @@ use App\Helper\Helper;
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ChatController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserReviewController;
@@ -53,6 +54,13 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::get('/completed', 'helperCompletedIndex')->name('complete.index');
             Route::get('/reqest', 'helperRequestdIndex')->name('reqest');
             Route::put('/accept/{task}', 'helperRequestAccept')->name('helperRequestAccept');
+        });
+    });
+
+    //dashboard
+    Route::prefix('/dashboard')->name('dashboard.')->controller(DashboardController::class)->group(function () {
+        Route::prefix('/helper')->name('helper.')->middleware(['helper'])->group(function () {
+            Route::get('/', 'show');
         });
     });
 
