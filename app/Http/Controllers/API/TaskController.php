@@ -41,6 +41,18 @@ class TaskController extends Controller
     }
 
 
+    public function helperCompletedIndex(): JsonResponse
+    {
+        try {
+            $tasks = $this->taskService->getAllCompletedHelperTasks();
+            return $this->success(200, 'completed tasks retrieved successfully', $tasks);
+        } catch (Exception $e) {
+            Log::error('TaksController::helperIndex:' . $e->getMessage());
+            return $this->error(500, 'fail to retrieve tasks', $e->getMessage());
+        }
+    }
+
+
     /**
      * Retrieve all helper request tasks.
      *
@@ -130,7 +142,7 @@ class TaskController extends Controller
      *     - Success: HTTP status code 200 with a success message.
      *     - Error: HTTP status code 500 with the error message and details.
      *
-     * @throws Exception If an error occurs during the request process, an exception is thrown and caught, 
+     * @throws Exception If an error occurs during the request process, an exception is thrown and caught,
      *         with an error message logged for debugging purposes.
      */
     public function request(TaskRequestRequest $taskRequestRequest)

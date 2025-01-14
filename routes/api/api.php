@@ -42,7 +42,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     });
     // task
     Route::prefix('/task')->name('task.')->controller(TaskController::class)->group(function () {
-        
+
         Route::middleware(['user'])->group(function () {
             Route::post('/store', 'store')->name('store');
             Route::get('/experts', 'experts')->name('experts');
@@ -50,6 +50,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         });
         Route::prefix('/helper')->name('helper.')->middleware(['helper'])->group(function () {
             Route::get('/', 'helperIndex')->name('index');
+            Route::get('/completed', 'helperCompletedIndex')->name('complete.index');
             Route::get('/reqest', 'helperRequestdIndex')->name('reqest');
             Route::put('/accept/{task}', 'helperRequestAccept')->name('helperRequestAccept');
         });

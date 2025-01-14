@@ -17,7 +17,7 @@ class TaskService
 
     /**
      * Constructor for the class. Initializes the authenticated user.
-     * 
+     *
      * This method retrieves the authenticated user using Laravel's Auth facade
      * and assigns it to the $user property for further use in class methods.
      */
@@ -36,8 +36,24 @@ class TaskService
     public function getAllHelperTasks(): mixed
     {
         try {
-            $tasks = $this->user->helperTasks;
+            $perPage = request()->query('per_page', 10);
+            $tasks = $this->user->helperTasks()->where('status', 'accepted')->paginate($perPage);
+            return $tasks;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 
+    /**
+     * Get all completed tasks assigned to the current user as a helper.
+     *
+     * @return mixed
+     */
+    public function getAllCompletedHelperTasks(): mixed
+    {
+        try {
+            $perPage = request()->query('per_page', 10);
+            $tasks = $this->user->helperTasks()->where('status', operator: 'completed')->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
@@ -48,12 +64,13 @@ class TaskService
     /**
      * Get all helper request tasks that are still pending.
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getAllHelperRequestTasks(): Collection
+    public function getAllHelperRequestTasks(): mixed
     {
         try {
-            $tasks = $this->user->requests()->where('task_requests.created_at', '>', now())->get();
+            $perPage = request()->query('per_page', 10);
+            $tasks = $this->user->requests()->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
@@ -175,8 +192,6 @@ class TaskService
 
             // Output the result
             return $tasksWithUsers;
-
-
         } catch (Exception $e) {
             throw $e;
         }
@@ -209,7 +224,6 @@ class TaskService
             }
             $task->requests()->attach($credentials['user_id']);
             return true;
-
         } catch (Exception $e) {
             throw $e;
         }
