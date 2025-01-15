@@ -70,7 +70,7 @@ class TaskService
     {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->requests()->paginate($perPage);
+            $tasks = $this->user->requests()->with(['client', 'address', 'images'])->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
