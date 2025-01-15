@@ -54,6 +54,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::get('/completed', 'helperCompletedIndex')->name('complete.index');
             Route::get('/reqest', 'helperRequestdIndex')->name('reqest');
             Route::put('/accept/{task}', 'helperRequestAccept')->name('helperRequestAccept');
+            Route::get('/{task}', 'show')->name('show');
         });
     });
 

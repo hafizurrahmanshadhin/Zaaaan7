@@ -9,8 +9,8 @@ use App\Models\Task;
 use App\Services\API\TaskService;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
@@ -24,7 +24,7 @@ class TaskController extends Controller
     }
 
 
-     /**
+    /**
      * Retrieve all helper tasks.
      *
      * @return JsonResponse
@@ -120,7 +120,41 @@ class TaskController extends Controller
     }
 
 
-    public function experts()
+    /**
+     * Display the specified task.
+     *
+     * @param Task $task The task model instance.
+     * @return \Illuminate\Http\JsonResponse JSON response containing the task data or an error message.
+     *
+     * Handles the following scenarios:
+     * - Success: Returns the task data with a success message.
+     * - ModelNotFoundException: Returns a 404 error if the task is not found.
+     * - General Exception: Logs the error message and returns a 500 error with a failure message.
+     */
+    public function show(Task $task): JsonResponse
+    {
+        try {
+            return $this->success(200, 'task created successfully', $task);
+        } catch (ModelNotFoundException $e) {
+            return $this->error(404, 'task not found');
+        } catch (Exception $e) {
+            Log::error('TaksController::show:' . $e->getMessage());
+            return $this->error(500, 'fail to store taks', $e->getMessage());
+        }
+    }
+
+
+
+    /**
+     * Retrieve and display available experts for a task.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response containing the list of experts or an error message.
+     *
+     * Handles the following scenarios:
+     * - Success: Returns the list of experts with a success message.
+     * - General Exception: Logs the error message and returns a 500 error with a failure message.
+     */
+    public function experts(): JsonResponse
     {
         try {
             $experts = $this->taskService->getExperts();
@@ -150,7 +184,7 @@ class TaskController extends Controller
      * @throws Exception If an error occurs during the request process, an exception is thrown and caught,
      *         with an error message logged for debugging purposes.
      */
-    public function request(TaskRequestRequest $taskRequestRequest)
+    public function request(TaskRequestRequest $taskRequestRequest): JsonResponse
     {
         try {
             $validatedData = $taskRequestRequest->validated();
@@ -160,6 +194,5 @@ class TaskController extends Controller
             Log::error('TaksController::request:' . $e->getMessage());
             return $this->error(500, 'fail to request for task', $e->getMessage());
         }
-
     }
 }
