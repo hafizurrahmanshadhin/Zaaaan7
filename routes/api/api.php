@@ -73,7 +73,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     Route::prefix('review')->name('review.')->controller(UserReviewController::class)->group(function () {
         Route::get('/client', 'clientIndex')->name('client.index')->middleware('user');
         Route::get('/helper', 'helperIndex')->name('helper.index')->middleware('helper');
-        Route::post('/store', 'store')->name('store');
+        Route::post('/store', 'store')->name('store')->middleware(['user']);
     });
     // message
     Route::controller(ChatController::class)->group(function () {
