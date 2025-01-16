@@ -19,11 +19,12 @@ class CateogryService
      *
      * This method retrieves all categories, optionally filtered by a search term.
      * The search term can match against category name, cost, or provision fields.
-     * The results are returned as a DataTables response with columns for image, name, 
+     * The results are returned as a DataTables response with columns for image, name,
      * cost, provision, and action.
      */
     public function index($request): JsonResponse
     {
+        try {
         $query = Category::orderBy('created_at', 'DESC');
 
         if ($request->has('search') && $request->search) {
@@ -62,8 +63,11 @@ class CateogryService
             })
             ->rawColumns(['image', 'name', 'cost', 'provision', 'action'])
             ->make(true);
+        }catch(Exception $e) {
+            throw $e;
+        }
     }
-    
+
 
     /**
      * Store a new category in the database.
@@ -72,7 +76,7 @@ class CateogryService
      * @return void
      *
      * This method creates a new category in the database, uploads the category image,
-     * and associates the image with the newly created category. A database transaction 
+     * and associates the image with the newly created category. A database transaction
      * is used to ensure that both the category and image are saved together.
      */
     public function store(array $data)
@@ -103,7 +107,7 @@ class CateogryService
      * @return void
      *
      * This method updates the category's name, cost, and provision in the database.
-     * If a new image is provided, the old image is deleted, and the new image is uploaded 
+     * If a new image is provided, the old image is deleted, and the new image is uploaded
      * and associated with the category. A database transaction is used to ensure atomicity.
      */
     public function update(array $data, $category)

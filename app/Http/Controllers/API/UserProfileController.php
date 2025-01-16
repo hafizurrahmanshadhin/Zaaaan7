@@ -22,9 +22,9 @@ class UserProfileController extends Controller
 
     /**
      * Constructor.
-     * 
+     *
      * Initializes the controller with the required service for user profile operations.
-     * 
+     *
      * @param UserProfileService $userProfileService The user profile service instance.
      */
     public function __construct(UserProfileService $userProfileService)
@@ -35,7 +35,7 @@ class UserProfileController extends Controller
 
     /**
      * Display the authenticated user's profile.
-     * 
+     *
      * @return JsonResponse The response containing the user's profile details.
      */
     public function show(): JsonResponse
@@ -52,9 +52,9 @@ class UserProfileController extends Controller
 
     /**
      * Update the authenticated user's avatar.
-     * 
+     *
      * Validates the avatar request, processes the update via the service, and returns a success or error response.
-     * 
+     *
      * @param AvatarRequest $avatarRequest The request containing the new avatar file.
      * @return JsonResponse The success or error response.
      */
@@ -85,11 +85,23 @@ class UserProfileController extends Controller
     }
 
 
+    public function showHelperById($user): JsonResponse
+    {
+        try {
+            $response = $this->userProfileService->getHelperProfileById($user);
+            return $this->success(200, 'user profile', $response);
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Show: '. $e->getMessage());
+            return $this->error(500, 'failed to get user profile', $e->getMessage());
+        }
+    }
+
+
     /**
      * Update the authenticated user's profile information.
-     * 
+     *
      * Validates the profile update request, processes the update via the service, and returns a success or error response.
-     * 
+     *
      * @param UpdateProfileRequest $updateProfileRequest The request containing the updated profile data.
      * @return JsonResponse The success or error response.
      */

@@ -31,6 +31,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::get('/', 'show')->name('show');
             Route::post('/update', 'update')->name('update');
             Route::get('/helper/{user}', 'getHelper')->name('show.helper.profile');
+            Route::get('/show/helper/{user}', 'showHelperById')->name('show.helper.profile');
         });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
     });
