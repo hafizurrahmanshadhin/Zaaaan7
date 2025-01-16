@@ -57,6 +57,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::put('/accept/{task}', 'helperRequestAccept')->name('helperRequestAccept');
             Route::get('/{task}', 'show')->name('show');
         });
+        Route::get('/{task}', 'show')->name('show');
     });
 
     //dashboard

@@ -100,7 +100,8 @@ class UserProfileService
                 ->first();
 
             $rating = $user->avarageRating();
-            return ['helper' => $user, 'raging' => $rating];
+            $reivewCount = $user->helperReviews()->count();
+            return ['helper' => $user, 'raging' => $rating, 'review_count' => $reivewCount];
         } catch (Exception $e) {
             throw $e;
         }
