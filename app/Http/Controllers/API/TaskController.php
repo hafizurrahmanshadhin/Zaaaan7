@@ -134,7 +134,7 @@ class TaskController extends Controller
     public function show(Task $task): JsonResponse
     {
         try {
-            $task->load(['client', 'helper', 'address']);
+            $task = $this->taskService->getTask($task);
             return $this->success(200, 'task created successfully', $task);
         } catch (ModelNotFoundException $e) {
             return $this->error(404, 'task not found');

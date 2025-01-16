@@ -4,6 +4,7 @@ namespace App\Services\API;
 
 use App\Helper\Helper;
 use App\Models\Address;
+use App\Models\SubCategory;
 use App\Models\Task;
 use App\Models\User;
 use Exception;
@@ -56,6 +57,22 @@ class TaskService
             $tasks = $this->user->helperTasks()->where('status', operator: 'completed')->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getTask(Task $task) :array
+    {
+        try {
+            $task->load(['client', 'helper', 'address']);
+            $subCategory = SubCategory::findOrFail($task->sub_category_id);
+            $subCategory->load('category');
+            return [
+                'taks' => $task,
+                'sub_category'  => $subCategory->name,
+                'category' => $subCategory->category->name,
+            ];
+        }catch (Exception $e) {
             throw $e;
         }
     }
@@ -181,12 +198,29 @@ class TaskService
                     ->whereHas('skills', function ($query) use ($task) {
                         $query->where('sub_category_id', $task->sub_category_id);
                     })
-                    ->get();
+                    ->get()
+                    ->map(function ($user) use ($task) {
+                        $averageRating = $user->helperReviews()->average('star') ?? 0;
+                        $reivew_count = $user->helperReviews()->count();
+                        $skill = SubCategory::findOrFail($task->sub_category_id);
+                        return [
+                            'id' => $user->id,
+                            'first_name' => $user->first_name,
+                            'last_name' => $user->last_name,
+                            'avatar' => $user->avatar,
+                            'skill' => $skill->name,
+                            'average_rating' => $averageRating,
+                            'review_count' => $reivew_count, // From withCount
+                        ];
+                    }
+
+                );
 
                 // Only include the task ID and related users
                 return [
                     'task_id' => $task->id,
-                    'users' => $users
+                    'helpers' => $users
+
                 ];
             });
 
