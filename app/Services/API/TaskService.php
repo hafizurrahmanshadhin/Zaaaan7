@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TaskService
 {
@@ -25,6 +26,42 @@ class TaskService
     public function __construct()
     {
         $this->user = Auth::user();
+    }
+
+
+    public function getAllUserTasks(): mixed
+    {
+        try {
+            $status = request()->query('status', null);
+            $perPage = request()->query('per_page', 10);
+
+            // Base query with eager loading
+            $query = $this->user->clientTasks()->with(['helper', 'images']);
+
+            // Filter based on status
+            if ($status === 'process') {
+                $query->whereStatus('in process');
+            } elseif ($status === 'complete') {
+                $query->whereStatus('completed');
+            } elseif ($status !== null) {
+                throw new UnprocessableEntityHttpException('Unprocessable entry', null, 422);
+            }
+
+            // Paginate the results
+            $tasks = $query->paginate($perPage);
+
+            // Add extra info to each task
+            // $tasks->getCollection()->transform(function ($task) {
+            //     $task->color = 'red'; // Add the additional info
+            //     return $task;
+            // });
+
+            return $tasks;
+        } catch (UnprocessableEntityHttpException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
 

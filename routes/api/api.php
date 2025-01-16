@@ -46,7 +46,8 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     Route::prefix('/task')->name('task.')->controller(TaskController::class)->group(function () {
 
         Route::middleware(['user'])->group(function () {
-            Route::post('/store', 'store')->name('store');
+            Route::get('/index', 'userIndex')->name('user.index');
+            Route::post('/store', 'store')->name('index');
             Route::get('/experts', 'experts')->name('experts');
             Route::post('/request', 'request')->name('request');
         });

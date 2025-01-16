@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TaskController extends Controller
 {
@@ -21,6 +22,26 @@ class TaskController extends Controller
     public function __construct(TaskService $taskService)
     {
         $this->taskService = $taskService;
+    }
+
+
+    /**
+     * Retrieve all users tasks.
+     *
+     * @return JsonResponse
+     */
+    public function userIndex(): JsonResponse
+    {
+        try {
+            $tasks = $this->taskService->getAllUserTasks();
+            return $this->success(200, 'tasks retrieved successfully', $tasks);
+        } catch (UnprocessableEntityHttpException $e) {
+            Log::error('TaksController::userIndex:' . $e->getMessage());
+            return $this->error($e->getCode(), 'fail to retrieve tasks', $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('TaksController::userIndex:' . $e->getMessage());
+            return $this->error(500, 'fail to retrieve tasks', $e->getMessage());
+        }
     }
 
 
