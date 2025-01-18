@@ -24,7 +24,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of all categories.
      *
-     * This method handles the request to retrieve all categories from the 
+     * This method handles the request to retrieve all categories from the
      * category service and returns them in a success response. If an error
      * occurs, an error response is returned with the exception message.
      *
@@ -34,18 +34,30 @@ class CategoryController extends Controller
     {
         try {
             $response = $this->categoryService->getCategoryes();
-            return $this->success(200, 'getting all the categories', ['categories' =>$response['categories']]);
+            return $this->success(200, 'getting all the categories', ['categories' => $response['categories']]);
         } catch (Exception $e) {
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get categories', $e->getMessage());
         }
     }
 
-    public function paginatedIndex():JsonResponse
+
+    public function subCategoryIndex(): JsonResponse
+    {
+        try {
+            $response = $this->categoryService->getSubCategoryes();
+            return $this->success(200, 'getting all the skills', $response);
+        } catch (Exception $e) {
+            Log::error('CategoryController:subCategoryIndex ->' . $e->getMessage());
+            return $this->error(500, 'failed to get skills', $e->getMessage());
+        }
+    }
+
+    public function paginatedIndex(): JsonResponse
     {
         try {
             $response = $this->categoryService->getCagegoryPaginated();
-            return $this->success(200, 'getting all the categories', ['categories' =>$response['categories']]);
+            return $this->success(200, 'getting all the categories', ['categories' => $response['categories']]);
         } catch (Exception $e) {
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get categories', $e->getMessage());
@@ -56,9 +68,9 @@ class CategoryController extends Controller
     /**
      * Display the specified category.
      *
-     * This method handles the request to retrieve a specific category by 
-     * its identifier from the category service and returns it in a success 
-     * response. If an error occurs, an error response is returned with the 
+     * This method handles the request to retrieve a specific category by
+     * its identifier from the category service and returns it in a success
+     * response. If an error occurs, an error response is returned with the
      * exception message.
      *
      * @param string $category The identifier of the category to view.
@@ -73,15 +85,14 @@ class CategoryController extends Controller
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get the category', $e->getMessage());
         }
-
     }
 
 
     /**
      * Display the subcategories of a specific category.
      *
-     * This method handles the request to retrieve all subcategories for a 
-     * given category and returns them in a success response. If an error 
+     * This method handles the request to retrieve all subcategories for a
+     * given category and returns them in a success response. If an error
      * occurs, an error response is returned with the exception message.
      *
      * @param string $category The identifier of the category whose subcategories to retrieve.
@@ -96,6 +107,5 @@ class CategoryController extends Controller
             Log::error('CategoryController:index ->' . $e->getMessage());
             return $this->error(500, 'failed to get sub-categories', $e->getMessage());
         }
-
     }
 }

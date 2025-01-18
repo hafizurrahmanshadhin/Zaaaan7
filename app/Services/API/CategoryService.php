@@ -5,6 +5,7 @@ namespace App\Services\API;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class CategoryService
 {
@@ -16,8 +17,8 @@ class CategoryService
     /**
      * Retrieve a list of all categories.
      *
-     * This method retrieves all categories from the database using the 
-     * Category model and returns them in an associative array. If an error 
+     * This method retrieves all categories from the database using the
+     * Category model and returns them in an associative array. If an error
      * occurs, it will throw an exception to be handled by the caller.
      *
      * @return array
@@ -28,6 +29,17 @@ class CategoryService
         try {
             $categories = Category::select('id', 'name', 'url')->get();
             return ['categories' => $categories];
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    public function getSubCategoryes():Collection
+    {
+        try {
+            $categories = SubCategory::select('id', 'name')->get();
+            return $categories;
         } catch (Exception $e) {
             throw $e;
         }
@@ -53,9 +65,9 @@ class CategoryService
     /**
      * Retrieve a specific category by its ID.
      *
-     * This method retrieves a category from the database using the 
-     * Category model based on the provided ID. If the category is not 
-     * found, it will throw a ModelNotFoundException. The category data 
+     * This method retrieves a category from the database using the
+     * Category model based on the provided ID. If the category is not
+     * found, it will throw a ModelNotFoundException. The category data
      * is returned in an associative array.
      *
      * @param int $id The ID of the category to retrieve.
@@ -77,8 +89,8 @@ class CategoryService
     /**
      * Retrieve subcategories for a specific category.
      *
-     * This method retrieves all subcategories associated with a given 
-     * category ID from the SubCategory model and returns them in an 
+     * This method retrieves all subcategories associated with a given
+     * category ID from the SubCategory model and returns them in an
      * associative array. If an error occurs, it will throw an exception.
      *
      * @param int $id The ID of the category to retrieve subcategories for.
