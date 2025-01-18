@@ -85,6 +85,17 @@ class UserProfileController extends Controller
     }
 
 
+    public function getHelpersBySkills($skill) {
+        try {
+            $response = $this->userProfileService->getHelpersBySkills($skill);
+            return $this->success(200, 'helpers of the user', $response);
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Show: '. $e->getMessage());
+            return $this->error(500, 'failed to get user profile', $e->getMessage());
+        }
+    }
+
+
     public function showHelperById($user): JsonResponse
     {
         try {

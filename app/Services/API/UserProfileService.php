@@ -136,7 +136,6 @@ class UserProfileService
         } catch (Exception $e) {
             throw $e;
         }
-
     }
 
 
@@ -211,7 +210,7 @@ class UserProfileService
      * @return mixed
      * @throws \Exception If any error occurs during the update process or transaction failure.
      */
-    public function updateHelperProfile($credentials):mixed
+    public function updateHelperProfile($credentials): mixed
     {
         try {
             DB::beginTransaction();
@@ -242,18 +241,38 @@ class UserProfileService
         try {
             $user = User::with(['profile', 'skills'])->findOrFail($id);
             $user->averageRating = $user->avarageRating();
-            if (!$user)
-            {
+            if (!$user) {
                 return new Exception('user not found', 404);
             }
-            if ($user->role !== 'helper'){
+            if ($user->role !== 'helper') {
                 return new Exception('user is not a helper', 404);
             }
             return $user;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
-
     }
 
+
+    public function getHelpersBySkills($id)
+    {
+        try {
+            // Fetch users with the specified skill's sub_category_id
+            $users = User::whereHas('skills', function ($query) use ($id) {
+                $query->where('sub_category_id', $id);
+            })->get();
+
+            // Map users and append review_count and rating
+            $usersWithReview = $users->map(function ($user) {
+                return array_merge($user->toArray(), [
+                    'review_count' => $user->helperReviews()->count(), // Ensure this relationship exists
+                    'rating' => $user->avarageRating(), // Ensure this method exists and works
+                ]);
+            });
+
+            return $usersWithReview;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 }
