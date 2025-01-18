@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests\API\Auth;
 
+use App\Traits\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Validation\Validator;
 
 class PasswordChangeRequest extends FormRequest
 {
+    use ApiResponse;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -53,16 +55,16 @@ class PasswordChangeRequest extends FormRequest
 
     /**
      * Handles failed validation by formatting the validation errors and throwing a ValidationException.
-     * 
-     * This method is called when validation fails in a form request. It uses the `error` method 
-     * from the `ApiResponse` trait to generate a standardized error response with the validation 
-     * error messages and a 422 HTTP status code. It then throws a `ValidationException` with the 
+     *
+     * This method is called when validation fails in a form request. It uses the `error` method
+     * from the `ApiResponse` trait to generate a standardized error response with the validation
+     * error messages and a 422 HTTP status code. It then throws a `ValidationException` with the
      * formatted response.
      *
      * @param Validator $validator The validator instance containing the validation errors.
      *
      * @return void Throws a ValidationException with a formatted error response.
-     * 
+     *
      * @throws ValidationException The exception is thrown to halt further processing and return validation errors.
      */
     protected function failedValidation(Validator $validator):never

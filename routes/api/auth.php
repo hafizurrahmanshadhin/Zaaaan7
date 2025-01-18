@@ -44,7 +44,11 @@ Route::middleware('guest:api')->group(function ($router) {
 Route::middleware('auth:api')->group(function () {
     // Authentication-related routes
     Route::controller(AuthController::class)->group(function () {
-        Route::post('logout', 'logout')->name('logout');
-        Route::post('refresh', 'refresh')->name('refresh.token');
+        Route::post('/logout', 'logout')->name('logout');
+        Route::post('/refresh', 'refresh')->name('refresh.token');
+    });
+
+    Route::controller(PasswordController::class)->group(function () {
+        Route::post('/change-password', 'changePassword')->name('change.password');
     });
 });
