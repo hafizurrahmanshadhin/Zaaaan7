@@ -135,6 +135,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Task::class, 'client');
     }
 
+
+    public function clientTransections(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'client');
+    }
+
     /**
      * Define the one-to-many relationship with the Task model as a helper.
      * A user can be assigned multiple tasks as a helper.
@@ -142,6 +148,12 @@ class User extends Authenticatable implements JWTSubject
     public function helperTasks(): HasMany
     {
         return $this->hasMany(Task::class, 'helper');
+    }
+
+
+    public function helperTransections(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'helper');
     }
 
     /**
@@ -176,7 +188,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Retrieve the reviews where the user is the client.
-     * 
+     *
      * This method defines a one-to-many-through relationship between the user and the reviews, where the user is the client
      * in the related tasks. It will return all reviews associated with the tasks where the user is the client.
      *
@@ -193,7 +205,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Retrieve the reviews where the user is the helper.
-     * 
+     *
      * This method defines a one-to-many-through relationship between the user and the reviews, where the user is the helper
      * in the related tasks. It will return all reviews associated with the tasks where the user is the helper.
      *
@@ -223,7 +235,7 @@ class User extends Authenticatable implements JWTSubject
      * Calculate the average rating for a helper based on reviews.
      *
      * This method calculates the average rating for a helper by retrieving the average value of the `star` field
-     * from all associated reviews in the `helper_reviews` relationship. It is assumed that each review contains a 
+     * from all associated reviews in the `helper_reviews` relationship. It is assumed that each review contains a
      * `star` rating representing the helper's performance.
      *
      * @return float The average star rating for the helper. If no reviews exist, it will return `null`.

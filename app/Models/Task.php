@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -50,7 +51,7 @@ class Task extends Model
 
     /**
      * Define the one-to-one relationship with the Review model.
-     * 
+     *
      * This method indicates that the current model (e.g., User or Task) has one associated review.
      * It will return the review that is directly related to the current model, if it exists.
      *
@@ -71,5 +72,10 @@ class Task extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
-    
+
+    public function transections():HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
 }
