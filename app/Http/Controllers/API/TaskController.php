@@ -156,7 +156,31 @@ class TaskController extends Controller
     {
         try {
             $task = $this->taskService->getTask($task);
-            return $this->success(200, 'task created successfully', $task);
+            return $this->success(200, 'successful', $task);
+        } catch (ModelNotFoundException $e) {
+            return $this->error(404, 'task not found');
+        } catch (Exception $e) {
+            Log::error('TaksController::show:' . $e->getMessage());
+            return $this->error(500, 'fail to store taks', $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Display the specified task.
+     *
+     * @param Task $task The task model instance.
+     * @return \Illuminate\Http\JsonResponse JSON response containing the task data or an error message.
+     *
+     * Handles the following scenarios:
+     * - Success: Returns the task data with a success message.
+     * - ModelNotFoundException: Returns a 404 error if the task is not found.
+     * - General Exception: Logs the error message and returns a 500 error with a failure message.
+     */
+    public function showStatus(Task $task): JsonResponse
+    {
+        try {
+            return $this->success(200, 'Successfull', $task->status);
         } catch (ModelNotFoundException $e) {
             return $this->error(404, 'task not found');
         } catch (Exception $e) {
