@@ -254,6 +254,24 @@ class UserProfileService
     }
 
 
+    public function getTopExperts()
+    {
+        try {
+            $users =   User::whereRole('helper')->with('skills')->get()->sortByDesc(function ($user) {
+                return $user->avarageRating();
+            })->take(4);
+            return  $users->map(function ($user) {
+                return array_merge($user->toArray(), [
+                    'review_count' => $user->helperReviews()->count(), // Ensure this relationship exists
+                    'rating' => $user->avarageRating(), // Ensure this method exists and works
+                ]);
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
     public function getHelpersBySkills($id)
     {
         try {

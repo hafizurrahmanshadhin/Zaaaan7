@@ -29,6 +29,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::get('/show/helper/{user}', 'showHelperById')->name('show.helper.profile');
             Route::get('/helper/skill/{skill}', 'getHelpersBySkills')->name('show.helper.profile');
             Route::get('/helper/{user}', 'getHelper')->name('show.helper.profile');
+            Route::get('/top-exparts', 'topExparts')->name('top.experts');
         });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
     });

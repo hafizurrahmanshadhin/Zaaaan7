@@ -157,4 +157,16 @@ class UserProfileController extends Controller
         }
     }
 
+
+    public function topExparts() :JsonResponse
+    {
+        try {
+            $response = $this->userProfileService->getTopExperts();
+            return $this->success(200, 'user profile', $response);
+        } catch (Exception $e) {
+            Log::error('UserProfileController::Show: '. $e->getMessage());
+            return $this->error(500, 'failed to get user profile', $e->getMessage());
+        }
+    }
+
 }
