@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\Backend\HomeController;
 use App\Http\Controllers\Web\Backend\Setting\MailController;
 use App\Http\Controllers\Web\Backend\SubCateogryController;
 use App\Http\Controllers\Web\Backend\ProfileController;
+use App\Http\Controllers\Web\Backend\TransectionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,6 +34,11 @@ Route::prefix('/category')->name('category.')->group(function () {
         Route::get('/edit/{subCategory}', 'edit')->name('edit');
         Route::put('/update/{subCategory}', 'update')->name('update');
     });
+});
+
+
+Route::prefix('/transection')->name('transection.')->controller(TransectionController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
 });
 
 Route::prefix('sub-cateogry')->name('sub.')->controller(SubCateogryController::class)->group(function () {
