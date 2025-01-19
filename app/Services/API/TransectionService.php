@@ -8,7 +8,7 @@ use Exception;
 class TransectionService
 {
 
-    public function storeTransection(array $credentials)
+    public function storeTransection($credentials)
     {
         try {
             $transection = Transaction::create($credentials);
