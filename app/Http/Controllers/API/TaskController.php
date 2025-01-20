@@ -180,7 +180,16 @@ class TaskController extends Controller
     public function showStatus(Task $task): JsonResponse
     {
         try {
-            return $this->success(200, 'Successfull', $task->status);
+            if ($task->status == 'pending') {
+                $result = ['value' => 1, 'status' => $task->status];
+            } else if ($task->status == 'accepted') {
+                $result = ['value' => 2, 'status' => $task->status];
+            } else if ($task->status == 'in process') {
+                $result = ['value' => 3, 'status' => $task->status];
+            } else {
+                $result = ['value' => 4, 'completed' => $task->status];
+            }
+            return $this->success(200, 'successfull', $result);
         } catch (ModelNotFoundException $e) {
             return $this->error(404, 'task not found');
         } catch (Exception $e) {
