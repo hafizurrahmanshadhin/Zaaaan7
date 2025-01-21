@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('address_id')->constrained('addresses')->cascadeOnDelete();
             $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
 
-            $table->enum('status', ['pending', 'accepted', 'in process', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'in process', 'completed', 'expired'])->default('pending');
             $table->longText('description')->comment('task description');
             $table->date('date');
             $table->time('time');

@@ -186,8 +186,10 @@ class TaskController extends Controller
                 $result = ['value' => 2, 'status' => $task->status];
             } else if ($task->status == 'in process') {
                 $result = ['value' => 3, 'status' => $task->status];
-            } else {
+            } else if ($task->status == 'completed') {
                 $result = ['value' => 4, 'completed' => $task->status];
+            } else {
+                $result = ['value' => 4, 'expired' => $task->status];
             }
             return $this->success(200, 'successfull', $result);
         } catch (ModelNotFoundException $e) {
