@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('helper')->comment('from users table');
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
             $table->float('amount');
+
             $table->foreign('client')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('helper')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
