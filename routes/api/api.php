@@ -56,6 +56,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::get('/reqest', 'helperRequestdIndex')->name('reqest');
             Route::put('/accept/{task}', 'helperRequestAccept')->name('helperRequestAccept');
             Route::get('/{task}', 'show')->name('show');
+            Route::delete('/request/delete/{task}', 'cancleRequest')->name('request.delete');
         });
         Route::get('/{task}', 'show')->name('show');
     });

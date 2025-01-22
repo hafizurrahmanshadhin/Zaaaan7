@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -98,7 +99,7 @@ class TaskService
         }
     }
 
-    public function getTask(Task $task) :array
+    public function getTask(Task $task): array
     {
         try {
             $task->load(['client', 'helper', 'address']);
@@ -109,7 +110,7 @@ class TaskService
                 'sub_category'  => $subCategory->name,
                 'category' => $subCategory->category->name,
             ];
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
@@ -236,22 +237,23 @@ class TaskService
                         $query->where('sub_category_id', $task->sub_category_id);
                     })
                     ->get()
-                    ->map(function ($user) use ($task) {
-                        $averageRating = $user->helperReviews()->average('star') ?? 0;
-                        $reivew_count = $user->helperReviews()->count();
-                        $skill = SubCategory::findOrFail($task->sub_category_id);
-                        return [
-                            'id' => $user->id,
-                            'first_name' => $user->first_name,
-                            'last_name' => $user->last_name,
-                            'avatar' => $user->avatar,
-                            'skill' => $skill->name,
-                            'average_rating' => $averageRating,
-                            'review_count' => $reivew_count, // From withCount
-                        ];
-                    }
+                    ->map(
+                        function ($user) use ($task) {
+                            $averageRating = $user->helperReviews()->average('star') ?? 0;
+                            $reivew_count = $user->helperReviews()->count();
+                            $skill = SubCategory::findOrFail($task->sub_category_id);
+                            return [
+                                'id' => $user->id,
+                                'first_name' => $user->first_name,
+                                'last_name' => $user->last_name,
+                                'avatar' => $user->avatar,
+                                'skill' => $skill->name,
+                                'average_rating' => $averageRating,
+                                'review_count' => $reivew_count, // From withCount
+                            ];
+                        }
 
-                );
+                    );
 
                 // Only include the task ID and related users
                 return [
@@ -296,6 +298,19 @@ class TaskService
             $task->requests()->attach($credentials['user_id']);
             return true;
         } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+
+    public function deleteRequest($id)
+    {
+        try {
+            $this->user->requests()->detach($id);
+            return true;
+        }
+        catch (Exception $e) {
             throw $e;
         }
     }

@@ -246,9 +246,20 @@ class TaskController extends Controller
         try {
             $validatedData = $taskRequestRequest->validated();
             $this->taskService->giveRequest($validatedData);
-            return $this->success(200, 'task created successfully', []);
+            return $this->success(200, 'request successfully', []);
         } catch (Exception $e) {
             Log::error('TaksController::request:' . $e->getMessage());
+            return $this->error(500, 'fail to request for task', $e->getMessage());
+        }
+    }
+
+
+    public function cancleRequest(Task $task){
+        try {
+            $this->taskService->deleteRequest($task->id);
+            return $this->success(200, 'delete success', []);
+        } catch (Exception $e) {
+            Log::error('TaksController::cancleRequest:' . $e->getMessage());
             return $this->error(500, 'fail to request for task', $e->getMessage());
         }
     }
