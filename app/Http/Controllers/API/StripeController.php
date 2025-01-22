@@ -25,11 +25,12 @@ class StripeController extends Controller
     public function createPayent(StripeCreatePaymentRequest $stripeCreatePaymentRequest):JsonResponse
     {
         try {
-            $response = $this->stripeService->createPaymentIntent($stripeCreatePaymentRequest);
+            $validatedData = $stripeCreatePaymentRequest->validated();
+            $response = $this->stripeService->createPaymentIntent($validatedData);
             return $this->success(200, 'Payment Successfull', $response);
         } catch (Exception $e) {
             Log::error("StripeController::createPayent", [$e->getMessage()]);
-            return $this->error($e->getCode() ?? 500, 'server error', $e->getMessage());
+            return $this->error( 500, 'server error', $e->getMessage());
         }
     }
 

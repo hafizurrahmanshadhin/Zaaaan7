@@ -26,10 +26,11 @@ class StripeService
             return $this->stripeKey;
         } catch (Exception $e) {
             Log::error('StripeService::getStripeKey', [$e->getMessage()]);
+            throw $e;
         }
     }
 
-    public function createPaymentIntent($credentials):PaymentIntent
+    public function createPaymentIntent($credentials)
     {
         try {
             Stripe::setApiKey($this->stripeSecret);
@@ -38,8 +39,8 @@ class StripeService
 
             $metadata = [
                 'task_id' => $task->id,
-                'client' => $task->client->id,
-                'helper' => $task->helper->id,
+                'client' => $task->client,
+                'helper' => $task->helper,
             ];
 
             $paymentIntent = PaymentIntent::create([
@@ -48,7 +49,11 @@ class StripeService
                 'metadata' => $metadata
             ]);
 
-            return $paymentIntent;
+            return [
+                'client_secret' => $paymentIntent['client_secret'],
+                'metadata' => $paymentIntent['metadata']
+            ];
+            // return $paymentIntent;
         } catch (Exception $e) {
             throw $e;
         }

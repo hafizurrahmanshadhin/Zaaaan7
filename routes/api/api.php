@@ -5,7 +5,9 @@ use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\StripeController;
 use App\Http\Controllers\API\TaskController;
+use App\Http\Controllers\API\TransectionController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserReviewController;
 use Illuminate\Support\Facades\Artisan;
@@ -95,7 +97,9 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
 
 
 
-
+Route::name('stripe.')->controller(StripeController::class)->group(function() {
+    Route::post('pay', 'createPayent')->name('pay');
+});
 
 
 
