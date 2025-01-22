@@ -55,14 +55,17 @@ class StripeService
     }
 
 
-    public function handlePaymentWebhook($credentials)
-    {
-        try{
-            Stripe::setApiKey($this->stripeSecret);
-            return 1;
-        }catch (Exception $e) {
-            throw $e;
-        }
-    }
+    // public function handlePaymentWebhook($credentials)
+    // {
+    //     try{
+    //         Stripe::setApiKey($this->stripeSecret);
+    //         Log::info('stripe webhook recived');
+
+    //         $payload = $credentials
+    //         return 1;
+    //     }catch (Exception $e) {
+    //         throw $e;
+    //     }
+    // }
 
 }

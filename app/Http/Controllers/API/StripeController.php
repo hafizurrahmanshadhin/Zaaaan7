@@ -34,14 +34,14 @@ class StripeController extends Controller
     }
 
 
-    public function paymentWebhook(StripeWebhookRequest $stripeWebhookRequest):JsonResponse
-    {
-        try {
-            $response = $this->stripeService->handlePaymentWebhook($stripeWebhookRequest);
-            return $this->success(200, 'Payment Successfull', $response);
-        } catch (Exception $e) {
-            Log::error("paymentWebhook::createPayent", [$e->getMessage()]);
-            return $this->error($e->getCode() ?? 500, 'server error', $e->getMessage());
-        }
-    }
+    // public function paymentWebhook(StripeWebhookRequest $stripeWebhookRequest):JsonResponse
+    // {
+    //     try {
+    //         $response = $this->stripeService->handlePaymentWebhook($stripeWebhookRequest);
+    //         return $this->success(200, 'Payment Successfull', $response);
+    //     } catch (Exception $e) {
+    //         Log::error("paymentWebhook::createPayent", [$e->getMessage()]);
+    //         return $this->error($e->getCode() ?? 500, 'server error', $e->getMessage());
+    //     }
+    // }
 }
