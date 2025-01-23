@@ -98,7 +98,8 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
 
 
 Route::name('stripe.')->controller(StripeController::class)->group(function() {
-    Route::post('pay', 'createPayent')->name('pay');
+    Route::post('/pay', 'createPayent')->name('pay');
+    Route::post('/web-hook', 'paymentWebhook')->name('pay.webhook');
 });
 
 
