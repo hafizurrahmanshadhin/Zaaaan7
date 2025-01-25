@@ -11,7 +11,7 @@ class Image extends Model
 {
     use HasFactory;
     protected $fillable = ['url'];
-    
+
     /**
      * Define a polymorphic relationship.
      * Indicates that this model can belong to multiple other models (e.g., User, Post) as an imageable entity.
@@ -22,10 +22,28 @@ class Image extends Model
     }
 
 
-    protected function url(): Attribute
+/**
+     * Get the URL attribute.
+     *
+     * This accessor method modifies the URL based on its type:
+     * - If the URL starts with 'http://' or 'https://', it appends the string 'tushar' to the URL.
+     * - If the URL is a relative path, it prepends the base URL using the asset helper.
+     * - If the URL is null, it returns the default user image URL.
+     *
+     * @param string|null $url The URL to be processed. Can be null or a string.
+     *
+     * @return string The processed URL. It may be modified or default to a fallback image.
+     */
+    public function getUrlAttribute($url): string
     {
-        return Attribute::make(
-            get: fn($url) => $url ? asset($url) : asset('assets/custom/img/user.jpg'),
-        );
+        if ($url) {
+            if (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) {
+                return $url;
+            } else {
+                return asset('storage/' . $url);
+            }
+        } else {
+            return asset('assets/custom/img/user.jpg');
+        }
     }
 }

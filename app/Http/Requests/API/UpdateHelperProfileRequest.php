@@ -37,6 +37,7 @@ class UpdateHelperProfileRequest extends FormRequest
             'address' => 'nullable|string',
             'gender' => 'nullable|string|in:male,female,other',
             'description' => 'nullable|string',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
 
@@ -67,29 +68,32 @@ class UpdateHelperProfileRequest extends FormRequest
 
             'gender.string' => 'Gender must be a valid string.',
             'gender.in' => 'Gender must be one of the following values: male, female, or other.',
+
+            'avatar.image' => 'The file must be an image.',
+            'avatar.mimes' => 'The image must be a type of: jpeg, png, jpg, gif, svg.',
         ];
     }
 
 
     /**
      * Handles failed validation by formatting the validation errors and throwing a ValidationException.
-     * 
-     * This method is called when validation fails in a form request. It uses the `error` method 
-     * from the `ApiResponse` trait to generate a standardized Errorsresponse with the validation 
-     * Errorsmessages and a 422 HTTP status code. It then throws a `ValidationException` with the 
+     *
+     * This method is called when validation fails in a form request. It uses the `error` method
+     * from the `ApiResponse` trait to generate a standardized Errorsresponse with the validation
+     * Errorsmessages and a 422 HTTP status code. It then throws a `ValidationException` with the
      * formatted response.
      *
      * @param Validator $validator The validator instance containing the validation errors.
      *
      * @return void Throws a ValidationException with a formatted Errorsresponse.
-     * 
+     *
      * @throws ValidationException The exception is thrown to halt further processing and return validation errors.
      */
     protected function failedValidation(Validator $validator): never
     {
         $errors = $validator->errors()->getMessages();
         $message = null;
-        $fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'gender', 'description'];
+        $fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'gender', 'description', 'avatar'];
 
         foreach ($fields as $field) {
             if (isset($errors[$field])) {

@@ -220,14 +220,23 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Define an accessor for the user's avatar.
-     * Returns a default avatar image if the user doesn't have one.
+     * Get the avatar attribute.
+     *
+     * @param string|null $url The URL to be processed. Can be null or a string.
+     *
+     * @return string The processed URL. It may be modified or default to a fallback image.
      */
-    protected function avatar(): Attribute
+    public function getAvatarAttribute($url): string
     {
-        return Attribute::make(
-            get: fn($value) => $value ? asset($value) : asset('assets/custom/img/user.jpg'),
-        );
+        if ($url) {
+            if (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) {
+                return $url;
+            } else {
+                return asset('storage/' . $url);
+            }
+        } else {
+            return asset('assets/custom/img/user.jpg');
+        }
     }
 
 

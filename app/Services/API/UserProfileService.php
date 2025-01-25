@@ -180,6 +180,18 @@ class UserProfileService
                 'address' => $credentials['address'] ?? $user->profile->address,
                 'gender' => $credentials['gender'] ?? $user->profile->gender,
             ]);
+
+            if (isset($credentials['avatar'])) {
+                $userAvater = $user->avatar;
+                $url = Helper::uploadFile($credentials['avatar'], 'user/' . $this->user->id);
+                $user->update([
+                    'avatar' => $url,
+                ]);
+                if ($userAvater) {
+                    Helper::deleteFile($userAvater);
+                }
+            }
+
             DB::commit();
             return $user->load('profile');
         } catch (Exception $e) {
@@ -227,6 +239,18 @@ class UserProfileService
                 'gender' => $credentials['gender'] ?? $user->profile->gender,
                 'bio' => $credentials['description'] ?? $user->profile->description,
             ]);
+
+            if (isset($credentials['avatar'])) {
+                $userAvater = $user->avatar;
+                $url = Helper::uploadFile($credentials['avatar'], 'user/' . $this->user->id);
+                $user->update([
+                    'avatar' => $url,
+                ]);
+                if ($userAvater) {
+                    Helper::deleteFile($userAvater);
+                }
+            }
+
             DB::commit();
             return $user->load('profile');
         } catch (Exception $e) {
