@@ -253,4 +253,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->helperReviews()->average('star') ?? 0;
     }
+
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
+    }
 }

@@ -83,6 +83,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     });
     // message
     Route::controller(ChatController::class)->group(function () {
+        Route::get('/messages', 'index');
         Route::get('/messages/{user}',  'getMessages');
         Route::post('/messages/{user}',  'sendMessage');
     });
