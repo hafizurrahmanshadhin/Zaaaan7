@@ -37,7 +37,7 @@ class TaskService
             $perPage = request()->query('per_page', 10);
 
             // Base query with eager loading
-            $query = $this->user->clientTasks()->with(['helper', 'images']);
+            $query = $this->user->clientTasks()->with(['helper', 'images', 'skill']);
 
             // Filter based on status
             if ($status === 'process') {
@@ -50,13 +50,6 @@ class TaskService
 
             // Paginate the results
             $tasks = $query->paginate($perPage);
-
-            // Add extra info to each task
-            // $tasks->getCollection()->transform(function ($task) {
-            //     $task->color = 'red'; // Add the additional info
-            //     return $task;
-            // });
-
             return $tasks;
         } catch (UnprocessableEntityHttpException $e) {
             throw $e;
