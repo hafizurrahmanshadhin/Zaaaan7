@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TaskService
@@ -145,7 +146,7 @@ class TaskService
                 'status' => 'accepted',
             ]);
             // sned notification
-            $client = $task->client();
+            $client = User::findOrFail($task->client);
             $client->notify(new TaskAcceptNotification(Auth::user()));
             DB::commit();
             return true;
