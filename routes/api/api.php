@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\StripeController;
 use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\TransectionController;
@@ -104,7 +105,10 @@ Route::name('stripe.')->controller(StripeController::class)->group(function() {
 });
 
 
-
+Route::prefix('notification')->name('notification.')->controller(NotificationController::class)->group(function() {
+    Route::get('/', 'index')->name('index');
+    Route::post('/read', 'read')->name('read');
+});
 
 
 

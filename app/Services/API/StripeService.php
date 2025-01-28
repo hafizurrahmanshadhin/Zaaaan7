@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Transaction;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Stripe\Exception\SignatureVerificationException;
 use Stripe\PaymentIntent;
@@ -130,7 +131,7 @@ class StripeService
                 Log::info('Duplicate transaction detected', ['transaction_id' => $paymentIntent->id]);
                 return;
             }
-
+            DB::beginTransaction();
             // Save transaction
             Transaction::create([
                 'transaction_id' => $paymentIntent->id,
@@ -140,7 +141,13 @@ class StripeService
                 'amount' => $amount,
                 'status' => $status
             ]);
+
+            Task::whereId($task_id)->update([
+                'status' => 'completed'
+            ]);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error('Error in handlePayment', [$e->getMessage()]);
             throw $e;
         }

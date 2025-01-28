@@ -7,6 +7,8 @@ use App\Models\Address;
 use App\Models\SubCategory;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\TaskAcceptNotification;
+use App\Notifications\TaskRequestNotification;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -136,13 +138,19 @@ class TaskService
     public function acceptRequest($task): bool
     {
         try {
+            DB::beginTransaction();
             $task->requests()->detach();
             $task->update([
                 'helper' => $this->user->id,
                 'status' => 'accepted',
             ]);
+            // sned notification
+            $client = $task->client();
+            $client->notify(new TaskAcceptNotification(Auth::user()));
+            DB::commit();
             return true;
         } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
@@ -283,14 +291,22 @@ class TaskService
     public function giveRequest(array $credentials): bool
     {
         try {
+            DB::beginTransaction();
             $task = Task::findOrFail($credentials['task_id']);
             if ($task->requests()->where('user_id', $credentials['user_id'])->exists()) {
 
                 throw new Exception('request exist', 404);
             }
             $task->requests()->attach($credentials['user_id']);
+
+            $client = $task->client;
+            // notifying user
+            User::whenId($credentials['user_id'])->notify(new TaskRequestNotification($client));
+
+            DB::commit();
             return true;
         } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
