@@ -298,10 +298,10 @@ class TaskService
                 throw new Exception('request exist', 404);
             }
             $task->requests()->attach($credentials['user_id']);
-
-            $client = $task->client;
             // notifying user
-            User::whenId($credentials['user_id'])->notify(new TaskRequestNotification($client));
+            $user = User::findOrFail($credentials['user_id']);
+            $client = User::findOrFail( $task->client);
+            $user->notify(new TaskRequestNotification($client));
 
             DB::commit();
             return true;

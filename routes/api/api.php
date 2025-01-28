@@ -88,6 +88,18 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::get('/messages/{user}',  'getMessages');
         Route::post('/messages/{user}',  'sendMessage');
     });
+
+
+    Route::name('stripe.')->controller(StripeController::class)->group(function() {
+        Route::post('/pay', 'createPayent')->name('pay');
+        Route::post('/web-hook', 'paymentWebhook')->name('pay.webhook');
+    });
+
+
+    Route::prefix('notification')->name('notification.')->controller(NotificationController::class)->group(function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/read', 'read')->name('read');
+    });
 });
 
 
@@ -97,18 +109,6 @@ Route::prefix('category')->name('category.')->controller(CategoryController::cla
     Route::get('/{category}', 'view')->name('view');
 });
 
-
-
-Route::name('stripe.')->controller(StripeController::class)->group(function() {
-    Route::post('/pay', 'createPayent')->name('pay');
-    Route::post('/web-hook', 'paymentWebhook')->name('pay.webhook');
-});
-
-
-Route::prefix('notification')->name('notification.')->controller(NotificationController::class)->group(function() {
-    Route::get('/', 'index')->name('index');
-    Route::post('/read', 'read')->name('read');
-});
 
 
 
