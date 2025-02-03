@@ -30,37 +30,48 @@ class ChatController extends Controller
     {
         try {
             $authUser = $request->user();
-
             $userId = $authUser->id;
 
+            // Subquery to get the latest message for each conversation (sent and received)
             $subQuery = Message::query()
-                ->select('sender_id', DB::raw('MAX(id) as last_message_id'), DB::raw('MAX(created_at) as time'))
-                ->where('receiver_id', $userId)
-                ->where('sender_id', '!=', $userId)
-                ->groupBy('sender_id');
+                ->select(
+                    DB::raw('LEAST(sender_id, receiver_id) AS participant_1'),
+                    DB::raw('GREATEST(sender_id, receiver_id) AS participant_2'),
+                    DB::raw('MAX(id) as last_message_id')
+                )
+                ->where(function ($query) use ($userId) {
+                    // This ensures we include both cases where the user is sender or receiver
+                    $query->where('sender_id', $userId)
+                        ->orWhere('receiver_id', $userId);
+                })
+                ->groupBy(DB::raw('LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id)'));
 
+            // Main query to get the last message for each conversation
             $messages = Message::query()
                 ->joinSub($subQuery, 'latest_messages', function ($join) {
                     $join->on('messages.id', '=', 'latest_messages.last_message_id');
                 })
-                ->with('sender:id,avatar,first_name,last_name')
-                ->orderByDesc('messages.id')
+                ->with('sender:id,avatar,first_name,last_name', 'receiver:id,avatar,first_name,last_name')
+                ->orderByDesc('messages.created_at') // Order by latest message
                 ->get();
 
-            // Format `created_at` field with Carbon's diffForHumans
+            // Format the `created_at` field for human readability
             $messages = $messages->map(function ($message) {
-                if ($message->time) {
-                    $message->time = Carbon::parse($message->time)->diffForHumans();
+                if ($message->created_at) {
+                    $message->time = Carbon::parse($message->created_at)->diffForHumans();
                 }
                 return $message;
             });
 
-            return $this->success(200, 'Users with last message retrieved successfully', $messages);
+            return $this->success(200, 'Last message from each conversation retrieved successfully', $messages);
         } catch (Exception $e) {
-            Log::error('Error retrieving users with last message: ' . $e->getMessage(), ['exception' => $e]);
-            return $this->error(500, 'An error occurred while retrieving users with last message: ', $e->getMessage());
+            Log::error('Error retrieving last message from each conversation: ' . $e->getMessage(), ['exception' => $e]);
+            return $this->error(500, 'An error occurred while retrieving the last message from each conversation: ', $e->getMessage());
         }
     }
+
+
+
 
 
     // public function search($search) {}
