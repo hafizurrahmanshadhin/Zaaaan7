@@ -64,6 +64,13 @@ class AddressService
                 'zip' => $credentials['zip'],
             ]);
 
+            $addressCount = $this->user->addresses()->count();
+
+            if ($addressCount == 1) {
+                $address->state = true;
+                $address->save();
+            }
+
             return $address;
         } catch (Exception $e) {
             throw $e;
