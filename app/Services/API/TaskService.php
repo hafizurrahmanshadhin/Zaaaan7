@@ -88,7 +88,7 @@ class TaskService
     {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->helperTasks()->where('status', operator: 'completed')->paginate($perPage);
+            $tasks = $this->user->helperTasks()->where('status', operator: 'completed')->with(['helper'])->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;

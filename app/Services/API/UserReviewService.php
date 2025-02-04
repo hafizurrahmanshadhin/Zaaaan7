@@ -29,7 +29,7 @@ class UserReviewService
     {
         try {
             $perPage = request()->query('per_page', 10);
-            $reviews = $this->user->clientReviews()->with('images')->paginate($perPage);
+            $reviews = $this->user->clientReviews()->with(['images', 'task.helper'])->paginate($perPage);
             return $reviews;
         } catch (Exception $e) {
             throw $e;
@@ -60,8 +60,8 @@ class UserReviewService
     /**
      * Retrieves a paginated list of reviews for the current user.
      *
-     * This method fetches a paginated set of reviews written by the currently authenticated user, 
-     * including any associated images, and returns them. The number of reviews per page can be specified 
+     * This method fetches a paginated set of reviews written by the currently authenticated user,
+     * including any associated images, and returns them. The number of reviews per page can be specified
      * via the `per_page` query parameter (defaults to 10).
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator The paginated list of reviews with images.
@@ -83,9 +83,9 @@ class UserReviewService
     /**
      * Stores a new review for a task.
      *
-     * This method creates a new review for a specified task, storing the rating (star), comment, 
-     * and associated images (if provided). The review is stored within a database transaction to ensure 
-     * atomicity. If any errors occur during the process, the transaction is rolled back, and any uploaded 
+     * This method creates a new review for a specified task, storing the rating (star), comment,
+     * and associated images (if provided). The review is stored within a database transaction to ensure
+     * atomicity. If any errors occur during the process, the transaction is rolled back, and any uploaded
      * images are deleted.
      *
      * @param array $credentials The review data containing 'task_id', 'star', 'comment', and optionally 'image'.

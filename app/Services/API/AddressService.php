@@ -67,7 +67,7 @@ class AddressService
             $addressCount = $this->user->addresses()->count();
 
             if ($addressCount == 1) {
-                $address->state = true;
+                $address->is_active = true;
                 $address->save();
             }
 
