@@ -143,4 +143,24 @@ class AddressService
             throw $e;
         }
     }
+
+
+    /**
+     * Get the active address for the authenticated user.
+     *
+     * This method retrieves the first active address associated with the user.
+     * It uses a query scope to filter addresses where `is_active` is true.
+     *
+     * @return Address|null Returns the active address if found, otherwise null.
+     * @throws Exception If an error occurs during the query execution.
+     */
+    public function getActiveAddress()
+    {
+        try {
+            $address = Address::whereUserId($this->user->id)->whereIsActive(true)->first();
+            return $address;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 }

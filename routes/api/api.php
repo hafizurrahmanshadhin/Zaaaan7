@@ -40,6 +40,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     Route::prefix('address')->name('address.')->controller(AddressController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
+        Route::get('/active', 'active')->name('active');
         Route::patch('/activate/{address}', 'activate')->name('activate');
         Route::delete('/destroy/{address}', 'destroy')->name('destroy');
     });

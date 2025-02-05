@@ -21,7 +21,7 @@ class AddressController extends Controller
 
     /**
      * Constructor for the AddressController. Initializes the AddressService.
-     * 
+     *
      * This method creates a new instance of the AddressService, which handles
      * address-related operations. It is invoked when the controller is instantiated.
      */
@@ -33,7 +33,7 @@ class AddressController extends Controller
 
     /**
      * Retrieves all addresses for the authenticated user.
-     * 
+     *
      * This method fetches addresses from the AddressService and returns a JSON response
      * containing the addresses under the authenticated user.
      *
@@ -54,7 +54,7 @@ class AddressController extends Controller
 
     /**
      * Stores a new address for the authenticated user.
-     * 
+     *
      * This method validates the incoming request using CreateAddressRequest and passes
      * the validated data to the AddressService for storing the new address.
      *
@@ -77,9 +77,9 @@ class AddressController extends Controller
 
     /**
      * Deletes an address for the authenticated user.
-     * 
-     * This method calls the AddressService to delete the specified address. It checks for 
-     * proper authorization and ensures that the address is deleted only if the user has the 
+     *
+     * This method calls the AddressService to delete the specified address. It checks for
+     * proper authorization and ensures that the address is deleted only if the user has the
      * right permissions. If an exception occurs, a relevant error message is returned.
      *
      * @param mixed $address The address to delete, either an Address instance or an address ID.
@@ -92,8 +92,7 @@ class AddressController extends Controller
         try {
             $this->addressService->deleteAddress($address);
             return $this->success(200, 'address deleted successfully', []);
-        }
-        catch (UnauthorizedException $e) {
+        } catch (UnauthorizedException $e) {
             Log::error('AddressController::destroy:' . $e->getMessage());
             return $this->error(500, 'unauthorized access', $e->getMessage());
         } catch (Exception $e) {
@@ -107,19 +106,19 @@ class AddressController extends Controller
     /**
      * Handles the activation of an address by calling the address service
      * to activate the specified address.
-     * 
+     *
      * This method processes the address activation and returns a success or error response
      * based on whether the activation succeeds or fails. It also logs errors if an issue occurs.
-     * 
+     *
      * @param int $address The ID of the address to be activated.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse The response containing the result of the address activation,
      *         including a success message and the activated address data or an error message.
-     * 
+     *
      * @throws UnauthorizedException If the user attempts to activate an address they don't own.
      * @throws Exception If any other error occurs during the address activation process.
      */
-    public function activate($address)
+    public function activate($address): JsonResponse
     {
         try {
             $address = $this->addressService->activateAddress($address);
@@ -133,4 +132,24 @@ class AddressController extends Controller
         }
     }
 
+
+    /**
+     * Retrieve the active address for the authenticated user.
+     *
+     * This method fetches the active address using the AddressService.
+     * If successful, it returns a JSON response with the active address.
+     * If an error occurs, it logs the exception and returns an error response.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response containing the active address or an error message.
+     */
+    public function active()
+    {
+        try {
+            $address = $this->addressService->getActiveAddress();
+            return $this->success(200, 'active address', $address);
+        } catch (Exception $e) {
+            Log::error('AddressController::active:' . $e->getMessage());
+            return $this->error(500, 'fail to activate address', $e->getMessage());
+        }
+    }
 }
