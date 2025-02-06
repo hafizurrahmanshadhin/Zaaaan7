@@ -20,7 +20,7 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function __construct(Message $message)
     {
-       Log::info('constructor'); 
+    //    Log::info('constructor');
         $this->message = $message;
     }
 
@@ -31,7 +31,7 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        Log::info('info'); 
+        // Log::info('info');
         return [
             new PrivateChannel(name: "chat.{$this->message->receiver_id}"),
         ];
