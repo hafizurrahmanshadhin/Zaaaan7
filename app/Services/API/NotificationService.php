@@ -2,6 +2,7 @@
 
 namespace App\Services\API;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,10 @@ class NotificationService
 
     public function getNotifications()  {
         try {
-            return $this->user->unreadNotifications;
+            return $this->user->unreadNotifications->map(function ($notification) {
+                $notification->time = Carbon::parse($notification->created_at)->diffForHumans();
+                return $notification;
+            });
         } catch (Exception $e) {
             Log::error('NotificationService::getNotifications', [$e->getMessage()]);
             throw $e;

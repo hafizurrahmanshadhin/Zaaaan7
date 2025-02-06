@@ -72,7 +72,9 @@ class TaskService
     {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->helperTasks()->where('status', 'accepted')->with(['helper', 'address'])->paginate($perPage);
+            $tasks = $this->user->helperTasks()->where('status', 'accepted')
+            ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
+            ->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
@@ -88,7 +90,9 @@ class TaskService
     {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->helperTasks()->where('status', operator: 'completed')->with(['helper', 'address'])->paginate($perPage);
+            $tasks = $this->user->helperTasks()->where('status', operator: 'completed')
+            ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
+            ->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
@@ -257,9 +261,9 @@ class TaskService
 
                     );
 
-                // Only include the task ID and related users
+                $order = Task::with(['skill'])->find($task->id);
                 return [
-                    'task_id' => $task->id,
+                    'task_id' => $order->skill->name,
                     'helpers' => $users
 
                 ];
