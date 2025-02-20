@@ -16,16 +16,11 @@ Route::middleware('guest:api')->group(function ($router) {
         Route::post('register', 'register')->name('register');
         Route::post('register/helper', 'registerHelper')->name('register.helper');
     });
-    // OTP-related routes
-    Route::controller(OTPController::class)->group(function () {
-        Route::post('oto-send', 'otpSend')->name('otp.send');
-        Route::post('oto-match', 'otpMatch')->name('otp.match');
-    });
+
     // Password-related routes
     Route::controller(PasswordController::class)->group(function () {
         Route::post('chage-password', 'changePassword')->name('change.password');
     });
-
 
     // OTP-related routes
     Route::prefix('/forget-password')->name('forgetpassword.')->controller(OTPController::class)->group(function () {
@@ -46,6 +41,12 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::post('/logout', 'logout')->name('logout');
         Route::post('/refresh', 'refresh')->name('refresh.token');
+    });
+
+    // OTP-related routes
+    Route::controller(OTPController::class)->group(function () {
+        Route::post('oto-send', 'otpSend')->name('otp.send');
+        Route::post('oto-match', 'otpMatch')->name('otp.match');
     });
 
     Route::controller(PasswordController::class)->group(function () {

@@ -74,7 +74,7 @@ class MakeService extends Command
      * This method splits the given service name by the '/' delimiter to separate the namespace
      * and class name. It then generates the appropriate PHP code for the service class, ensuring
      * that the namespace and class name are correctly formatted. If a directory structure is
-     * specified, it creates the corresponding namespace. Otherwise, it defaults to the root 
+     * specified, it creates the corresponding namespace. Otherwise, it defaults to the root
      * namespace.
      *
      * @param string $name The name of the service, potentially with a namespace structure.
@@ -96,7 +96,7 @@ class MakeService extends Command
         $namespace = !empty($namespaceParts) ? '\\' . implode('\\', $namespaceParts) : '';
 
         return "<?php
-    
+
 namespace App\\Services{$namespace};
 
 class {$className}
