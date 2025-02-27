@@ -65,12 +65,16 @@ class NotificationService
 
     /**
      * getDeviceFirebaseToken
-     * @param array $credentials
-     * @return void
+     * @return mixed
      */
-    public function getDeviceFirebaseToken(array $credentials)
+    public function getDeviceFirebaseToken()
     {
         try {
+            $deviceId = request('device_id');
+
+            return FirebaseToken::whereUserId($this->user->id)
+                ->whereDeviceId($deviceId)
+                ->first();
         } catch (Exception $e) {
             Log::error('NotificationService::getDeviceFirebaseToken', [$e->getMessage()]);
             throw $e;
@@ -79,10 +83,9 @@ class NotificationService
 
     /**
      * deleteDeviceFirebaseToken
-     * @param array $credentials
      * @return void
      */
-    public function deleteDeviceFirebaseToken(array $credentials)
+    public function deleteDeviceFirebaseToken()
     {
         try {
         } catch (Exception $e) {

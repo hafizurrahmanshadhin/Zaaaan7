@@ -73,7 +73,8 @@ class NotificationController extends Controller
     public function getToken()
     {
         try {
-
+            $response = $this->notificationService->getDeviceFirebaseToken();
+            return $this->success(200, 'devise token', $response);
         } catch (Exception $e) {
             Log::error('NotificationController::storeToken', [$e->getMessage()]);
             return $this->error(500, 'server error', $e->getMessage());
@@ -83,7 +84,7 @@ class NotificationController extends Controller
     public function deleteToken()
     {
         try {
-
+            
         } catch (Exception $e) {
             Log::error('NotificationController::storeToken', [$e->getMessage()]);
             return $this->error(500, 'server error', $e->getMessage());
