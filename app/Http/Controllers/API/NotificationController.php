@@ -70,6 +70,10 @@ class NotificationController extends Controller
     }
 
 
+    /**
+     * Summary of getToken
+     * @return JsonResponse
+     */
     public function getToken()
     {
         try {
@@ -81,10 +85,16 @@ class NotificationController extends Controller
         }
     }
 
+
+    /**
+     * Summary of deleteToken
+     * @return JsonResponse
+     */
     public function deleteToken()
     {
         try {
-            
+            $this->notificationService->deleteDeviceFirebaseToken();
+            return $this->success(200, 'deleted successfully');
         } catch (Exception $e) {
             Log::error('NotificationController::storeToken', [$e->getMessage()]);
             return $this->error(500, 'server error', $e->getMessage());

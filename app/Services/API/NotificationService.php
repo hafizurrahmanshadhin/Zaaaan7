@@ -88,6 +88,14 @@ class NotificationService
     public function deleteDeviceFirebaseToken()
     {
         try {
+            $deviceId = request('device_id');
+            $firebaseToken = FirebaseToken::whereUserId($this->user->id)
+                ->whereDeviceId($deviceId)
+                ->first();
+
+            if ($firebaseToken) {
+                $firebaseToken->delete();
+            }
         } catch (Exception $e) {
             Log::error('NotificationService::deleteDeviceFirebaseToken', [$e->getMessage()]);
             throw $e;
