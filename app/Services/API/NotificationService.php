@@ -54,6 +54,7 @@ class NotificationService
     {
         try {
             return FirebaseToken::create([
+                'user_id' => $this->user->id,
                 'token' => $credentials['token'],
                 'device_id' => $credentials['device_id'],
             ]);
