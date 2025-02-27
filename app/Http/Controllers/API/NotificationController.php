@@ -64,7 +64,7 @@ class NotificationController extends Controller
     public function getToken()
     {
         try {
-
+            
         } catch (Exception $e) {
             Log::error('NotificationController::storeToken', [$e->getMessage()]);
             return $this->error(500, 'server error', $e->getMessage());
