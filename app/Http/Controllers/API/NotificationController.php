@@ -19,6 +19,10 @@ class NotificationController extends Controller
         $this->notificationService = $notificationService;
     }
 
+    /**
+     * index
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         try {
@@ -31,6 +35,10 @@ class NotificationController extends Controller
     }
 
 
+    /**
+     * read
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function read()
     {
         try {
@@ -38,6 +46,37 @@ class NotificationController extends Controller
             return $this->success(200, 'marked as read');
         } catch (Exception $e) {
             Log::error('NotificationController::read', [$e->getMessage()]);
+            return $this->error(500, 'server error', $e->getMessage());
+        }
+    }
+
+    public function storeToken()
+    {
+        try {
+
+        } catch (Exception $e) {
+            Log::error('NotificationController::storeToken', [$e->getMessage()]);
+            return $this->error(500, 'server error', $e->getMessage());
+        }
+    }
+
+
+    public function getToken()
+    {
+        try {
+
+        } catch (Exception $e) {
+            Log::error('NotificationController::storeToken', [$e->getMessage()]);
+            return $this->error(500, 'server error', $e->getMessage());
+        }
+    }
+
+    public function deleteToken()
+    {
+        try {
+
+        } catch (Exception $e) {
+            Log::error('NotificationController::storeToken', [$e->getMessage()]);
             return $this->error(500, 'server error', $e->getMessage());
         }
     }
