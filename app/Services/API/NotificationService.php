@@ -2,6 +2,7 @@
 
 namespace App\Services\API;
 
+use App\Models\FirebaseToken;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -47,11 +48,15 @@ class NotificationService
     /**
      * storeDeviceFirebaseToken
      * @param array $credentials
-     * @return void
+     * @return FirebaseToken
      */
     public function storeDeviceFirebaseToken(array $credentials)
     {
         try {
+            return FirebaseToken::create([
+                'token' => $credentials['token'],
+                'device_id' => $credentials['device_id'],
+            ]);
         } catch (Exception $e) {
             Log::error('NotificationService::storeDeviceFirebaseToken', [$e->getMessage()]);
             throw $e;
