@@ -4,11 +4,13 @@ namespace App\Services\API;
 
 use App\Helper\Helper;
 use App\Models\Address;
+use App\Models\FirebaseToken;
 use App\Models\SubCategory;
 use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskAcceptNotification;
 use App\Notifications\TaskRequestNotification;
+use App\Traits\PushNotification;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TaskService
 {
+    use PushNotification;
     private $user;
 
     /**
@@ -73,8 +76,8 @@ class TaskService
         try {
             $perPage = request()->query('per_page', 10);
             $tasks = $this->user->helperTasks()->where('status', 'accepted')
-            ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
-            ->paginate($perPage);
+                ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
+                ->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
@@ -91,8 +94,8 @@ class TaskService
         try {
             $perPage = request()->query('per_page', 10);
             $tasks = $this->user->helperTasks()->where('status', operator: 'completed')
-            ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
-            ->paginate($perPage);
+                ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
+                ->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
@@ -152,6 +155,16 @@ class TaskService
             // sned notification
             $client = User::findOrFail($task->client);
             $client->notify(new TaskAcceptNotification(Auth::user()));
+
+            // Retrieve Firebase tokens for push notification
+            $tokens = FirebaseToken::where('user_id', $client->id)->pluck('token');
+
+            if ($tokens->isNotEmpty()) {
+                foreach ($tokens as $token) {
+                    $this->sendPushNotification($token, "Task Accepted", "Your task has been accepted by ");
+                }
+            }
+
             DB::commit();
             return true;
         } catch (Exception $e) {
@@ -305,8 +318,18 @@ class TaskService
             $task->requests()->attach($credentials['user_id']);
             // notifying user
             $user = User::findOrFail($credentials['user_id']);
-            $client = User::findOrFail( $task->client);
+            $client = User::findOrFail($task->client);
             $user->notify(new TaskRequestNotification($client));
+
+
+            // Retrieve Firebase tokens for push notification
+            $tokens = FirebaseToken::where('user_id', $user->id)->pluck('token');
+
+            if ($tokens->isNotEmpty()) {
+                foreach ($tokens as $token) {
+                    $this->sendPushNotification($token, "New Task Request", "You have received a new task request from ");
+                }
+            }
 
             DB::commit();
             return true;
@@ -323,8 +346,7 @@ class TaskService
         try {
             $this->user->requests()->detach($id);
             return true;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
