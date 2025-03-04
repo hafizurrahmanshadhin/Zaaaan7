@@ -1585,7 +1585,7 @@
 
 
 @push('scripts')
-    
+
     <script>
         $(document).ready(function() {
             Echo.private('chat.1').listen('MessageSent', (e) => {

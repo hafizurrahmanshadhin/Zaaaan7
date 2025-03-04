@@ -51,7 +51,7 @@ return Application::configure(basePath: dirname(__DIR__))
         [
             'prefix'     => 'api',
             'middleware' => [
-                'api', 'auth.jwt',
+                'api', 'auth.api',
             ],
         ],
     )

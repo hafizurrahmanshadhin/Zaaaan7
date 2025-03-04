@@ -52,6 +52,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::post('/store', 'store')->name('index');
             Route::get('/experts', 'experts')->name('experts');
             Route::post('/request', 'request')->name('request');
+
             Route::get('/status/{task}', 'showStatus')->name('status');
         });
         Route::prefix('/helper')->name('helper.')->middleware(['helper'])->group(function () {
@@ -100,6 +101,12 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     Route::prefix('notification')->name('notification.')->controller(NotificationController::class)->group(function() {
         Route::get('/', 'index')->name('index');
         Route::get('/read', 'read')->name('read');
+
+        // token
+        Route::get('/firebase-token', 'getToken');
+        Route::post('/firebase-token', 'storeToken');
+        Route::delete('/firebase-token', 'deleteToken');
+
     });
 });
 

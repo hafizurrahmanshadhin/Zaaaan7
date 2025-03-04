@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\StoreFirebaseToken;
 use App\Services\API\NotificationService;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -19,6 +21,10 @@ class NotificationController extends Controller
         $this->notificationService = $notificationService;
     }
 
+    /**
+     * index
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         try {
@@ -31,6 +37,10 @@ class NotificationController extends Controller
     }
 
 
+    /**
+     * read
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function read()
     {
         try {
@@ -38,6 +48,55 @@ class NotificationController extends Controller
             return $this->success(200, 'marked as read');
         } catch (Exception $e) {
             Log::error('NotificationController::read', [$e->getMessage()]);
+            return $this->error(500, 'server error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Summary of storeToken
+     * @param \App\Http\Requests\API\StoreFirebaseToken $storeFirebaseToken
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeToken(StoreFirebaseToken $storeFirebaseToken): JsonResponse
+    {
+        try {
+            $validatedData = $storeFirebaseToken->validated();
+            $response = $this->notificationService->storeDeviceFirebaseToken($validatedData);
+            return $this->success(200, 'token saved successfully', $response);
+        } catch (Exception $e) {
+            Log::error('NotificationController::storeToken', [$e->getMessage()]);
+            return $this->error(500, 'server error', $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Summary of getToken
+     * @return JsonResponse
+     */
+    public function getToken()
+    {
+        try {
+            $response = $this->notificationService->getDeviceFirebaseToken();
+            return $this->success(200, 'devise token', $response);
+        } catch (Exception $e) {
+            Log::error('NotificationController::storeToken', [$e->getMessage()]);
+            return $this->error(500, 'server error', $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Summary of deleteToken
+     * @return JsonResponse
+     */
+    public function deleteToken()
+    {
+        try {
+            $this->notificationService->deleteDeviceFirebaseToken();
+            return $this->success(200, 'deleted successfully');
+        } catch (Exception $e) {
+            Log::error('NotificationController::storeToken', [$e->getMessage()]);
             return $this->error(500, 'server error', $e->getMessage());
         }
     }

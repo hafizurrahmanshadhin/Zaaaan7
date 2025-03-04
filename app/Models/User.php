@@ -264,4 +264,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+
+    public function firebaseToken(): HasMany
+    {
+        return $this->hasMany(FirebaseToken::class);
+    }
 }

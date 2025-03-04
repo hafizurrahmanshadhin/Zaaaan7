@@ -9,13 +9,14 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('firebase_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100)->comment('name of the category');
-            $table->string('url')->nullable();
-            $table->float('cost')->nullable()->comment('$');
-            $table->float('provision')->nullable()->comment('$');
-            $table->softDeletes();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->longText('token');
+            $table->longText('device_id')->nullable();
+
+            $table->enum('status', ['active', 'inactive'])->default('active');
+
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('firebase_tokens');
     }
 };
