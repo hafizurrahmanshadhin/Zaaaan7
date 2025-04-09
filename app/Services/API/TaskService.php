@@ -12,15 +12,12 @@ use App\Notifications\TaskAcceptNotification;
 use App\Notifications\TaskRequestNotification;
 use App\Traits\PushNotification;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TaskService
-{
+class TaskService {
     use PushNotification;
     private $user;
 
@@ -30,16 +27,13 @@ class TaskService
      * This method retrieves the authenticated user using Laravel's Auth facade
      * and assigns it to the $user property for further use in class methods.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->user = Auth::user();
     }
 
-
-    public function getAllUserTasks(): mixed
-    {
+    public function getAllUserTasks(): mixed {
         try {
-            $status = request()->query('status', null);
+            $status  = request()->query('status', null);
             $perPage = request()->query('per_page', 10);
 
             // Base query with eager loading
@@ -64,18 +58,15 @@ class TaskService
         }
     }
 
-
-
     /**
      * Get all tasks assigned to the current user as a helper.
      *
      * @return mixed
      */
-    public function getAllHelperTasks(): mixed
-    {
+    public function getAllHelperTasks(): mixed {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->helperTasks()->where('status', 'accepted')
+            $tasks   = $this->user->helperTasks()->where('status', 'accepted')
                 ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
                 ->paginate($perPage);
             return $tasks;
@@ -89,11 +80,10 @@ class TaskService
      *
      * @return mixed
      */
-    public function getAllCompletedHelperTasks(): mixed
-    {
+    public function getAllCompletedHelperTasks(): mixed {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->helperTasks()->where('status', operator: 'completed')
+            $tasks   = $this->user->helperTasks()->where('status', operator: 'completed')
                 ->with(['helper', 'address', 'images', 'skill', 'skill.category'])
                 ->paginate($perPage);
             return $tasks;
@@ -102,40 +92,35 @@ class TaskService
         }
     }
 
-    public function getTask(Task $task): array
-    {
+    public function getTask(Task $task): array {
         try {
             $task->load(['client', 'helper', 'address']);
             $subCategory = SubCategory::findOrFail($task->sub_category_id);
             $subCategory->load('category');
             return [
-                'taks' => $task,
-                'sub_category'  => $subCategory->name,
-                'category' => $subCategory->category->name,
+                'taks'         => $task,
+                'sub_category' => $subCategory->name,
+                'category'     => $subCategory->category->name,
             ];
         } catch (Exception $e) {
             throw $e;
         }
     }
 
-
     /**
      * Get all helper request tasks that are still pending.
      *
      * @return mixed
      */
-    public function getAllHelperRequestTasks(): mixed
-    {
+    public function getAllHelperRequestTasks(): mixed {
         try {
             $perPage = request()->query('per_page', 10);
-            $tasks = $this->user->requests()->with(['client', 'address', 'images'])->paginate($perPage);
+            $tasks   = $this->user->requests()->with(['client', 'address', 'images'])->paginate($perPage);
             return $tasks;
         } catch (Exception $e) {
             throw $e;
         }
     }
-
-
 
     /**
      * Accept a request for a task and assign the current user as the helper.
@@ -143,8 +128,7 @@ class TaskService
      * @param $task
      * @return bool
      */
-    public function acceptRequest($task): bool
-    {
+    public function acceptRequest($task): bool {
         try {
             DB::beginTransaction();
             $task->requests()->detach();
@@ -173,7 +157,6 @@ class TaskService
         }
     }
 
-
     /**
      * Create a new task along with associated images and store them in the database.
      *
@@ -196,23 +179,22 @@ class TaskService
      *
      * @throws Exception If an error occurs during the task creation or image upload process.
      */
-    public function createTaske(array $credentials): array
-    {
+    public function createTaske(array $credentials): array {
         $images = [];
         try {
             DB::beginTransaction();
             $task = $this->user->clientTasks()->create([
-                'address_id' => $credentials['address_id'],
+                'address_id'      => $credentials['address_id'],
                 'sub_category_id' => $credentials['sub_category_id'],
-                'description' => $credentials['description'],
-                'date' => $credentials['date'],
-                'time' => $credentials['time'],
+                'description'     => $credentials['description'],
+                'date'            => $credentials['date'],
+                'time'            => $credentials['time'],
             ]);
 
             foreach ($credentials['image'] as $image) {
                 $url = Helper::uploadFile($image, 'task/' . $task->id);
                 array_push($images, $task->images()->create([
-                    'url' => $url
+                    'url' => $url,
                 ]));
             }
             DB::commit();
@@ -226,9 +208,7 @@ class TaskService
         }
     }
 
-
-    public function getExperts()
-    {
+    public function getExperts() {
         try {
 
             // Step 1: Get all tasks with their associated address and skill
@@ -259,16 +239,16 @@ class TaskService
                     ->map(
                         function ($user) use ($task) {
                             $averageRating = $user->helperReviews()->average('star') ?? 0;
-                            $reivew_count = $user->helperReviews()->count();
-                            $skill = SubCategory::findOrFail($task->sub_category_id);
+                            $reivew_count  = $user->helperReviews()->count();
+                            $skill         = SubCategory::findOrFail($task->sub_category_id);
                             return [
-                                'id' => $user->id,
-                                'first_name' => $user->first_name,
-                                'last_name' => $user->last_name,
-                                'avatar' => $user->avatar,
-                                'skill' => $skill->name,
+                                'id'             => $user->id,
+                                'first_name'     => $user->first_name,
+                                'last_name'      => $user->last_name,
+                                'avatar'         => $user->avatar,
+                                'skill'          => $skill->name,
                                 'average_rating' => $averageRating,
-                                'review_count' => $reivew_count, // From withCount
+                                'review_count'   => $reivew_count, // From withCount
                             ];
                         }
 
@@ -277,7 +257,7 @@ class TaskService
                 $order = Task::with(['skill'])->find($task->id);
                 return [
                     'task_id' => $order->skill->name,
-                    'helpers' => $users
+                    'helpers' => $users,
 
                 ];
             });
@@ -288,6 +268,16 @@ class TaskService
             throw $e;
         }
     }
+
+    public function deleteRequest($id) {
+        try {
+            $this->user->requests()->detach($id);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
 
 
     /**
@@ -306,20 +296,43 @@ class TaskService
      * @throws Exception If the request already exists for the user on the task or if there is an error during
      *         the process. Exception message will specify the reason.
      */
-    public function giveRequest(array $credentials): bool
-    {
+    public function giveRequest(array $credentials): bool {
         try {
             DB::beginTransaction();
+
+            Log::info("giveRequest called", ['credentials' => $credentials]);
+
             $task = Task::findOrFail($credentials['task_id']);
             if ($task->requests()->where('user_id', $credentials['user_id'])->exists()) {
-
-                throw new Exception('request exist', 404);
+                throw new Exception('Request already exists', 404);
             }
+
             $task->requests()->attach($credentials['user_id']);
-            // notifying user
-            $user = User::findOrFail($credentials['user_id']);
+
+            // Retrieve users: helper (who makes the request) and client (task owner)
+            $helper = User::findOrFail($credentials['user_id']);
             $client = User::findOrFail($task->client);
-            $user->notify(new TaskRequestNotification($client));
+
+            // Send a database notification (if needed)
+            $helper->notify(new TaskRequestNotification($client));
+
+            // Example for notifying the helper
+            $tokens = FirebaseToken::where('user_id', $helper->id)->pluck('token');
+            Log::info("Retrieved Firebase tokens for client", [
+                'client_id' => $client->id,
+                'count'     => $tokens->count(),
+                'tokens'    => $tokens->toArray(),
+            ]);
+
+            Log::info("Retrieved Firebase tokens", ['client_id' => $client->id, 'count' => $tokens->count(), 'tokens' => $tokens->toArray()]);
+
+            if ($tokens->isNotEmpty()) {
+                foreach ($tokens as $token) {
+                    $this->sendPushNotification($token, "New Task Request", "You have received a new task request from {$helper->first_name} {$helper->last_name}");
+                }
+            } else {
+                Log::warning("No Firebase tokens found for client", ['client_id' => $client->id]);
+            }
 
 
             // Retrieve Firebase tokens for push notification
@@ -339,15 +352,50 @@ class TaskService
         }
     }
 
-
-
-    public function deleteRequest($id)
-    {
+    protected function sendPushNotification($token, $title, $body): void {
         try {
-            $this->user->requests()->detach($id);
-            return true;
+            Log::info("sendPushNotification called", [
+                'token' => $token,
+                'title' => $title,
+                'body'  => $body,
+            ]);
+
+            // Log the credentials file path and verify it exists
+            $credentialsFile = storage_path('app/firebase-auth.json');
+            Log::info("Using Firebase credentials file", ['path' => $credentialsFile]);
+            if (!file_exists($credentialsFile)) {
+                Log::error("Firebase credentials file does not exist", ['path' => $credentialsFile]);
+                return;
+            }
+
+            // Initialize Firebase Factory
+            $factory = (new \Kreait\Firebase\Factory)->withServiceAccount($credentialsFile);
+            Log::info("Firebase factory initialized successfully.");
+
+            // Create messaging service
+            $messaging = $factory->createMessaging();
+            Log::info("Firebase messaging service created.");
+
+            // Create the notification payload
+            $notification = \Kreait\Firebase\Messaging\Notification::create($title, $body);
+            Log::info("Firebase notification payload created.", ['notification' => $notification]);
+
+            // Create the message targeted to a specific token
+            $message = \Kreait\Firebase\Messaging\CloudMessage::withTarget('token', $token)
+                ->withNotification($notification);
+            Log::info("Firebase CloudMessage created.", ['message' => $message]);
+
+            // Send the push notification
+            $result = $messaging->send($message);
+            Log::info("Push notification sent successfully.", ['result' => $result, 'token' => $token]);
         } catch (Exception $e) {
-            throw $e;
+            Log::error("Failed to send push notification.", [
+                'token' => $token,
+                'title' => $title,
+                'body'  => $body,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 }

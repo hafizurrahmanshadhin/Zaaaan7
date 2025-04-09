@@ -52,6 +52,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
             Route::post('/store', 'store')->name('index');
             Route::get('/experts', 'experts')->name('experts');
             Route::post('/request', 'request')->name('request');
+
             Route::get('/status/{task}', 'showStatus')->name('status');
         });
         Route::prefix('/helper')->name('helper.')->middleware(['helper'])->group(function () {
