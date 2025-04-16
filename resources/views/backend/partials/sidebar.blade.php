@@ -32,7 +32,7 @@
                     </a>
                 </li>
                 {{-- User --}}
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <!-- label-->
                     <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-e-commerce"
                             role="button" data-bs-toggle="collapse" aria-expanded="false"
@@ -90,7 +90,7 @@
                             </ul>
                         </div>
                     </div>
-                </li>
+                </li> --}}
                 {{-- category --}}
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.category.*') ? 'active' : '' }}"
