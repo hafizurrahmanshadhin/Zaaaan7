@@ -256,7 +256,8 @@ class TaskService {
 
                 $order = Task::with(['skill'])->find($task->id);
                 return [
-                    'task_id' => $order->skill->name,
+                    'task_name' => $order->skill->name,
+                    'task_id' => $task->id,
                     'helpers' => $users,
 
                 ];
