@@ -20,7 +20,7 @@ class Helper
         try {
             $imageFileName = uniqid('image_') . '.' . $image->getClientOriginalExtension();
             $image->storeAs($directory, $imageFileName, 'public');
-            return $directory . '/' . $imageFileName;
+            return 'storage/'.$directory . '/' . $imageFileName;
         } catch (Exception $e) {
             return redirect()->back()->with('t-error', 'Something went wrong');
         }
@@ -116,9 +116,9 @@ class Helper
 
     /**
      * Returns a standardized success response with the provided data, message, and HTTP status code.
-     * 
-     * This method formats the response to indicate a successful operation. It includes a success 
-     * flag, an optional message, the data to be returned, and an HTTP status code. The response 
+     *
+     * This method formats the response to indicate a successful operation. It includes a success
+     * flag, an optional message, the data to be returned, and an HTTP status code. The response
      * is structured as a JSON object and the status code defaults to 200 (OK), but can be customized.
      *
      * @param mixed $data The data to be included in the response, typically the result of the operation.
@@ -143,10 +143,10 @@ class Helper
 
     /**
      * Returns a standardized error response with the provided data, message, and HTTP status code.
-     * 
-     * This method formats the response to indicate an error or failure in the operation. It includes 
-     * an error flag, an optional message, the error details or data, and an HTTP status code. The 
-     * response is structured as a JSON object, and the status code defaults to 500 (Internal Server Error), 
+     *
+     * This method formats the response to indicate an error or failure in the operation. It includes
+     * an error flag, an optional message, the error details or data, and an HTTP status code. The
+     * response is structured as a JSON object, and the status code defaults to 500 (Internal Server Error),
      * but can be customized to reflect different types of errors.
      *
      * @param mixed $data The data to be included in the response, typically containing error details.

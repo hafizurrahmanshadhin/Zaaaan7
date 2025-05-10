@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TaskService {
+class TaskService
+{
     use PushNotification;
     private $user;
 
@@ -27,11 +28,13 @@ class TaskService {
      * This method retrieves the authenticated user using Laravel's Auth facade
      * and assigns it to the $user property for further use in class methods.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->user = Auth::user();
     }
 
-    public function getAllUserTasks(): mixed {
+    public function getAllUserTasks(): mixed
+    {
         try {
             $status  = request()->query('status', null);
             $perPage = request()->query('per_page', 10);
@@ -63,7 +66,8 @@ class TaskService {
      *
      * @return mixed
      */
-    public function getAllHelperTasks(): mixed {
+    public function getAllHelperTasks(): mixed
+    {
         try {
             $perPage = request()->query('per_page', 10);
             $tasks   = $this->user->helperTasks()->where('status', 'accepted')
@@ -80,7 +84,8 @@ class TaskService {
      *
      * @return mixed
      */
-    public function getAllCompletedHelperTasks(): mixed {
+    public function getAllCompletedHelperTasks(): mixed
+    {
         try {
             $perPage = request()->query('per_page', 10);
             $tasks   = $this->user->helperTasks()->where('status', operator: 'completed')
@@ -92,15 +97,16 @@ class TaskService {
         }
     }
 
-    public function getTask(Task $task): array {
+    public function getTask(Task $task): array
+    {
         try {
             $task->load(['client', 'helper', 'address']);
             $subCategory = SubCategory::findOrFail($task->sub_category_id);
             $subCategory->load('category');
             return [
-                'taks'         => $task,
-                'sub_category' => $subCategory->name,
-                'category'     => $subCategory->category->name,
+                'task'         => $task,
+                'sub_category' => $subCategory->name ?? null,
+                'category'     => $subCategory?->category?->name ?? null,
             ];
         } catch (Exception $e) {
             throw $e;
@@ -112,7 +118,8 @@ class TaskService {
      *
      * @return mixed
      */
-    public function getAllHelperRequestTasks(): mixed {
+    public function getAllHelperRequestTasks(): mixed
+    {
         try {
             $perPage = request()->query('per_page', 10);
             $tasks   = $this->user->requests()->with(['client', 'address', 'images'])->paginate($perPage);
@@ -128,7 +135,8 @@ class TaskService {
      * @param $task
      * @return bool
      */
-    public function acceptRequest($task): bool {
+    public function acceptRequest($task): bool
+    {
         try {
             DB::beginTransaction();
             $task->requests()->detach();
@@ -179,7 +187,8 @@ class TaskService {
      *
      * @throws Exception If an error occurs during the task creation or image upload process.
      */
-    public function createTaske(array $credentials): array {
+    public function createTaske(array $credentials): array
+    {
         $images = [];
         try {
             DB::beginTransaction();
@@ -208,7 +217,8 @@ class TaskService {
         }
     }
 
-    public function getExperts() {
+    public function getExperts()
+    {
         try {
 
             // Step 1: Get all tasks with their associated address and skill
@@ -270,7 +280,8 @@ class TaskService {
         }
     }
 
-    public function deleteRequest($id) {
+    public function deleteRequest($id)
+    {
         try {
             $this->user->requests()->detach($id);
             return true;
@@ -297,7 +308,8 @@ class TaskService {
      * @throws Exception If the request already exists for the user on the task or if there is an error during
      *         the process. Exception message will specify the reason.
      */
-    public function giveRequest(array $credentials): bool {
+    public function giveRequest(array $credentials): bool
+    {
         try {
             DB::beginTransaction();
 
@@ -353,7 +365,8 @@ class TaskService {
         }
     }
 
-    protected function sendPushNotification($token, $title, $body): void {
+    protected function sendPushNotification($token, $title, $body): void
+    {
         try {
             Log::info("sendPushNotification called", [
                 'token' => $token,
