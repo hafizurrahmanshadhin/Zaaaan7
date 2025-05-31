@@ -2,62 +2,83 @@
 
 namespace App\Services\API\Auth;
 
-use App\Exceptions\SocialLoginException;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class SocialLoginService
-{
-    protected $authService;
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
-
-    public function handleSocialLogin(array $credentials)
-    {
-        try {
-            $socialUser = Socialite::driver($credentials['provider'])->stateless()->userFromToken($credentials['token']);
-
-            if (!$socialUser) {
-                throw new SocialLoginException("Invalid social login token or provider.", 401);
-            }
-
-            $user = User::whereEmail($socialUser->getEmail())->first();
-
-            if ($user && !empty($user->deleted_at)) {
-                throw new SocialLoginException("Your account has been deleted.", 410);
-            }
-
-            if (!$user) {
-                $password = Str::random(8);
-
-                $name = $socialUser->getName();
-                $nameParts = explode(' ', $name, 2);
-                $firstName = $nameParts[0] ?? '';
-                $lastName = $nameParts[1] ?? '';
-
-                DB::beginTransaction();
-                $this->authService->createUser([
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'email' => $socialUser->getEmail(),,
-                    'password' => $password,
-                    'address' => null,
-                ]);
-
-                $token = $this->authService->login(['email' => $socialUser->getEmail()]);
-                DB::commit();
-                return $token;
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error('SocialLoginService::handleSocialLogin-> ' . $e->getMessage());
-            throw $e;
+class SocialLoginService {
+    /**
+     * Handle socialite login.
+     *
+     * @param string $provider
+     * @param string $token
+     * @return array
+     * @throws UnauthorizedHttpException
+     */
+    public function loginWithSocialite(string $provider, string $token): array {
+        if (!in_array($provider, ['google', 'facebook'])) {
+            throw new UnauthorizedHttpException('', 'Provider not supported');
         }
+
+        try {
+            $socialUser = Socialite::driver($provider)->stateless()->userFromToken($token);
+        } catch (Exception $e) {
+            throw new UnauthorizedHttpException('', 'Invalid token or provider');
+        }
+
+        if (!$socialUser || !$socialUser->getEmail()) {
+            throw new UnauthorizedHttpException('', 'Invalid social user data');
+        }
+
+        // Extract details
+        $firstName  = $socialUser->user['given_name'] ?? null;
+        $lastName   = $socialUser->user['family_name'] ?? null;
+        $avatar     = $socialUser->getAvatar() ?? null;
+        $providerId = $socialUser->getId();
+
+        $googleId   = $provider === 'google' ? $providerId : null;
+        $facebookId = $provider === 'facebook' ? $providerId : null;
+
+        // Create or find user
+        $user = User::firstOrCreate(
+            ['email' => $socialUser->getEmail()],
+            [
+                'first_name'        => $firstName,
+                'last_name'         => $lastName,
+                'handle'            => Str::slug($firstName . $lastName . Str::random(12)),
+                'avatar'            => $avatar,
+                'google_id'         => $googleId,
+                'password'          => Hash::make(Str::random(16)),
+                'email_verified_at' => now(),
+                'role'              => 'user',
+            ]
+        );
+
+        // Log user in and generate JWT
+        Auth::login($user);
+        $jwtToken = JWTAuth::fromUser($user);
+
+        $isNewUser = $user->wasRecentlyCreated;
+
+
+        return [
+            'status'        => true,
+            'message'       => $isNewUser ? 'User registered successfully' : 'User logged in successfully',
+            'code'          => 200,
+            'token_type'    => 'bearer',
+            'token'         => $jwtToken,
+            'data'          => [
+                'id'     => $user->id,
+                'name'   => $user->first_name . ' ' . $user->last_name,
+                'email'  => $user->email,
+                'avatar' => $user->avatar,
+            ],
+        ];
     }
 }

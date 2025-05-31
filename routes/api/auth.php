@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\API\Auth\AuthController;
-use App\Http\Controllers\API\Auth\ForgerPasswordController;
-use App\Http\Controllers\API\Auth\OTPController;
-use App\Http\Controllers\API\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Auth\OTPController;
+use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Auth\PasswordController;
+use App\Http\Controllers\API\Auth\SocialLoginController;
+use App\Http\Controllers\API\Auth\ForgerPasswordController;
 
 
 
@@ -16,6 +17,9 @@ Route::middleware('guest:api')->group(function ($router) {
         Route::post('register', 'register')->name('register');
         Route::post('register/helper', 'registerHelper')->name('register.helper');
     });
+
+    Route::post('/socialite-login', [SocialLoginController::class, 'socialiteLogin']);
+
 
     // Password-related routes
     Route::controller(PasswordController::class)->group(function () {
