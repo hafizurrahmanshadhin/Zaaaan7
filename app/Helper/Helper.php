@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helper;
 
 use Exception;
@@ -7,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Helper {
+class Helper
+{
     /**
      * Upload an image and return its URL.
      *
@@ -15,13 +17,30 @@ class Helper {
      * @param  string  $directory
      * @return string
      */
-    public static function uploadFile($image, $directory) {
+    // public static function uploadFile($image, $directory) {
+    //     try {
+    //         $imageFileName = uniqid('image_') . '.' . $image->getClientOriginalExtension();
+    //         $image->storeAs($directory, $imageFileName, 'public');
+    //         return 'storage/' . $directory . '/' . $imageFileName;
+    //     } catch (Exception $e) {
+    //         return redirect()->back()->with('t-error', 'Something went wrong');
+    //     }
+    // }
+
+    //client issue updating  profile image upload   update: 6/30/2025
+    public static function uploadFile($image, $directory)
+    {
         try {
             $imageFileName = uniqid('image_') . '.' . $image->getClientOriginalExtension();
             $image->storeAs($directory, $imageFileName, 'public');
-            return 'storage/' . $directory . '/' . $imageFileName;
+            return asset('storage/' . $directory . '/' . $imageFileName);
         } catch (Exception $e) {
+            // Optional: Log error
+            // Log::error($e->getMessage());
+
             return redirect()->back()->with('t-error', 'Something went wrong');
+
+            throw $e;
         }
     }
 
@@ -31,35 +50,66 @@ class Helper {
      * @param  string  $imageUrl
      * @return bool
      */
-    public static function deleteFile($imageUrl) {
+    // public static function deleteFile($imageUrl)
+    // {
+    //     try {
+    //         // Check if $imageUrl is a valid string
+    //         if (is_string($imageUrl) && !empty($imageUrl)) {
+    //             // Extract the relative path from the URL
+    //             $parsedUrl    = parse_url($imageUrl);
+    //             $relativePath = $parsedUrl['path'] ?? '';
+
+    //             // Remove the leading '/storage/' from the path
+    //             $relativePath = preg_replace('/^\/?storage\//', '', $relativePath);
+
+    //             // Check if the image exists
+    //             if (Storage::disk('public')->exists($relativePath)) {
+    //                 // Delete the image if it exists
+    //                 Storage::disk('public')->delete($relativePath);
+    //                 return true;
+    //             } else {
+    //                 // Return false if the image does not exist
+    //                 return false;
+    //             }
+    //         } else {
+    //             // Return false if $imageUrl is not a valid string
+    //             return false;
+    //         }
+    //     } catch (Exception $e) {
+    //         // Handle any other exceptions
+    //         return false;
+    //     }
+    // }
+
+
+    //updated deleteFile method to handle image deletion update: 6/30/2025
+    public static function deleteFile($imageUrl): bool
+    {
         try {
-            // Check if $imageUrl is a valid string
-            if (is_string($imageUrl) && !empty($imageUrl)) {
-                // Extract the relative path from the URL
-                $parsedUrl    = parse_url($imageUrl);
-                $relativePath = $parsedUrl['path'] ?? '';
-
-                // Remove the leading '/storage/' from the path
-                $relativePath = preg_replace('/^\/?storage\//', '', $relativePath);
-
-                // Check if the image exists
-                if (Storage::disk('public')->exists($relativePath)) {
-                    // Delete the image if it exists
-                    Storage::disk('public')->delete($relativePath);
-                    return true;
-                } else {
-                    // Return false if the image does not exist
-                    return false;
-                }
-            } else {
-                // Return false if $imageUrl is not a valid string
+            if (!is_string($imageUrl) || empty($imageUrl)) {
                 return false;
             }
+
+            // Extract relative path from URL
+            $parsedUrl = parse_url($imageUrl);
+            $relativePath = $parsedUrl['path'] ?? '';
+
+            // Remove leading '/storage/' if present
+            $relativePath = ltrim(preg_replace('/^\/?storage\//', '', $relativePath), '/');
+
+            // Delete if file exists in public disk
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+                return true;
+            }
+
+            return false;
         } catch (Exception $e) {
-            // Handle any other exceptions
+            // Optional: Log::error($e->getMessage());
             return false;
         }
     }
+
 
     /**
      * Generate a unique slug for the given model and title.
@@ -69,7 +119,8 @@ class Helper {
      * @param string $slugColumn
      * @return string
      */
-    public static function generateUniqueSlug($title, $table, $slugColumn = 'slug') {
+    public static function generateUniqueSlug($title, $table, $slugColumn = 'slug')
+    {
         // Generate initial slug
         $slug = str::slug($title);
 
@@ -88,7 +139,8 @@ class Helper {
      * @param string $tableName The name of the table in which to check for SKU uniqueness.
      * @return string The generated SKU.
      */
-    public static function generateUniqueId($table, $column, $length = 10) {
+    public static function generateUniqueId($table, $column, $length = 10)
+    {
         $characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $charactersLength = strlen($characters);
 
@@ -117,7 +169,8 @@ class Helper {
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the success status, message, data, and code.
      */
-    public static function success($code = 200, $message = null, $data = null): JsonResponse {
+    public static function success($code = 200, $message = null, $data = null): JsonResponse
+    {
         return response()->json([
             'success'   => (bool) true,
             'code'      => (int) $code,
@@ -141,7 +194,8 @@ class Helper {
      *
      * @return \Illuminate\Http\JsonResponse A JSON response containing the error status, message, data, and code.
      */
-    public static function error($code = 500, $message = null, $error = null): JsonResponse {
+    public static function error($code = 500, $message = null, $error = null): JsonResponse
+    {
         return response()->json([
             'status'    => (bool) false,
             'code'      => (int) $code,
@@ -160,7 +214,8 @@ class Helper {
      * @param mixed $data Optional additional data to include in the response.
      * @return JsonResponse The JSON response.
      */
-    public static function jsonResponse(bool $status, string $message, int $code, $data = null, $errors = null): JsonResponse {
+    public static function jsonResponse(bool $status, string $message, int $code, $data = null, $errors = null): JsonResponse
+    {
         $response = [
             'status'  => $status,
             'message' => $message,

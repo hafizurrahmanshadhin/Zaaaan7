@@ -28,7 +28,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         });
         Route::middleware(['user'])->group(function () {
             Route::get('/', 'show')->name('show');
-            Route::post('/update', 'update')->name('update');
+            Route::post('/update', 'update')->name('update'); //------------image update
             Route::get('/show/helper/{user}', 'showHelperById')->name('show.helper.profile');
             Route::get('/helper/skill/{skill}', 'getHelpersBySkills')->name('show.helper.profile');
             Route::get('/helper/{user}', 'getHelper')->name('show.helper.profile');
@@ -36,6 +36,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
     });
+    
     // address
     Route::prefix('address')->name('address.')->controller(AddressController::class)->group(function () {
         Route::get('/', 'index')->name('index');
