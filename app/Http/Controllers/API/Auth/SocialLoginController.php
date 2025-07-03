@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\API\Auth;
 
-use Exception;
 use App\Helper\Helper;
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Exceptions\SocialLoginException;
 use App\Services\API\Auth\SocialLoginService;
-use App\Http\Requests\API\Auth\SocialLoginRequest;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class SocialLoginController extends Controller {
@@ -41,12 +37,12 @@ class SocialLoginController extends Controller {
             $response = $this->socialiteService->loginWithSocialite($provider, $token);
 
             return response()->json([
-                'status'        => true,
-                'message'       => $response['message'],
-                'code'          => $response['code'],
-                'token_type'    => $response['token_type'],
-                'token'         => $response['token'],
-                'data'          => $response['data'],
+                'status'     => true,
+                'message'    => $response['message'],
+                'code'       => $response['code'],
+                'token_type' => $response['token_type'],
+                'token'      => $response['token'],
+                'data'       => $response['data'],
             ], $response['code']);
         } catch (UnauthorizedHttpException $e) {
             return $this->helper->jsonResponse(false, 'Unauthorized', 401, null, ['error' => $e->getMessage()]);

@@ -8,16 +8,10 @@ use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\StripeController;
 use App\Http\Controllers\API\TaskController;
-use App\Http\Controllers\API\TransectionController;
 use App\Http\Controllers\API\UserProfileController;
 use App\Http\Controllers\API\UserReviewController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-
-
-
-
-
 
 Route::middleware(['auth:api', 'verified'])->group(function () {
     // profile
@@ -36,7 +30,7 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         });
         Route::post('/update/avatar', 'updateAvatar')->name('update.avatar');
     });
-    
+
     // address
     Route::prefix('address')->name('address.')->controller(AddressController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -85,21 +79,21 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::get('/helper', 'helperIndex')->name('helper.index')->middleware('helper');
         Route::post('/store', 'store')->name('store')->middleware(['user']);
     });
+
     // message
     Route::controller(ChatController::class)->group(function () {
         Route::get('/messages', 'index');
-        Route::get('/messages/{user}',  'getMessages');
-        Route::post('/messages/{user}',  'sendMessage');
+        Route::get('/messages/search', 'search');
+        Route::get('/messages/{user}', 'getMessages');
+        Route::post('/messages/{user}', 'sendMessage');
     });
 
-
-    Route::name('stripe.')->controller(StripeController::class)->group(function() {
+    Route::name('stripe.')->controller(StripeController::class)->group(function () {
         Route::post('/pay', 'createPayent')->name('pay');
         Route::post('/web-hook', 'paymentWebhook')->name('pay.webhook');
     });
 
-
-    Route::prefix('notification')->name('notification.')->controller(NotificationController::class)->group(function() {
+    Route::prefix('notification')->name('notification.')->controller(NotificationController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/read', 'read')->name('read');
 
@@ -111,20 +105,11 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     });
 });
 
-
 Route::prefix('category')->name('category.')->controller(CategoryController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/sub-category/{category}', 'subCategories')->name('sub.category');
     Route::get('/{category}', 'view')->name('view');
 });
-
-
-
-
-
-
-
-
 
 // Clear all cache and optimize the application
 Route::get('/optimize-clear', function () {
@@ -161,7 +146,6 @@ Route::get('/queue-work', function () {
     Artisan::call('queue:work --stop-when-empty');
     return Helper::success(200, 'Queue worker started successfully.');
 });
-
 
 // Run composer update
 Route::get('/composer-update', function () {

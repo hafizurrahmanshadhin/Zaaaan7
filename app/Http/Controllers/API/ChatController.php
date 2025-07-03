@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class ChatController extends Controller
-{
-
+class ChatController extends Controller {
     use ApiResponse;
 
     /**
@@ -26,11 +24,10 @@ class ChatController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
-    {
+    public function index(Request $request): JsonResponse {
         try {
             $authUser = $request->user();
-            $userId = $authUser->id;
+            $userId   = $authUser->id;
 
             // Subquery to get the latest message for each conversation (sent and received)
             $subQuery = Message::query()
@@ -70,12 +67,7 @@ class ChatController extends Controller
         }
     }
 
-
-
-
-
     // public function search($search) {}
-
 
     /**
      ** Get messages between the authenticated user and another user
@@ -84,8 +76,7 @@ class ChatController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getMessages(User $user, Request $request): JsonResponse
-    {
+    public function getMessages(User $user, Request $request): JsonResponse {
         $messages = Message::query()
             ->where(function ($query) use ($user, $request) {
                 $query->where('sender_id', $request->user()->id)
@@ -105,8 +96,6 @@ class ChatController extends Controller
         return $this->success(200, 'Messages retrieved successfully', $messages);
     }
 
-
-
     /**
      *! Send a message to another user
      *
@@ -114,16 +103,15 @@ class ChatController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function sendMessage(User $user, Request $request): JsonResponse
-    {
+    public function sendMessage(User $user, Request $request): JsonResponse {
         $request->validate([
             'message' => 'required|string',
         ]);
 
         $message = Message::create([
-            'sender_id' => $request->user()->id,
+            'sender_id'   => $request->user()->id,
             'receiver_id' => $user->id,
-            'text' => $request->message,
+            'text'        => $request->message,
         ]);
 
         //* Load the sender's information
@@ -132,5 +120,34 @@ class ChatController extends Controller
         broadcast(new MessageSent($message))->toOthers();
 
         return $this->success(200, 'Message sent successfully', $message);
+    }
+
+    /**
+     * Search among users you've had at least one message-exchange with.
+     *
+     * @param  Request  $request
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse {
+        $request->validate([
+            'q' => 'required|string|min:1',
+        ]);
+
+        $authId = $request->user()->id;
+        $term   = $request->input('q');
+
+        $sent    = Message::where('sender_id', $authId)->pluck('receiver_id');
+        $recv    = Message::where('receiver_id', $authId)->pluck('sender_id');
+        $userIds = $sent->merge($recv)->unique()->values();
+
+        $matches = User::whereIn('id', $userIds)
+            ->where(function ($q) use ($term) {
+                $q->where('first_name', 'like', "%{$term}%")
+                    ->orWhere('last_name', 'like', "%{$term}%");
+            })
+            ->select('id', 'first_name', 'last_name', 'avatar')
+            ->get();
+
+        return $this->success(200, 'Search results', $matches);
     }
 }
