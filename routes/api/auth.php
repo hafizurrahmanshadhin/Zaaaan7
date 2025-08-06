@@ -13,6 +13,7 @@ use App\Http\Controllers\API\Auth\ForgerPasswordController;
 Route::middleware('guest:api')->group(function ($router) {
     // Authentication-related routes
     Route::controller(AuthController::class)->group(function () {
+        Route::post('mail-validation', 'emailValidation');
         Route::post('login', 'login')->name('login');
         Route::post('register', 'register')->name('register');
         Route::post('register/helper', 'registerHelper')->name('register.helper');

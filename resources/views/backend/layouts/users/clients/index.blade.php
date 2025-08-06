@@ -27,13 +27,13 @@
     <div class="content">
         <nav class="mb-3" aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item active">Categories</li>
+                <li class="breadcrumb-item active">Users</li>
             </ol>
         </nav>
         <div class="mb-9">
             <div class="row g-3 mb-4">
                 <div class="col-auto">
-                    <h2 class="mb-0">Categories</h2>
+                    <h2 class="mb-0">Clients</h2>
                 </div>
             </div>
             <div id="products"
@@ -53,18 +53,6 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="ms-xxl-auto">
-                            <a href="{{ route('admin.category.create') }}" class="btn btn-primary" id="addBtn">
-                                <svg class="svg-inline--fa fa-plus me-2" aria-hidden="true" focusable="false"
-                                    data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 448 512" data-fa-i2svg="">
-                                    <path fill="currentColor"
-                                        d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z">
-                                    </path>
-                                </svg>
-                                Add Category
-                            </a>
-                        </div>
                     </div>
                 </div>
                 <div
@@ -76,13 +64,7 @@
                                     <th class="sort white-space-nowrap align-middle fs-10" scope="col"
                                         style="width:50px;"></th>
                                     <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;">
-                                        CATEGORY NAME
-                                    </th>
-                                    <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:50px;">
-                                        PRICE
-                                    </th>
-                                    <th class="sort align-middle ps-4" scope="col" style="width:50px;">
-                                        PROVISION
+                                        NAME
                                     </th>
                                     <th class="sort align-middle ps-4" scope="col" style="width:50px;"></th>
                                 </tr>
@@ -131,7 +113,7 @@
                     pagingType: "full_numbers",
                     dom: "<'row justify-content-between table-topbar'<'col-md-2 col-sm-4 px-0'f>>tipr",
                     ajax: {
-                        url: "{{ route('admin.category.index') }}",
+                        url: "{{ route('admin.user.client.index') }}",
                         type: "GET",
                         data: (d) => {
                             d.search = $('#search-input').val();
@@ -156,18 +138,6 @@
                             searchable: true
                         },
                         {
-                            data: 'cost',
-                            name: 'cost',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'provision',
-                            name: 'provision',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
                             data: 'action',
                             name: 'action',
                             orderable: false,
@@ -188,9 +158,6 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end py-2">
-                                                <a class="dropdown-item" href="${viewUrl}">View</a>
-                                                <a class="dropdown-item" href="${editUrl}">Edit</a>
-                                                <div class="dropdown-divider"></div>
                                                 <button onclick="deleteAlert('${data}')" class="dropdown-item text-danger" href="#!">Remove</button>
                                             </div>
                                         </div>
@@ -236,7 +203,7 @@
             try {
                 $.ajax({
                     // Generate the URL using the named route
-                    url: `{{ route('admin.category.destroy', '') }}/${id}`,
+                    url: `{{ route('admin.user.client.destroy', '') }}/${id}`,
                     type: 'DELETE',
                     dataType: 'json',
                     success: (response) => {

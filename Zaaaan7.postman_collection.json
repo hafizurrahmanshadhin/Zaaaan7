@@ -1,0 +1,4750 @@
+{
+	"info": {
+		"_postman_id": "1a7dced4-db8f-4813-bec0-f4128488d11a",
+		"name": "Zaaaan7",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32086283",
+		"_collection_link": "https://www.postman.com/shadhinworkspace/workspace/zaaaan7/collection/32086283-1a7dced4-db8f-4813-bec0-f4128488d11a?action=share&source=collection_link&creator=32086283"
+	},
+	"item": [
+		{
+			"name": "Local server",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "forget password",
+							"item": [
+								{
+									"name": "otp send",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "gotetat954@kvegg.com",
+													"type": "text"
+												},
+												{
+													"key": "operation",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "aklein@example.org",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{local_url}}/api/auth/forget-password/oto-send",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"forget-password",
+												"oto-send"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp sended\",  \n\"data\": {  \n\"otp\": 195860  \n},  \n\"timestamp\": \"2024-12-09T13:52:57+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								},
+								{
+									"name": "otp match",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "user1@mail.com",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "otp",
+													"value": "779675",
+													"type": "text"
+												},
+												{
+													"key": "operation",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "gotetat954@kvegg.com",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{local_url}}/api/auth/forget-password/oto-match",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"forget-password",
+												"oto-match"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp verified\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:53:37+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								},
+								{
+									"name": "reset-password",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "gotetat954@kvegg.com",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "user1@mail.com",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "password",
+													"value": "12345678",
+													"type": "text"
+												},
+												{
+													"key": "password_confirmation",
+													"value": "12345678",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{local_url}}/api/auth/forget-password/reset-password",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"forget-password",
+												"reset-password"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp verified\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:53:37+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"if (jsonData && jsonData.data && jsonData.data.token) {\r",
+											"    pm.globals.set('token', jsonData.data.token);\r",
+											"    console.log('Token set globally: ' + jsonData.data.token);\r",
+											"} else {\r",
+											"    console.error('Token not found in the response');\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "user@user.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "User",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Atif",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522\n(257) 563-7401",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/register",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user registration successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"user\",  \n\"verify\": false  \n},  \n\"timestamp\": \"2024-12-09T13:51:47+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "registerHelper",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "helper@mail.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Hamid",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Firoz",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "documents[]",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/vintage-car-7305109_1280.jpg"
+										},
+										{
+											"key": "documents[]",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/vintage-car-7305109_1280.jpg"
+										},
+										{
+											"key": "id",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/log-cabin-1886620_1280.jpg"
+										},
+										{
+											"key": "sub_category_id[]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "sub_category_id[]",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "hello I am helper",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/register/helper",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register",
+										"helper"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user registration successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"helper\",  \n\"verify\": false  \n},  \n\"timestamp\": \"2024-12-09T13:51:56+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"if (jsonData && jsonData.data && jsonData.data.token) {\r",
+											"    pm.globals.set('token', jsonData.data.token);\r",
+											"    console.log('Token set globally: ' + jsonData.data.token);\r",
+											"} else {\r",
+											"    console.error('Token not found in the response');\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "helper@mail.com",
+											"description": "helper",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "user@user.com",
+											"description": "user",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/login",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user login successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"helper\",  \n\"verify\": true  \n},  \n\"timestamp\": \"2024-12-09T11:55:37+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/logout",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"logout"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user logged out successfully\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:52:45+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "otp send",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "xahini9770@fmin.com",
+											"type": "text"
+										},
+										{
+											"key": "operation",
+											"value": "email",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/oto-send",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"oto-send"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp sended\",  \n\"data\": {  \n\"otp\": 195860  \n},  \n\"timestamp\": \"2024-12-09T13:52:57+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "otp match",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "gotetat954@kvegg.com",
+											"type": "text"
+										},
+										{
+											"key": "otp",
+											"value": "783475",
+											"type": "text"
+										},
+										{
+											"key": "operation",
+											"value": "email",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/oto-match",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"oto-match"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp verified\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:53:37+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "change-password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "user@mail.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/change-password",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "helpers by skills",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile/helper/skill/1",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"helper",
+										"skill",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "social login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "provider",
+											"value": "google",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "ya29.a0AW4XtxjOFRZ8v-xetpweKPFYkLNU72fXsgbQpMaDY6QqsmOEhiI9cGr1_gz_s2KfUjITYsuyNS0AM7q7tjsM0d9D24-9h9VEHF-9JhoijwIGyQT1h06SFD7n7kqvgD8bNyYDE_g05ONINiX9ZJbP6lRFHcJUtKajAPsm6IOJaCgYKAZkSARISFQHGX2Miw5av2h8lC1gh9K7UTCkofg0175",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/auth/socialite-login",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"socialite-login"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user registration successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"user\",  \n\"verify\": false  \n},  \n\"timestamp\": \"2024-12-09T13:51:47+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "category",
+					"item": [
+						{
+							"name": "categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/category",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"category"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting all the categories\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"quo\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"quis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quia\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"expedita\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"unde\"  \n},  \n{  \n\"id\": 6,  \n\"name\": \"illum\"  \n},  \n{  \n\"id\": 7,  \n\"name\": \"qui\"  \n},  \n{  \n\"id\": 8,  \n\"name\": \"exercitationem\"  \n},  \n{  \n\"id\": 9,  \n\"name\": \"est\"  \n},  \n{  \n\"id\": 10,  \n\"name\": \"non\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:03:38+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "skills",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/category/skills",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"skills"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting all the categories\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"quo\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"quis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quia\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"expedita\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"unde\"  \n},  \n{  \n\"id\": 6,  \n\"name\": \"illum\"  \n},  \n{  \n\"id\": 7,  \n\"name\": \"qui\"  \n},  \n{  \n\"id\": 8,  \n\"name\": \"exercitationem\"  \n},  \n{  \n\"id\": 9,  \n\"name\": \"est\"  \n},  \n{  \n\"id\": 10,  \n\"name\": \"non\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:03:38+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/category/1",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"1"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting the category\",  \n\"data\": {  \n\"category\": {  \n\"id\": 1,  \n\"name\": \"quo\",  \n\"cost\": 87.03,  \n\"provision\": 47.6  \n}  \n},  \n\"timestamp\": \"2024-12-11T06:06:57+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "sub categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/category/sub-category/1",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"sub-category",
+										"1"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting sub-categories of the category\",  \n\"data\": {  \n\"sub_categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"laudantium\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"perferendis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quos\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"eveniet\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"modi\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:05:20+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "categories paginated",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/category/paginated/page?page=1&per_page=2",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"paginated",
+										"page"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "2"
+										}
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting all the categories\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"quo\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"quis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quia\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"expedita\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"unde\"  \n},  \n{  \n\"id\": 6,  \n\"name\": \"illum\"  \n},  \n{  \n\"id\": 7,  \n\"name\": \"qui\"  \n},  \n{  \n\"id\": 8,  \n\"name\": \"exercitationem\"  \n},  \n{  \n\"id\": 9,  \n\"name\": \"est\"  \n},  \n{  \n\"id\": 10,  \n\"name\": \"non\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:03:38+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "show",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "show helper",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile/show/helper",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"show",
+										"helper"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update avatar",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/C:/Users/SVA/Pictures/vendor1.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/profile/update/avatar",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"update",
+										"avatar"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"avatar updated successfully\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-11T08:43:48+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "selena",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "gomez",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "xahini9770@confmin.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "56565 556 asdsd",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "sdfasfasd f asdf asf asdf",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "female",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/profile/update",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update helper",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "selena",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "gomez",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "xahini9770@fmin.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "56565 556 asdsd",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "sdfasfasd f asdf asf asdf",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "female",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "sfasf saf asf asdf sdaf df",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/profile/update/helper",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"update",
+										"helper"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "helper Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile/helper/4",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"helper",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "show helper profile by ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile/show/helper/4",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"show",
+										"helper",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "top experts",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile/top-exparts",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"top-exparts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "address",
+					"item": [
+						{
+							"name": "index",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/address",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "store",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "latitude",
+											"value": "77.36",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "63.23",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "faf",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "rtyhrt",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "agfsfas",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "tyiykfhj fgj gh",
+											"type": "text"
+										},
+										{
+											"key": "zip",
+											"value": "iops aat",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/address/store",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "latitude",
+											"value": "77.36",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "63.23",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "faf",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "rtyhrt",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "agf cbdc",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "tyiykfhj fgj gh",
+											"type": "text"
+										},
+										{
+											"key": "zip",
+											"value": "iops aat",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/address/activate/9",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"activate",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/address/destroy/12",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"destroy",
+										"12"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Task",
+					"item": [
+						{
+							"name": "helper",
+							"item": [
+								{
+									"name": "my tasks",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/helper?page=1&per_page=1",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "request",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/helper/reqest?page=2&per_page=2",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"reqest"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "2"
+												},
+												{
+													"key": "per_page",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "completed",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/helper/completed?page=2&per_page=1",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"completed"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "2"
+												},
+												{
+													"key": "per_page",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "accept task",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/helper/accept/",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"accept",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "request accept",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{local_url}}/api/task/helper/accept/7",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"accept",
+												"7"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "user",
+							"item": [
+								{
+									"name": "store",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "address_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "sub_category_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "d gsdg dsag dasg",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-11-13",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "09:00",
+													"type": "text"
+												},
+												{
+													"key": "image[]",
+													"type": "file",
+													"src": "/C:/Users/hrsha/Pictures/Screenshots/Screenshot (1).png"
+												},
+												{
+													"key": "image[]",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{local_url}}/api/task/store",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"store"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"task created successfully\",  \n\"data\": {  \n\"task\": {  \n\"address_id\": \"8\",  \n\"sub_category_id\": \"2\",  \n\"description\": \"d gsdg dsag dasg\",  \n\"date\": \"2024-12-13\",  \n\"time\": \"09:00\",  \n\"client\": 4,  \n\"updated_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"created_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"id\": 7  \n},  \n\"images\": \\[  \n{  \n\"url\": \"[https://zaaaan7.test/task/7/image_675abf6145c26.jpg\"](https://zaaaan7.test/task/7/image_675abf6145c26.jpg),  \n\"imageable_id\": 7,  \n\"imageable_type\": \"App\\\\Models\\\\Task\",  \n\"updated_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"created_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"id\": 16  \n},  \n{  \n\"url\": \"[https://zaaaan7.test/task/7/image_675abf6146f83.png\"](https://zaaaan7.test/task/7/image_675abf6146f83.png),  \n\"imageable_id\": 7,  \n\"imageable_type\": \"App\\\\Models\\\\Task\",  \n\"updated_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"created_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"id\": 17  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-12T10:48:01+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								},
+								{
+									"name": "available experts",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/experts",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"experts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "user tasks",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/index?status=&page=1&per_page=",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"index"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "",
+													"description": "'', 'process' or 'complete'"
+												},
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "request give",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "user_id",
+													"value": "4",
+													"type": "text"
+												},
+												{
+													"key": "task_id",
+													"value": "4",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{local_url}}/api/task/request",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "status",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{local_url}}/api/task/status/2",
+											"host": [
+												"{{local_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"status",
+												"2"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "show task",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/task/2",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"task",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "reviews",
+					"item": [
+						{
+							"name": "store",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "task_id",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "star",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "afasddfaf asdf asdfads fasdf ",
+											"type": "text"
+										},
+										{
+											"key": "image[]",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/admin1.jpg"
+										},
+										{
+											"key": "image[]",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/2.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/review/store",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"review",
+										"store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client reviews",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/review/client?page=1&per_page=",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"review",
+										"client"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "helper reviews",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/review/helper?page=1&per_page=",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"review",
+										"helper"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "message",
+					"item": [
+						{
+							"name": "get message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/messages/3",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "send message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "message",
+											"value": "Maria ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/messages/1",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "index",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/messages/",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/messages/search?q=user",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										"search"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "user"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "dashboard",
+					"item": [
+						{
+							"name": "show",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local_url}}/api/dashboard/helper",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"helper"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "notifications",
+					"item": [
+						{
+							"name": "get",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/notification",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "read",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/notification/read",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"read"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "firebase  token get",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/notification/firebase-token?device_id=asdfsdafsadf",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"firebase-token"
+									],
+									"query": [
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "firebase token store",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "cI17nunuR9eXBL8qxBw9A2:APA91bFb-KZnJSLr3uOPXSn9VThzfRRaAk_Q1fQg34upgpC8-yIPtFntiOvR4CopWWKCKsOB8feaeC0K8qEs8GqF7CqUDoQr0V_Qd2yHjX0-34lakqJvlnI",
+											"type": "text"
+										},
+										{
+											"key": "device_id",
+											"value": " UP1A.231005.007",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local_url}}/api/notification/firebase-token",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"firebase-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "firebase token store Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "asfsda",
+											"type": "text"
+										},
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/notification/firebase-token?device_id=asdfsdafsadf",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"firebase-token"
+									],
+									"query": [
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Live Server",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "forget password",
+							"item": [
+								{
+									"name": "otp send",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "user@mail.com",
+													"type": "text"
+												},
+												{
+													"key": "operation",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "aklein@example.org",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{live_url}}/api/auth/forget-password/oto-send",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"forget-password",
+												"oto-send"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp sended\",  \n\"data\": {  \n\"otp\": 195860  \n},  \n\"timestamp\": \"2024-12-09T13:52:57+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								},
+								{
+									"name": "otp match",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "user@mail.com",
+													"type": "text"
+												},
+												{
+													"key": "otp",
+													"value": "396423",
+													"type": "text"
+												},
+												{
+													"key": "operation",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "aklein@example.org",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{live_url}}/api/auth/forget-password/oto-match",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"forget-password",
+												"oto-match"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp verified\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:53:37+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								},
+								{
+									"name": "reset-password",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "aklein@example.org",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "email",
+													"value": "user@mail.com",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "12345678",
+													"type": "text"
+												},
+												{
+													"key": "password_confirmation",
+													"value": "12345678",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{live_url}}/api/auth/forget-password/reset-password",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"forget-password",
+												"reset-password"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp verified\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:53:37+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "xahii97x0@confmdin.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Hamid",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Firoz",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Cecilia Chapman\n711-2880 Nulla St.\nMankato Mississippi 96522\n(257) 563-7401",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/register",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user registration successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"user\",  \n\"verify\": false  \n},  \n\"timestamp\": \"2024-12-09T13:51:47+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "registerHelper",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "user@fmin.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Hamid",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Firoz",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "documents[]",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/vintage-car-7305109_1280.jpg"
+										},
+										{
+											"key": "documents[]",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/log-cabin-1886620_1280.jpg"
+										},
+										{
+											"key": "id",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/vintage-car-7305109_1280.jpg"
+										},
+										{
+											"key": "sub_category_id[]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "sub_category_id[]",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "hello I am helper",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/register/helper",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register",
+										"helper"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user registration successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"helper\",  \n\"verify\": false  \n},  \n\"timestamp\": \"2024-12-09T13:51:56+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"if (jsonData && jsonData.data && jsonData.data.token) {\r",
+											"    pm.globals.set('token', jsonData.data.token);\r",
+											"    console.log('Token set globally: ' + jsonData.data.token);\r",
+											"} else {\r",
+											"    console.error('Token not found in the response');\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "helper@mail.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "user@mail.com",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "xahini970@confmdin.com",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/login",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user login successfull\",  \n\"data\": {  \n\"token\": \"{{vault:json-web-token}}\",  \n\"role\": \"helper\",  \n\"verify\": true  \n},  \n\"timestamp\": \"2024-12-09T11:55:37+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/logout",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"logout"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"user logged out successfully\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:52:45+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "otp send",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "xahini9770@confmdin.com",
+											"type": "text"
+										},
+										{
+											"key": "operation",
+											"value": "email",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/oto-send",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"oto-send"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp sended\",  \n\"data\": {  \n\"otp\": 195860  \n},  \n\"timestamp\": \"2024-12-09T13:52:57+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "otp match",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "xahini9770@confmdin.com",
+											"type": "text"
+										},
+										{
+											"key": "otp",
+											"value": "487649",
+											"type": "text"
+										},
+										{
+											"key": "operation",
+											"value": "email",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/oto-match",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"oto-match"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"otp verified\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-09T13:53:37+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "change-password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "user@mail.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/auth/change-password",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "category",
+					"item": [
+						{
+							"name": "categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/category",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"category"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting all the categories\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"quo\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"quis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quia\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"expedita\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"unde\"  \n},  \n{  \n\"id\": 6,  \n\"name\": \"illum\"  \n},  \n{  \n\"id\": 7,  \n\"name\": \"qui\"  \n},  \n{  \n\"id\": 8,  \n\"name\": \"exercitationem\"  \n},  \n{  \n\"id\": 9,  \n\"name\": \"est\"  \n},  \n{  \n\"id\": 10,  \n\"name\": \"non\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:03:38+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/category/1",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"1"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting the category\",  \n\"data\": {  \n\"category\": {  \n\"id\": 1,  \n\"name\": \"quo\",  \n\"cost\": 87.03,  \n\"provision\": 47.6  \n}  \n},  \n\"timestamp\": \"2024-12-11T06:06:57+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "sub categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/category/sub-category/1",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"sub-category",
+										"1"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting sub-categories of the category\",  \n\"data\": {  \n\"sub_categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"laudantium\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"perferendis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quos\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"eveniet\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"modi\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:05:20+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "categories paginated",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/category/paginated/page?page=1&per_page=2",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"paginated",
+										"page"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "2"
+										}
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting all the categories\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"quo\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"quis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quia\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"expedita\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"unde\"  \n},  \n{  \n\"id\": 6,  \n\"name\": \"illum\"  \n},  \n{  \n\"id\": 7,  \n\"name\": \"qui\"  \n},  \n{  \n\"id\": 8,  \n\"name\": \"exercitationem\"  \n},  \n{  \n\"id\": 9,  \n\"name\": \"est\"  \n},  \n{  \n\"id\": 10,  \n\"name\": \"non\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:03:38+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "skills",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/category/skills",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"category",
+										"skills"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"getting all the categories\",  \n\"data\": {  \n\"categories\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"quo\"  \n},  \n{  \n\"id\": 2,  \n\"name\": \"quis\"  \n},  \n{  \n\"id\": 3,  \n\"name\": \"quia\"  \n},  \n{  \n\"id\": 4,  \n\"name\": \"expedita\"  \n},  \n{  \n\"id\": 5,  \n\"name\": \"unde\"  \n},  \n{  \n\"id\": 6,  \n\"name\": \"illum\"  \n},  \n{  \n\"id\": 7,  \n\"name\": \"qui\"  \n},  \n{  \n\"id\": 8,  \n\"name\": \"exercitationem\"  \n},  \n{  \n\"id\": 9,  \n\"name\": \"est\"  \n},  \n{  \n\"id\": 10,  \n\"name\": \"non\"  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-11T06:03:38+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "show",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/profile",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "show helper",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/profile/show/helper",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"show",
+										"helper"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update avatar",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/C:/Users/SVA/Pictures/vendor1.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/profile/update/avatar",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"update",
+										"avatar"
+									]
+								},
+								"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"avatar updated successfully\",  \n\"data\": null,  \n\"timestamp\": \"2024-12-11T08:43:48+00:00 GMT+00:00\"  \n}"
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "selena",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "gomez",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "user@mail.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "56565 556 asdsd",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "sdfasfasd f asdf asf asdf",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "female",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/C:/Users/USER/Downloads/image/admin4.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/profile/update",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update helper",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "selena",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "gomez",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "helper@mail.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "56565 556 asdsd",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "sdfasfasd f asdf asf asdf",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "female",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "sfasf saf asf asdf sdaf df",
+											"type": "text"
+										},
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/C:/Users/USER/Pictures/licensed-image.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/profile/update/helper",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"update",
+										"helper"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "helper Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/profile/helper/4",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"helper",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "show helper profile by ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local_url}}/api/profile/show/helper/4",
+									"host": [
+										"{{local_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"show",
+										"helper",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "helpers by skills",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/profile/helper/skill/1",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"helper",
+										"skill",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "top experts",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/profile/top-exparts",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"profile",
+										"top-exparts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "address",
+					"item": [
+						{
+							"name": "index",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/address",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "store",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "latitude",
+											"value": "77.36",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "63.23",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "fafdsfasdf",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Bangladesh",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "Dhaka",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Mohammaadpur",
+											"type": "text"
+										},
+										{
+											"key": "zip",
+											"value": "iops aat",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/address/store",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "activate",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{live_url}}/api/address/activate/8",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"activate",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/address/destroy/12",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"destroy",
+										"12"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "active",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/address/active",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"address",
+										"active"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "reviews",
+					"item": [
+						{
+							"name": "store",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "task_id",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "star",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "afasddfaf asdf asdfads fasdf ",
+											"type": "text"
+										},
+										{
+											"key": "image[]",
+											"type": "file",
+											"src": "/C:/Users/SVA/Pictures/user.jpg",
+											"disabled": true
+										},
+										{
+											"key": "image[]",
+											"type": "file",
+											"src": "/C:/Users/SVA/Pictures/vendor3.jpg",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/review/store",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"review",
+										"store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client reviews",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/review/client?page=2&per_page=1",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"review",
+										"client"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "per_page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "helper reviews",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/review/helper?page=2&per_page=1",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"review",
+										"helper"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "per_page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "message",
+					"item": [
+						{
+							"name": "index",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/messages/",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/messages/3",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "send message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "message",
+											"value": "Maria ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/messages/1",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"messages",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Task",
+					"item": [
+						{
+							"name": "helper",
+							"item": [
+								{
+									"name": "my tasks",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/helper?page=1&per_page=10",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "request",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/helper/reqest?page=1&per_page=10",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"reqest"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "completed",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/helper/completed?page=1&per_page=10",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"completed"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "accept task",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/helper/accept/",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"accept",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "request accept",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{live_url}}/api/task/helper/accept/31",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"accept",
+												"31"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete request",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/helper/request/delete/67",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"helper",
+												"request",
+												"delete",
+												"67"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "user",
+							"item": [
+								{
+									"name": "store",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "address_id",
+													"value": "47",
+													"type": "text"
+												},
+												{
+													"key": "sub_category_id",
+													"value": "4",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "d gsdg dsag dasg",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-11-13",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "09:00",
+													"type": "text"
+												},
+												{
+													"key": "image[]",
+													"type": "file",
+													"src": "/C:/Users/USER/Pictures/licensed-image.jpg"
+												},
+												{
+													"key": "image[]",
+													"type": "file",
+													"src": [],
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{live_url}}/api/task/store",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"store"
+											]
+										},
+										"description": "{  \n\"success\": true,  \n\"code\": 200,  \n\"message\": \"task created successfully\",  \n\"data\": {  \n\"task\": {  \n\"address_id\": \"8\",  \n\"sub_category_id\": \"2\",  \n\"description\": \"d gsdg dsag dasg\",  \n\"date\": \"2024-12-13\",  \n\"time\": \"09:00\",  \n\"client\": 4,  \n\"updated_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"created_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"id\": 7  \n},  \n\"images\": \\[  \n{  \n\"url\": \"[https://zaaaan7.test/task/7/image_675abf6145c26.jpg\"](https://zaaaan7.test/task/7/image_675abf6145c26.jpg),  \n\"imageable_id\": 7,  \n\"imageable_type\": \"App\\\\Models\\\\Task\",  \n\"updated_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"created_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"id\": 16  \n},  \n{  \n\"url\": \"[https://zaaaan7.test/task/7/image_675abf6146f83.png\"](https://zaaaan7.test/task/7/image_675abf6146f83.png),  \n\"imageable_id\": 7,  \n\"imageable_type\": \"App\\\\Models\\\\Task\",  \n\"updated_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"created_at\": \"2024-12-12T10:48:01.000000Z\",  \n\"id\": 17  \n}  \n\\]  \n},  \n\"timestamp\": \"2024-12-12T10:48:01+00:00 GMT+00:00\"  \n}"
+									},
+									"response": []
+								},
+								{
+									"name": "available experts",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/experts",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"experts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "request give",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "user_id",
+													"value": "4",
+													"type": "text"
+												},
+												{
+													"key": "task_id",
+													"value": "31",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{live_url}}/api/task/request",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "user tasks",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/index?status=&page=1&per_page=",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"index"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "",
+													"description": "'', 'process' or 'complete'"
+												},
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "status",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{live_url}}/api/task/status/1",
+											"host": [
+												"{{live_url}}"
+											],
+											"path": [
+												"api",
+												"task",
+												"status",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "show task",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/task/2",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"task",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "dashboard",
+					"item": [
+						{
+							"name": "show",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{live_url}}/api/dashboard/helper",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"helper"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "transection",
+					"item": [
+						{
+							"name": "pay",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "task_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "amount",
+											"value": "65",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/pay",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"pay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "notifications",
+					"item": [
+						{
+							"name": "get",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/notification",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "read",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/notification/read",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"read"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "firebase  token get",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{live_url}}/api/notification/firebase-token?device_id=asdfsdafsadf",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"firebase-token"
+									],
+									"query": [
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "firebase token store",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "asfsda",
+											"type": "text"
+										},
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/notification/firebase-token",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"firebase-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "firebase token store Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "token",
+											"value": "asfsda",
+											"type": "text"
+										},
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{live_url}}/api/notification/firebase-token?device_id=asdfsdafsadf",
+									"host": [
+										"{{live_url}}"
+									],
+									"path": [
+										"api",
+										"notification",
+										"firebase-token"
+									],
+									"query": [
+										{
+											"key": "device_id",
+											"value": "asdfsdafsadf"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "live_url",
+			"value": "https://zaaaan7.softvencefsd.xyz",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "local_url",
+			"value": "http://zaaaan7.test",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "user_token",
+			"value": "{{vault:json-web-token}}",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "helper_token",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "local_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "live_url",
+			"value": "https://ok-app.net",
+			"type": "string"
+		}
+	]
+}

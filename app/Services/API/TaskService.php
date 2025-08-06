@@ -221,60 +221,84 @@ class TaskService
     {
         try {
 
-            // Step 1: Get all tasks with their associated address and skill
             $tasksWithAddressSkill = $this->user->clientTasks()->whereStatus('pending')
-                ->select('id', 'address_id', 'sub_category_id') // Assuming `sub_category_id` is the foreign key in the tasks table
-                ->with(['address:id,country,state,city,zip', 'skill:id']) // Assuming `skill` is a relationship that links to SubCategory
+                ->select('id', 'address_id', 'sub_category_id')
+                ->with(['address:id,latitude,longitude', 'skill:id'])
                 ->get();
 
-            // Step 2: Extract unique address details from the tasks
-            $addresses = $tasksWithAddressSkill->pluck('address')->unique(function ($address) {
-                return $address->country . $address->state . $address->city . $address->zip;
+
+            $helpers = User::where('role', 'helper')->whereHas('addresses', function ($query) {
+                $query->where('is_active', true);
+            })->with(['skills' => function ($query) {
+                $query->select('sub_categories.id');
+            }, 'addresses' => function ($query) {
+                $query->select('id', 'user_id', 'latitude', 'longitude')
+                    ->where('is_active', true);
+            }])->get();
+
+            $helpers->each(function ($helper) {
+                $helper->skills->each->makeHidden('pivot');
             });
 
-            // Step 3: For each task, find users whose address and skill match the task's address and skill
-            $tasksWithUsers = $tasksWithAddressSkill->map(function ($task) use ($addresses) {
-                // Find users whose address and skill match the task's address and skill
-                $users = User::whereRole('helper')
-                    ->whereHas('addresses', function ($query) use ($task) {
-                        $query->where('country', $task->address->country)
-                            ->where('state', $task->address->state)
-                            ->where('city', $task->address->city)
-                            ->where('zip', $task->address->zip);
-                    })
-                    ->whereHas('skills', function ($query) use ($task) {
-                        $query->where('sub_category_id', $task->sub_category_id);
-                    })
-                    ->get()
-                    ->map(
-                        function ($user) use ($task) {
-                            $averageRating = $user->helperReviews()->average('star') ?? 0;
-                            $reivew_count  = $user->helperReviews()->count();
-                            $skill         = SubCategory::findOrFail($task->sub_category_id);
-                            return [
-                                'id'             => $user->id,
-                                'first_name'     => $user->first_name,
-                                'last_name'      => $user->last_name,
-                                'avatar'         => $user->avatar,
-                                'skill'          => $skill->name,
-                                'average_rating' => $averageRating,
-                                'review_count'   => $reivew_count, // From withCount
+
+            $earthRadius = 6371;
+            $results = [];
+
+            foreach ($tasksWithAddressSkill as $task) {
+                $taskLat = $task->address->latitude;
+                $taskLng = $task->address->longitude;
+                $taskSkillId = $task->sub_category_id;
+
+                $skill = SubCategory::findOrFail($task->sub_category_id);
+
+                $matchedHelpers = [];
+
+                foreach ($helpers as $helper) {
+                    // Check if helper has the required skill
+                    $helperSkillIds = $helper->skills->pluck('id')->toArray();
+                    if (!in_array($taskSkillId, $helperSkillIds)) {
+                        continue; // skip if skill doesn't match
+                    }
+
+                    // Now check for distance
+                    foreach ($helper->addresses as $address) {
+                        $distance = $earthRadius * acos(
+                            cos(deg2rad($taskLat)) * cos(deg2rad($address->latitude)) *
+                                cos(deg2rad($address->longitude) - deg2rad($taskLng)) +
+                                sin(deg2rad($taskLat)) * sin(deg2rad($address->latitude))
+                        );
+
+                        if ($distance <= 10) {
+                            $matchedHelpers[] = [
+                                'id' => $helper->id,
+                                'first_name' => $helper->first_name,
+                                'last_name' => $helper->last_name,
+                                'avatar' => $helper->avatar,
+                                'rating' => $helper->avarageRating(),
+                                'distance_km' => round($distance, 2),
+                                'skill' => $skill->name,
                             ];
+                            break;
                         }
+                    }
+                }
 
-                    );
-
-                $order = Task::with(['skill'])->find($task->id);
-                return [
-                    'task_name' => $order->skill->name,
-                    'task_id' => $task->id,
-                    'helpers' => $users,
-
+                $results[] = [
+                    'task' => [
+                        'id' => $task->id,
+                        // 'sub_category_id' => $taskSkillId,
+                        // 'location' => [
+                        //     'latitude' => $taskLat,
+                        //     'longitude' => $taskLng
+                        // ]
+                    ],
+                    'helpers' => $matchedHelpers
                 ];
-            });
+            }
 
             // Output the result
-            return $tasksWithUsers;
+            // return [$tasksWithAddressSkill, $helpers];
+            return $results;
         } catch (Exception $e) {
             throw $e;
         }
@@ -349,7 +373,7 @@ class TaskService
 
 
             // Retrieve Firebase tokens for push notification
-            $tokens = FirebaseToken::where('user_id', $user->id)->pluck('token');
+            $tokens = FirebaseToken::where('user_id', $helper->id)->pluck('token');
 
             if ($tokens->isNotEmpty()) {
                 foreach ($tokens as $token) {

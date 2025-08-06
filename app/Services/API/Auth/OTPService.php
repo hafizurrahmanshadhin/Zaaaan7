@@ -6,10 +6,12 @@ use App\Exceptions\OTPExpiredException;
 use App\Exceptions\OTPMismatchException;
 use App\Exceptions\UserAlreadyVarifiedException;
 use App\Jobs\SendOTPEmail;
+use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OTPService
 {
@@ -35,7 +37,7 @@ class OTPService
             $user = User::whereEmail($email)->first();
             $user->otps()->whereOperation($operation)->delete();
             $otp = $this->otp($user, $operation);
-            Log::info($otp);
+            // Log::info($otp);
             return $otp;
         } catch (Exception $e) {
             Log::error('OTPService::otpSend -> ' . $e->getMessage());
@@ -140,7 +142,8 @@ class OTPService
                 'number' => $otp,
             ]);
 
-            SendOTPEmail::dispatch($user, $otp);
+            // SendOTPEmail::dispatch($user, $otp);
+            Mail::to($user->email)->send(new OTPMail('Onboarding', $otp, $user));
             return $otp;
         } catch (Exception $e) {
             Log::error('OTPService::otpMatch -> ' . $e->getMessage());

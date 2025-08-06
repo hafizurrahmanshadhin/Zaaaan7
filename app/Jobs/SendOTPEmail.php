@@ -30,7 +30,7 @@ class SendOTPEmail implements ShouldQueue
     public function handle(): void
     {
         try {
-            Log::info("Sending OTP email");
+            // Log::info("Sending OTP email");
             Mail::to($this->user->email)->send(new OTPMail('Onboarding', $this->otp, $this->user));
         }catch(Exception $e) {
             Log::error("OTP EMAIL Sending:".$e->getMessage());

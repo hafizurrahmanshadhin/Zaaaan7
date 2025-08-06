@@ -6,6 +6,9 @@ use App\Http\Controllers\Web\Backend\Setting\MailController;
 use App\Http\Controllers\Web\Backend\SubCateogryController;
 use App\Http\Controllers\Web\Backend\ProfileController;
 use App\Http\Controllers\Web\Backend\TransectionController;
+use App\Http\Controllers\Web\Backend\Users\UserController;
+use App\Http\Controllers\Web\Backend\Users\ClientController;
+use App\Http\Controllers\Web\Backend\Users\HelperController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -13,6 +16,20 @@ Route::prefix('/')->name('home.')->controller(HomeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index');
     });
+
+Route::prefix('user')->name('user.')->group(function () {
+    Route::prefix('client')->name('client.')->controller(ClientController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::delete('/{user}', 'destroy')->name('destroy');
+    });
+    Route::prefix('helper')->name('helper.')->controller(HelperController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::delete('/{user}', 'destroy')->name('destroy');
+    });
+
+    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    Route::get('/status/{user}', [UserController::class, 'status'])->name('status');
+});
 
 
 Route::prefix('/category')->name('category.')->group(function () {
